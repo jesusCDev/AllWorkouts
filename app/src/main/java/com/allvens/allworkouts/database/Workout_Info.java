@@ -7,12 +7,12 @@ public class Workout_Info {
     private long id;
     private String workout;
     private long type; // 0 = simple 1 = mix
-    private int progress; // redo every 7 trials - update max
+    private int progress; // redo every 7 trials - update max and reset to 1 || if 0 means it doesn't count yet.
     private int max;
 
     private List<WorkoutHistory_Info> history;
 
-    public Workout_Info(String workout, int type, int progress, int max){
+    public Workout_Info(String workout, int max, int type, int progress){
         this.workout = workout;
         this.type = type;
         this.progress = progress;

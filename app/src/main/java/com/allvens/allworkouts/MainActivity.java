@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
         start_Timer();
     }
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 long timer_tracker = timer_value - millis;
 
                 if(timer_tracker < 0){
+                    timerHandler.removeCallbacks(timerRunnable);
                     change_screens();
                 }
             }

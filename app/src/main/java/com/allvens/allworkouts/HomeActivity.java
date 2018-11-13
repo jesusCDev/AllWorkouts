@@ -1,9 +1,12 @@
 package com.allvens.allworkouts;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -87,7 +90,9 @@ public class HomeActivity extends AppCompatActivity {
         return (new View.OnClickListener(){
             @Override
             public void onClick(View v){
+
                 HomeActivity.choice = choice;
+                tv_CurrentWorkout.setText(choice);
                 btn_ChangeWorkouts.setText("^ " + choice);
                 workoutChooserTracker = false;
                 ll_home_WorkoutChooser.removeAllViews();
@@ -99,9 +104,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void set_BtnChoiceStyle(Button btn, int style, String btnText){
 
-        tv_CurrentWorkout.setText(btnText);
         btn.setText(btnText);
-
         if (Build.VERSION.SDK_INT < 23) {
             btn.setTextAppearance(HomeActivity.this, style);
         } else {
@@ -110,51 +113,68 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void btnAction_StartWorkout(View view) {
-
-        // Every 7 workouts add a new maximum
-        // Check if you have set a new maximum
-        // Check if they are doing simple or mix
-
         Intent intent;
         if(check_WorkoutExist()){
             if(check_WorkoutProgress()){
                 intent = new Intent(HomeActivity.this, WorkoutActivity.class);
             }else{
-                intent = new Intent(HomeActivity.this, MaximumActivity.class);
+                intent = new Intent(HomeActivity.this, WorkoutMaximumActivity.class);
             }
+
+            intent.putExtra("chosenWorkout", choice);
+            startActivity(intent);
         }else{
-            create_Workout();
-            intent = new Intent(HomeActivity.this, MaximumActivity.class);
+            start_newSession();
         }
-        intent.putExtra("chosenWorkout", choice);
-        startActivity(intent);
     }
 
     private boolean check_WorkoutExist(){
         for(Workout_Info workout: wrapper.get_AllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choice)) {
-                return true;
+                    Log.d("Bug", "Progress: " + workout.getProgress());
+                if(workout.getProgress() != 0){
+                    return true;
+                }else{
+                    wrapper.delete_Workout(workout);
+                }
             }
         }
         return false;
     }
-    private void create_Workout(){
-        // tell user to pick simple or mix
+
+    private void create_Workout(int workoutType){
         // create workout
-        // start maximum
+        wrapper.create_Workout(new Workout_Info(choice, 0, workoutType, 0));
+        wrapper.close();
+
+        Intent intent = new Intent(HomeActivity.this, WorkoutMaximumActivity.class);
+
+        intent.putExtra("chosenWorkout", choice);
+        startActivity(intent);
+    }
+
+    private void start_newSession(){
+        final String[] workoutTypes = {"Simple", "Mix"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick workout type.");
+        builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                create_Workout(which);
+            }
+        });
+        builder.show();
     }
 
     private boolean check_WorkoutProgress(){
         for(Workout_Info workout: wrapper.get_AllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choice)) {
-                return (workout.getProgress() < 7);
+                Log.d("Bug", "Checking; " + workout.getProgress());
+                return (workout.getProgress() < 8);
             }
         }
         return false;
-    }
-
-    private boolean checkIfLast7RoundsMax(){
-        return true;
     }
 
     public void btnAction_Settings(View view) {
