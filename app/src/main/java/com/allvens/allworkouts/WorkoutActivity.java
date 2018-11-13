@@ -11,7 +11,7 @@ public class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_workout);
+        setContentView(R.layout.activity_workout_session);
 
         TextView tv = findViewById(R.id.textView);
 
