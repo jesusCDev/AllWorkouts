@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.allvens.allworkouts.preferences.PreferencesValues;
+import com.allvens.allworkouts.assets.PreferencesValues;
 
 public class MainActivity extends AppCompatActivity {
 

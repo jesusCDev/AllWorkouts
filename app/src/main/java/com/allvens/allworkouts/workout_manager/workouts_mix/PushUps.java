@@ -1,6 +1,6 @@
-package com.allvens.allworkouts.workouts_mix;
+package com.allvens.allworkouts.workout_manager.workouts_mix;
 
-public class Mix_PushUpValues {
+public class PushUps {
     
     private final static int FIRST_VALUE_DIFFUCULTY = 3;
     private final static int SECOND_VALUE_DIFFUCULTY = 2;

@@ -6,7 +6,7 @@ public class Workout_Info {
 
     private long id;
     private String workout;
-    private long type; // 0 = simple 1 = mix
+    private int type; // 0 = simple 1 = mix
     private int progress; // redo every 7 trials - update max and reset to 1 || if 0 means it doesn't count yet.
     private int max;
 
@@ -39,11 +39,11 @@ public class Workout_Info {
         return id;
     }
 
-    public long getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(long type) {
+    public void setType(int type) {
         this.type = type;
     }
 

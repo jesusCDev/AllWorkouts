@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.database.Workout_Info;
 import com.allvens.allworkouts.database.Workout_Wrapper;
 
@@ -22,7 +23,7 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tv_CurrentWorkout;
 
     private boolean workoutChooserTracker = false;
-    private static String choice = "Pull Ups";
+    private static String choice = Constants.PULL_UPS;
     private Button btn_ChangeWorkouts;
 
     private Workout_Wrapper wrapper;
@@ -62,17 +63,17 @@ public class HomeActivity extends AppCompatActivity {
 
                 if(!workoutChooserTracker){
                     Button btn_PullUps = new Button(HomeActivity.this);
-                    btn_PullUps.setOnClickListener(changeWorkout("Pull Ups"));
-                    set_BtnChoiceStyle(btn_PullUps, R.style.btn_home_workoutChoice, "Pull Ups");
+                    btn_PullUps.setOnClickListener(changeWorkout(Constants.PULL_UPS));
+                    set_BtnChoiceStyle(btn_PullUps, R.style.btn_home_workoutChoice, Constants.PULL_UPS);
                     Button btn_PushUps = new Button(HomeActivity.this);
-                    btn_PushUps.setOnClickListener(changeWorkout("Push Ups"));
-                    set_BtnChoiceStyle(btn_PushUps, R.style.btn_home_workoutChoice, "Push Ups");
+                    btn_PushUps.setOnClickListener(changeWorkout(Constants.PUSH_UPS));
+                    set_BtnChoiceStyle(btn_PushUps, R.style.btn_home_workoutChoice, Constants.PUSH_UPS);
                     Button btn_SitUps = new Button(HomeActivity.this);
-                    btn_SitUps.setOnClickListener(changeWorkout("Sit Ups"));
-                    set_BtnChoiceStyle(btn_SitUps, R.style.btn_home_workoutChoice, "Sit Ups");
+                    btn_SitUps.setOnClickListener(changeWorkout(Constants.SIT_UPS));
+                    set_BtnChoiceStyle(btn_SitUps, R.style.btn_home_workoutChoice, Constants.SIT_UPS);
                     Button btn_Squats = new Button(HomeActivity.this);
-                    btn_Squats.setOnClickListener(changeWorkout("Squats"));
-                    set_BtnChoiceStyle(btn_Squats, R.style.btn_home_workoutChoice, "Squats");
+                    btn_Squats.setOnClickListener(changeWorkout(Constants.SQUATS));
+                    set_BtnChoiceStyle(btn_Squats, R.style.btn_home_workoutChoice, Constants.SQUATS);
 
                     ll_home_WorkoutChooser.addView(btn_PullUps);
                     ll_home_WorkoutChooser.addView(btn_PushUps);

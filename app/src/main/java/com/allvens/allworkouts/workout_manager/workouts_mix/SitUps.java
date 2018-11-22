@@ -1,6 +1,6 @@
-package com.allvens.allworkouts.workouts_mix;
+package com.allvens.allworkouts.workout_manager.workouts_mix;
 
-public class Mix_SitUpsValues {
+public class SitUps {
     
     private final static int FIRST_VALUE_DIFFUCULTY = 2;
     private final static int SECOND_VALUE_DIFFUCULTY = 3;

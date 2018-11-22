@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.preferences;
+package com.allvens.allworkouts.assets;
 
 public interface PreferencesValues {
 

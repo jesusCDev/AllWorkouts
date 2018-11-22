@@ -43,6 +43,7 @@ public class WorkoutFinishActivity extends AppCompatActivity{
             case "hard":
                 set_WorkoutDifficulty(1);
                 break;
+                // todo show that this button is the pressed one
             case "neutral":
                 set_WorkoutDifficulty(2);
                 break;
