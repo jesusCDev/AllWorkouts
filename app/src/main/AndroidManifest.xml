@@ -19,7 +19,6 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".WorkoutActivity" />
         <activity android:name=".WorkoutMaximumActivity" />
-        <activity android:name=".WorkoutBreakActivity" />
         <activity android:name=".WorkoutFinishActivity" />
         <activity android:name=".StartingActivity" />
     </application>

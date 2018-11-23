@@ -3,6 +3,7 @@ package com.allvens.allworkouts;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,12 +20,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_workout_session);
 
-        TextView tv_wokrout_WorkoutName = findViewById(R.id.tv_wokrout_WorkoutName);
+        TextView tv_workout_WorkoutName = findViewById(R.id.tv_workout_WorkoutName);
         LinearLayout ll_workout_timeImageHolder = findViewById(R.id.ll_workout_timeImageHolder);
+        LinearLayout ll_workout_ValueHolder = findViewById(R.id.ll_workout_ValueHolder);
         Button btn_workout_CompleteTask = findViewById(R.id.btn_workout_CompleteTask);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get("chosenWorkout").toString());
-        manager.update_UI();
+        manager.setUp_UiManager(tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
+        manager.setUp_Timer();
+        manager.start_Screen();
     }
 
     @Override
@@ -35,5 +39,9 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    public void btnAction_ChangeActivities(View view){
+        manager.update_Screen();
     }
 }

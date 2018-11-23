@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_manager.workouts_mix;
+package com.allvens.allworkouts.workout_manager.workouts;
 
 public class PushUps {
     

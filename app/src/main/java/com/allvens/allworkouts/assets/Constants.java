@@ -7,4 +7,5 @@ public interface Constants {
     String SIT_UPS = "Sit Ups";
     String SQUATS = "Squats";
 
+    String CHOOSEN_WORKOUT_EXTRA_KEY = "chosenWorkout";
 }

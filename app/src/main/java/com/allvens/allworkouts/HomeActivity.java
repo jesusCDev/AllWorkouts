@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent = new Intent(HomeActivity.this, WorkoutMaximumActivity.class);
             }
 
-            intent.putExtra("chosenWorkout", choice);
+            intent.putExtra(Constants.CHOOSEN_WORKOUT_EXTRA_KEY, choice);
             startActivity(intent);
         }else{
             start_newSession();
@@ -150,7 +150,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent intent = new Intent(HomeActivity.this, WorkoutMaximumActivity.class);
 
-        intent.putExtra("chosenWorkout", choice);
+        intent.putExtra(Constants.CHOOSEN_WORKOUT_EXTRA_KEY, choice);
         startActivity(intent);
     }
 
