@@ -8,9 +8,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.allvens.allworkouts.workout_manager.WorkoutSession_Manager;
+import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.workout_session.WorkoutSession_Manager;
 
-public class WorkoutActivity extends AppCompatActivity {
+public class WorkoutSessionActivity extends AppCompatActivity {
 
     private WorkoutSession_Manager manager;
 
@@ -25,7 +26,7 @@ public class WorkoutActivity extends AppCompatActivity {
         LinearLayout ll_workout_ValueHolder = findViewById(R.id.ll_workout_ValueHolder);
         Button btn_workout_CompleteTask = findViewById(R.id.btn_workout_CompleteTask);
 
-        manager = new WorkoutSession_Manager(this, getIntent().getExtras().get("chosenWorkout").toString());
+        manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
         manager.setUp_UiManager(tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
         manager.setUp_Timer();
         manager.start_Screen();

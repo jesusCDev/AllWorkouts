@@ -1,7 +1,8 @@
-package com.allvens.allworkouts.workout_manager;
+package com.allvens.allworkouts.workout_session;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,9 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.allvens.allworkouts.workout_manager.workouts.Workout;
+import com.allvens.allworkouts.workout_session.workouts.Workout;
 
-public class UI_Manager {
+public class WorkoutSession_UI_Manager {
 
     private Workout workout;
     private int progress = 0;
@@ -26,7 +27,7 @@ public class UI_Manager {
 
     RelativeLayout[] rl_BottomValues;
     
-    public UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
+    public WorkoutSession_UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
         ll_MainScreen = ll_workout_timeImageHolder;
@@ -69,6 +70,7 @@ public class UI_Manager {
     }
 
     private RelativeLayout create_ValueCounter(int workoutValue){
+        Log.d("Bug", "WokroutValue: "+ workoutValue);
         RelativeLayout rl = new RelativeLayout(context);
 
         TextView tvValue = new TextView(context);

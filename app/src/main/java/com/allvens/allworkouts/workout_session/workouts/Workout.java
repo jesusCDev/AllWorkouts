@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_manager.workouts;
+package com.allvens.allworkouts.workout_session.workouts;
 
 public class Workout {
 
@@ -12,7 +12,7 @@ public class Workout {
     public void create_WorkoutValues(){
         workoutValues = new int[5];
         for(int i = 0; i < 5; i++){
-            workoutValues[i] = (int)(Math.round(max * difficultyValues[i]));
+            workoutValues[i] = (int)(Math.ceil(max * difficultyValues[i]));
         }
     }
 

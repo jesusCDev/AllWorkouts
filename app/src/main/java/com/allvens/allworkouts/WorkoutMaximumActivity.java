@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.database.Workout_Info;
 import com.allvens.allworkouts.database.Workout_Wrapper;
 
@@ -15,6 +16,8 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
     private TextView tv_max_MaxValue;
     private TextView tv_max_WorkoutName;
     private int maxValue = 1;
+    private String chosenWorkout;
+    private int type;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,9 +26,10 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
 
         tv_max_MaxValue = findViewById(R.id.tv_max_MaxValue);
         tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
-        tv_max_WorkoutName.setText(getIntent().getExtras().get("chosenWorkout").toString());
 
-
+        chosenWorkout = getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString();
+        type = Integer.parseInt(getIntent().getExtras().get(Constants.WORKOUT_TYPE_KEY).toString());
+        tv_max_WorkoutName.setText(chosenWorkout);
     }
 
 
@@ -38,13 +42,20 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         Workout_Wrapper wrapper = new Workout_Wrapper(this);
         wrapper.open();
 
+        boolean workoutExist = false;
         for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if(workout.getWorkout().equalsIgnoreCase(tv_max_WorkoutName.getText().toString())){
+            if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
                 workout.setProgress(1);
                 workout.setMax(maxValue);
                 wrapper.update_Workout(workout);
+                workoutExist = true;
             }
         }
+
+        if(!workoutExist){
+            wrapper.create_Workout(new Workout_Info(chosenWorkout, maxValue, type, 1));
+        }
+
         wrapper.close();
     }
 

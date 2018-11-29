@@ -5,13 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.database.Workout_Info;
 import com.allvens.allworkouts.database.Workout_Wrapper;
+import com.allvens.allworkouts.workout_session.workouts.PullUps;
+import com.allvens.allworkouts.workout_session.workouts.PushUps;
+import com.allvens.allworkouts.workout_session.workouts.SitUps;
+import com.allvens.allworkouts.workout_session.workouts.Squats;
+import com.allvens.allworkouts.workout_session.workouts.Workout;
 
-public class WorkoutFinishActivity extends AppCompatActivity{
+public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
 
     private int maxValue;
@@ -26,27 +31,48 @@ public class WorkoutFinishActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
 
-        choiceWorkout = getIntent().getExtras().get(Constants.CHOOSEN_WORKOUT_EXTRA_KEY).toString();
+        choiceWorkout = getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString();
         update_WorkoutProgress();
     }
 
-    public void update_WorkoutProgress(){
+    private void update_WorkoutProgress(){
         Workout_Wrapper wrapper = new Workout_Wrapper(this);
         wrapper.open();
 
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if(workout.getWorkout().equalsIgnoreCase(choiceWorkout)){
-                maxValue = workout.getMax();
-                workout.setMax((workout.getMax() + PROG_INC_NEUTRAL));
-                workout.setProgress((workout.getProgress() + 1));
-                wrapper.update_Workout(workout);
+        for(Workout_Info workout_info: wrapper.get_AllWorkouts()){
+            if(workout_info.getWorkout().equalsIgnoreCase(choiceWorkout)){
+
+                Workout workout;
+                switch (workout_info.getWorkout()){
+                    case Constants.PULL_UPS:
+                        workout = new PullUps(workout_info.getType(), workout_info.getMax());
+                        break;
+                    case Constants.PUSH_UPS:
+                        workout = new PushUps(workout_info.getType(), workout_info.getMax());
+                        break;
+                    case Constants.SIT_UPS:
+                        workout = new SitUps(workout_info.getType(), workout_info.getMax());
+                        break;
+                    default:
+                        workout = new Squats(workout_info.getType(), workout_info.getMax());
+                        break;
+                }
+
+                maxValue = workout_info.getMax();
+                workout_info.add_History(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
+                        workout.get_WorkoutValue(1), workout.get_WorkoutValue(2),
+                        workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue));
+
+                workout_info.setMax((workout_info.getMax() + PROG_INC_NEUTRAL));
+                workout_info.setProgress((workout_info.getProgress() + 1));
+                wrapper.update_Workout(workout_info);
             }
         }
 
         wrapper.close();
     }
 
-    public void change_WorkoutProgress(int progress){
+    private void change_WorkoutProgress(int progress){
         Workout_Wrapper wrapper = new Workout_Wrapper(this);
         wrapper.open();
 

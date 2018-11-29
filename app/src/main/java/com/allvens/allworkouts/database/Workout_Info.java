@@ -19,8 +19,6 @@ public class Workout_Info {
         this.max = max;
     }
 
-
-
     public List<WorkoutHistory_Info> getHistory()
     {
         return history;
@@ -29,6 +27,10 @@ public class Workout_Info {
     public void setHistory(List<WorkoutHistory_Info> history)
     {
         this.history = history;
+    }
+
+    public void add_History(WorkoutHistory_Info history_info){
+        history.add(history_info);
     }
 
     public void setId(long id){

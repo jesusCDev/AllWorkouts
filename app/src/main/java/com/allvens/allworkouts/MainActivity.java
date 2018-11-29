@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void create_Timer(){
 
-        final int timer_value = 3000;
+        final int timer_value = 0;
+//        final int timer_value = 3000; todo set this again
         final long startTime = System.currentTimeMillis();
 
         timerRunnable = new Runnable() {

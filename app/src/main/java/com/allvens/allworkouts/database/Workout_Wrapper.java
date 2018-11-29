@@ -79,7 +79,6 @@ public class Workout_Wrapper {
                 cursor.close();
             }
         }
-
         return workouts;
     }
 

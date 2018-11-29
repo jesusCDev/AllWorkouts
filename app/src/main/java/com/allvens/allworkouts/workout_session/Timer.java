@@ -1,18 +1,18 @@
-package com.allvens.allworkouts.workout_manager;
+package com.allvens.allworkouts.workout_session;
 
 import android.os.Handler;
 
 public class Timer {
 
-    private UI_Manager ui_manager;
+    private WorkoutSession_UI_Manager workoutSessionUi_manager;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
     private long startTime = 0;
     private boolean timerRunning = false;
 
-    public Timer(UI_Manager ui_manager){
-        this.ui_manager = ui_manager;
+    public Timer(WorkoutSession_UI_Manager workoutSessionUi_manager){
+        this.workoutSessionUi_manager = workoutSessionUi_manager;
     }
 
     public boolean get_TimerRunning(){
@@ -30,8 +30,8 @@ public class Timer {
 
     public void start_timer() {
         timerRunning = true;
-        ui_manager.play_basicSound();
-        ui_manager.vibrate();
+        workoutSessionUi_manager.play_basicSound();
+        workoutSessionUi_manager.vibrate();
 
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
@@ -39,9 +39,9 @@ public class Timer {
 
     private void onFinish(){
         stop_timer();
-        ui_manager.vibrate();
-        ui_manager.play_basicSound();
-        ui_manager.changeScreen_Workout();
+        workoutSessionUi_manager.vibrate();
+        workoutSessionUi_manager.play_basicSound();
+        workoutSessionUi_manager.changeScreen_Workout();
     }
 
     public void create_timer(int workoutTime) {
@@ -57,7 +57,7 @@ public class Timer {
                 long secondsLeft = (time_tracker / 1000);
 
                 // update ui
-                ui_manager.set_TimeTV(secondsLeft);
+                workoutSessionUi_manager.set_TimeTV(secondsLeft);
 
                 timerHandler.postDelayed(this, 1000);
                 if(time_tracker < 0){
