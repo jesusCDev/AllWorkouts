@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.database;
+package com.allvens.allworkouts.data_manager.database;
 
 import java.util.List;
 
@@ -17,6 +17,14 @@ public class Workout_Info {
         this.type = type;
         this.progress = progress;
         this.max = max;
+    }
+
+    public Workout_Info(String workout, int max, int type, int progress, List<WorkoutHistory_Info> history){
+        this.workout = workout;
+        this.type = type;
+        this.progress = progress;
+        this.max = max;
+        this.history = history;
     }
 
     public List<WorkoutHistory_Info> getHistory()

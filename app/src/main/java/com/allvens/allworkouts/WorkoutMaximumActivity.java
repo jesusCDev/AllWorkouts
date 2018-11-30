@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.database.Workout_Info;
-import com.allvens.allworkouts.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.Workout_Info;
+import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 
 public class WorkoutMaximumActivity extends AppCompatActivity {
 
@@ -27,8 +27,8 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         tv_max_MaxValue = findViewById(R.id.tv_max_MaxValue);
         tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
 
-        chosenWorkout = getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString();
-        type = Integer.parseInt(getIntent().getExtras().get(Constants.WORKOUT_TYPE_KEY).toString());
+        chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        type = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
         tv_max_WorkoutName.setText(chosenWorkout);
     }
 

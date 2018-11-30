@@ -7,9 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.database.WorkoutHistory_Info;
-import com.allvens.allworkouts.database.Workout_Info;
-import com.allvens.allworkouts.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.database.Workout_Info;
+import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.workout_session.workouts.PullUps;
 import com.allvens.allworkouts.workout_session.workouts.PushUps;
 import com.allvens.allworkouts.workout_session.workouts.SitUps;
@@ -31,7 +31,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
 
-        choiceWorkout = getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString();
+        choiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         update_WorkoutProgress();
     }
 
@@ -59,9 +59,9 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
                 }
 
                 maxValue = workout_info.getMax();
-                workout_info.add_History(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
+                wrapper.create_WorkoutHistory(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
                         workout.get_WorkoutValue(1), workout.get_WorkoutValue(2),
-                        workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue));
+                        workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue), workout_info.getId());
 
                 workout_info.setMax((workout_info.getMax() + PROG_INC_NEUTRAL));
                 workout_info.setProgress((workout_info.getProgress() + 1));

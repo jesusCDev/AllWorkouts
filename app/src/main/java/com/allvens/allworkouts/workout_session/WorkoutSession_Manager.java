@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.database.Workout_Info;
-import com.allvens.allworkouts.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.Workout_Info;
+import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.workout_session.workouts.PullUps;
 import com.allvens.allworkouts.workout_session.workouts.PushUps;
 import com.allvens.allworkouts.workout_session.workouts.SitUps;
@@ -27,7 +27,6 @@ public class WorkoutSession_Manager {
     public WorkoutSession_Manager(Context context, String choice){
         this.context = context;
 
-        // get workout info
         Workout_Wrapper wrapper = new Workout_Wrapper(context);
         wrapper.open();
         for(Workout_Info workout: wrapper.get_AllWorkouts()){
@@ -37,8 +36,6 @@ public class WorkoutSession_Manager {
         }
         wrapper.close();
     }
-
-
 
     public void setUp_UiManager(TextView tv_workout_WorkoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_CompleteTask){
         // create workout

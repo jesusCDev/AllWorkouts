@@ -3,9 +3,9 @@ package com.allvens.allworkouts.home_manager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,14 +13,15 @@ import android.widget.TextView;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.database.Workout_Info;
-import com.allvens.allworkouts.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.Workout_Pos;
+import com.allvens.allworkouts.data_manager.database.Workout_Info;
+import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 
 public class HomeManager {
 
     private Context context;
     private Home_Ui_Manager uiManager;
-    private String[] workouts = {Constants.PULL_UPS, Constants.PUSH_UPS, Constants.SIT_UPS, Constants.SQUATS}; // todo check this out
+    private String[] workouts;
     private String chosenWorkout;
     private boolean workoutChooserOpen = false;
 
@@ -34,15 +35,23 @@ public class HomeManager {
 
     public HomeManager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
-        // todo get data for workout sessions
 
-        // todo set default value
+        setUp_WorkoutsPos(context);
 
-        // todo setup screen
         uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
-        // todo fix this
-        chosenWorkout = workouts[1];
-        uiManager.update_Screen(workouts[1]);
+        chosenWorkout = workouts[0];
+        uiManager.update_Screen(workouts[0]);
+    }
+
+    private void setUp_WorkoutsPos(Context context){
+        Workout_Pos workout_pos = new Workout_Pos(context);
+
+        String[][] chosenWorkout = workout_pos.get_AllWorkoutsAndPositions(false);
+        workouts = new String[chosenWorkout.length];
+
+        for(int i = 0; i < chosenWorkout.length; i++){
+            workouts[i] = chosenWorkout[i][0];
+        }
     }
 
     public View.OnClickListener update_WorkoutSelection(final String workout){
@@ -131,8 +140,10 @@ public class HomeManager {
 
     private void create_Workout(int workoutType){
         Intent intent = new Intent(context, WorkoutMaximumActivity.class);
+
         intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
         intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
+
         context.startActivity(intent);
     }
 }

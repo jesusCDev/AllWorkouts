@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.database;
+package com.allvens.allworkouts.data_manager.database;
 
 public class WorkoutHistory_Info {
 
