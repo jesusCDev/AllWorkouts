@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="cl_Pos" type="id">cl_pos</item>
+    <item name="btn_Pos_id" type="id">btn_pos_pushups_id</item>
+    <item name="tv_Pos_Id" type="id">tv_pos_pushups_id</item>
+    <item name="s_Pos_Id" type="id">s_pos_pushups_id</item>
+</resources>
