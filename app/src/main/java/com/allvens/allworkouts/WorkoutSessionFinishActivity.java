@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.assets.Start_WorkoutSession;
+import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
 import com.allvens.allworkouts.workout_session.workouts.PullUps;
 import com.allvens.allworkouts.workout_session.workouts.PushUps;
 import com.allvens.allworkouts.workout_session.workouts.SitUps;
@@ -111,7 +114,25 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_workoutFinish_NextWorkout(View view) {
+        WorkoutBasics_Prefs workoutsPos = new WorkoutBasics_Prefs(this);
+
+        int pos = 0;
+        for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
+            if(workout.getName().equalsIgnoreCase(choiceWorkout)){
+                pos = workout.getPosition();
+                break;
+            }
+        }
+
+        if(pos < (workoutsPos.get_WorkoutsPos(false).length - 1)){
+            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(pos +1)].getName();
+        }else{
+            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
+        }
+        new Start_WorkoutSession().start_Workout(this, choiceWorkout);
     }
+
+
 
     public void btnAction_workoutFinish_FinishWorkout(View view) {
         startActivity(new Intent(this, HomeActivity.class));

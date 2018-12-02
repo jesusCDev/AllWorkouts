@@ -3,7 +3,6 @@ package com.allvens.allworkouts.home_manager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
@@ -13,9 +12,11 @@ import android.widget.TextView;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.Workout_Pos;
+import com.allvens.allworkouts.assets.Start_WorkoutSession;
+import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
 
 public class HomeManager {
 
@@ -24,6 +25,10 @@ public class HomeManager {
     private String[] workouts;
     private String chosenWorkout;
     private boolean workoutChooserOpen = false;
+
+    public String[] get_Workouts(){
+        return workouts;
+    }
 
     public boolean get_WorkoutChooserOpen(){
         return workoutChooserOpen;
@@ -36,21 +41,21 @@ public class HomeManager {
     public HomeManager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
 
-        setUp_WorkoutsPos(context);
+        setUp_WorkoutsPos();
 
         uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
         chosenWorkout = workouts[0];
         uiManager.update_Screen(workouts[0]);
     }
 
-    private void setUp_WorkoutsPos(Context context){
-        Workout_Pos workout_pos = new Workout_Pos(context);
+    public void setUp_WorkoutsPos(){
+        WorkoutBasics_Prefs workout_basicsPrefs = new WorkoutBasics_Prefs(context);
 
-        String[][] chosenWorkout = workout_pos.get_AllWorkoutsAndPositions(false);
+        WorkoutPosAndStatus[] chosenWorkout = workout_basicsPrefs.get_WorkoutsPos(false);
+
         workouts = new String[chosenWorkout.length];
-
         for(int i = 0; i < chosenWorkout.length; i++){
-            workouts[i] = chosenWorkout[i][0];
+            workouts[i] = chosenWorkout[i].getName();
         }
     }
 
@@ -58,12 +63,16 @@ public class HomeManager {
         return (new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                chosenWorkout = workout;
-                workoutChooserOpen = !workoutChooserOpen;
-                uiManager.clear_WorkoutChanger();
-                uiManager.update_Screen(workout);
+                update_Workout(workout);
             }
         });
+    }
+
+    public void update_Workout(String workout){
+        chosenWorkout = workout;
+        workoutChooserOpen = false;
+        uiManager.clear_WorkoutChanger();
+        uiManager.update_Screen(workout);
     }
 
     public void open_WorkoutChanger(){
@@ -87,63 +96,6 @@ public class HomeManager {
     }
 
     public void start_Workout(){
-        Intent intent;
-        Workout_Wrapper wrapper = new Workout_Wrapper(context);
-        wrapper.open();
-
-        if(check_WorkoutExist(wrapper)){
-            if(check_WorkoutProgress(wrapper)){
-                intent = new Intent(context, WorkoutSessionActivity.class);
-            }else{
-                intent = new Intent(context, WorkoutMaximumActivity.class);
-            }
-            wrapper.close();
-            intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
-            context.startActivity(intent);
-        }else{
-            wrapper.close();
-            start_newSession();
-        }
-    }
-
-    private boolean check_WorkoutExist(Workout_Wrapper wrapper){
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if (workout.getWorkout().equalsIgnoreCase(chosenWorkout)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean check_WorkoutProgress(Workout_Wrapper wrapper){
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if (workout.getWorkout().equalsIgnoreCase(chosenWorkout)) {
-                return (workout.getProgress() < 8);
-            }
-        }
-        return false;
-    }
-
-    private void start_newSession(){
-        final String[] workoutTypes = {"Simple", "Mix"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pick workout type.");
-        builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                create_Workout(which);
-            }
-        });
-        builder.show();
-    }
-
-    private void create_Workout(int workoutType){
-        Intent intent = new Intent(context, WorkoutMaximumActivity.class);
-
-        intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
-        intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
-
-        context.startActivity(intent);
+        new Start_WorkoutSession().start_Workout(context, chosenWorkout);
     }
 }

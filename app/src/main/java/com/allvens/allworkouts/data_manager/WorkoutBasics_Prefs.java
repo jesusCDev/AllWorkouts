@@ -2,17 +2,20 @@ package com.allvens.allworkouts.data_manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.ViewGroup;
 
+import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
 
-public class Workout_Pos {
+public class WorkoutBasics_Prefs {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
     WorkoutPosAndStatus[] workouts;
 
-    public Workout_Pos(Context context){
+    public WorkoutBasics_Prefs(Context context){
         prefs = context.getSharedPreferences(PreferencesValues.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
@@ -46,22 +49,27 @@ public class Workout_Pos {
 
     private WorkoutPosAndStatus[] get_AllWorkoutsPositionsAndStatus(){
         WorkoutPosAndStatus[] workouts = new WorkoutPosAndStatus[4];
-        workouts[0] = get_WorkoutData(Constants.PULL_UPS, PreferencesValues.PULL_POS, PreferencesValues.PULL_STAT, "random1");
-        workouts[1] = get_WorkoutData(Constants.PUSH_UPS, PreferencesValues.PUSH_POS, PreferencesValues.PUSH_STAT, "random2");
-        workouts[2] = get_WorkoutData(Constants.SIT_UPS, PreferencesValues.SIT_POS, PreferencesValues.SIT_STAT, "random3");
-        workouts[3] = get_WorkoutData(Constants.SQUATS, PreferencesValues.SQT_POS, PreferencesValues.SQT_STAT, "random4");
+        workouts[0] = get_WorkoutData(Constants.PULL_UPS, PreferencesValues.PULL_POS, PreferencesValues.PULL_STAT, R.id.pullUpsPosContainer);
+        workouts[1] = get_WorkoutData(Constants.PUSH_UPS, PreferencesValues.PUSH_POS, PreferencesValues.PUSH_STAT, R.id.pushUpsPosContainer);
+        workouts[2] = get_WorkoutData(Constants.SIT_UPS, PreferencesValues.SIT_POS, PreferencesValues.SIT_STAT, R.id.sitUpsPosContainer);
+        workouts[3] = get_WorkoutData(Constants.SQUATS, PreferencesValues.SQT_POS, PreferencesValues.SQT_STAT, R.id.squatUpsPosContainer);
         return organize_DataSetByOrder(workouts);
     }
 
-    private WorkoutPosAndStatus get_WorkoutData(String workoutName, String posPrefKey, String statusPrefKey, String resoruceId){
+    private WorkoutPosAndStatus get_WorkoutData(String workoutName, String posPrefKey, String statusPrefKey, int resoruceId){
         WorkoutPosAndStatus workout = new WorkoutPosAndStatus(workoutName, posPrefKey, statusPrefKey, resoruceId);
         workout.setPosition(prefs.getInt(posPrefKey, 1));
-        workout.setTurnOnStatus(prefs.getBoolean(statusPrefKey, true));
+        workout.set_TurnOnStatus(prefs.getBoolean(statusPrefKey, true));
         return workout;
     }
 
+    public void update_WorkoutStatusPref(String prefKey, boolean value){
+        edit.putBoolean(prefKey, value);
+        edit.commit();
+    }
+
     public void update_WorkoutPositionPref(String prefKey, int value){
-        edit.putInt(prefKey,value);
+        edit.putInt(prefKey, value);
         edit.commit();
     }
 
@@ -86,5 +94,19 @@ public class Workout_Pos {
         dataSet[beforePos] = afterValue;
         dataSet[afterPos] = beforeValue;
         return dataSet;
+    }
+
+    public void update_WorkoutsWithViews(ViewGroup parent) {
+        for(WorkoutPosAndStatus workout: workouts){
+            for(int i = 0; i < 4; i++){
+                if(parent.getChildAt(i).getId() == workout.getResourceID()){
+                    update_WorkoutPositionPref(workout.getPosPrefKey(), parent.indexOfChild(parent.getChildAt(i)));
+                }
+            }
+        }
+    }
+
+    private void pop(String message){
+        Log.d("Bug", message);
     }
 }

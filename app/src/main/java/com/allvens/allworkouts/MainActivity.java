@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.allvens.allworkouts.assets.PreferencesValues;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
         if(this.getSharedPreferences(PreferencesValues.PREFS_NAMES, MODE_PRIVATE).getBoolean(PreferencesValues.FIRST_TIME_USING, true)){
             intent = new Intent(this, StartingActivity.class);
         }else{
+            // todo chagne this back
             intent = new Intent(this, HomeActivity.class);
+//            intent = new Intent(this, SettingsActivity.class);
         }
         this.startActivity(intent);
     }

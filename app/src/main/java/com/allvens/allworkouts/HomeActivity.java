@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.assets.Start_WorkoutSession;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.home_manager.HomeManager;
@@ -31,6 +32,16 @@ public class HomeActivity extends AppCompatActivity {
         LinearLayoutCompat ll_home_WorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
 
         manager = new HomeManager(this, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+
+        pop("Ran On Create");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pop("Ran On REsume");
+        manager.setUp_WorkoutsPos();
+        manager.update_Workout(manager.get_Workouts()[0]);
     }
 
     public void btnAction_changeWorkouts(View view) {
@@ -52,4 +63,7 @@ public class HomeActivity extends AppCompatActivity {
     public void btnAction_Log(View view) {
     }
 
+    private void pop(String message){
+        Log.d("Bug", message);
+    }
 }

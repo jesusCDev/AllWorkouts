@@ -1,14 +1,19 @@
 package com.allvens.allworkouts.settings_manager;
 
-public class WorkoutPos {
+public class WorkoutPosAndStatus {
 
     private String name;
-    private String prefName;
-    private String resourceID;
+    private String posPrefKey;
+    private String statPrefKey;
+    private int resourceID;
     private int position;
     private boolean turnOnStatus;
 
-    public WorkoutPos() {
+    public WorkoutPosAndStatus(String name, String posPrefKey, String statPrefKey, int resourceID) {
+        this.name = name;
+        this.posPrefKey = posPrefKey;
+        this.statPrefKey = statPrefKey;
+        this.resourceID = resourceID;
     }
 
     public int getPosition() {
@@ -27,27 +32,35 @@ public class WorkoutPos {
         this.name = name;
     }
 
-    public String getResourceID() {
+    public int getResourceID() {
         return resourceID;
     }
 
-    public void setResourceID(String resourceID) {
+    public void setResourceID(int resourceID) {
         this.resourceID = resourceID;
     }
 
-    public boolean isTurnOnStatus() {
+    public boolean get_TurnOnStatus() {
         return turnOnStatus;
     }
 
-    public void setTurnOnStatus(boolean turnOnStatus) {
+    public void set_TurnOnStatus(boolean turnOnStatus) {
         this.turnOnStatus = turnOnStatus;
     }
 
-    public String getPrefName() {
-        return prefName;
+    public String getPosPrefKey() {
+        return posPrefKey;
     }
 
-    public void setPrefName(String prefName) {
-        this.prefName = prefName;
+    public void setPosPrefKey(String posPrefKey) {
+        this.posPrefKey = posPrefKey;
+    }
+
+    public String getStatPrefKey() {
+        return statPrefKey;
+    }
+
+    public void setStatPrefKey(String statPrefKey) {
+        this.statPrefKey = statPrefKey;
     }
 }
