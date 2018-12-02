@@ -9,14 +9,14 @@ import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
 
-public class WorkoutBasics_Prefs {
+public class WorkoutBasicsPrefs_Checker {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
     WorkoutPosAndStatus[] workouts;
 
-    public WorkoutBasics_Prefs(Context context){
-        prefs = context.getSharedPreferences(PreferencesValues.PREFS_NAMES, Context.MODE_PRIVATE);
+    public WorkoutBasicsPrefs_Checker(Context context){
+        prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
         workouts = get_AllWorkoutsPositionsAndStatus();
@@ -49,10 +49,10 @@ public class WorkoutBasics_Prefs {
 
     private WorkoutPosAndStatus[] get_AllWorkoutsPositionsAndStatus(){
         WorkoutPosAndStatus[] workouts = new WorkoutPosAndStatus[4];
-        workouts[0] = get_WorkoutData(Constants.PULL_UPS, PreferencesValues.PULL_POS, PreferencesValues.PULL_STAT, R.id.pullUpsPosContainer);
-        workouts[1] = get_WorkoutData(Constants.PUSH_UPS, PreferencesValues.PUSH_POS, PreferencesValues.PUSH_STAT, R.id.pushUpsPosContainer);
-        workouts[2] = get_WorkoutData(Constants.SIT_UPS, PreferencesValues.SIT_POS, PreferencesValues.SIT_STAT, R.id.sitUpsPosContainer);
-        workouts[3] = get_WorkoutData(Constants.SQUATS, PreferencesValues.SQT_POS, PreferencesValues.SQT_STAT, R.id.squatUpsPosContainer);
+        workouts[0] = get_WorkoutData(Constants.PULL_UPS, Preferences_Values.PULL_POS, Preferences_Values.PULL_STAT, R.id.pullUpsPosContainer);
+        workouts[1] = get_WorkoutData(Constants.PUSH_UPS, Preferences_Values.PUSH_POS, Preferences_Values.PUSH_STAT, R.id.pushUpsPosContainer);
+        workouts[2] = get_WorkoutData(Constants.SIT_UPS, Preferences_Values.SIT_POS, Preferences_Values.SIT_STAT, R.id.sitUpsPosContainer);
+        workouts[3] = get_WorkoutData(Constants.SQUATS, Preferences_Values.SQT_POS, Preferences_Values.SQT_STAT, R.id.squatUpsPosContainer);
         return organize_DataSetByOrder(workouts);
     }
 

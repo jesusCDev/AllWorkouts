@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">All Workouts</string>
+    <string name="pull_ups">Pull Ups</string>
+    <string name="push_ups">Push Ups</string>
+    <string name="sit_ups">Sit Ups</string>
+    <string name="squats">Squats</string>
 </resources>

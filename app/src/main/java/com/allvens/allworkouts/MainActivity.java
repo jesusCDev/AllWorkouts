@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.data_manager.Preferences_Values;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void change_screens(){
         Intent intent;
-        if(this.getSharedPreferences(PreferencesValues.PREFS_NAMES, MODE_PRIVATE).getBoolean(PreferencesValues.FIRST_TIME_USING, true)){
+        if(this.getSharedPreferences(Preferences_Values.PREFS_NAMES, MODE_PRIVATE).getBoolean(Preferences_Values.FIRST_TIME_USING, true)){
             intent = new Intent(this, StartingActivity.class);
         }else{
             // todo chagne this back

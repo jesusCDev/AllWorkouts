@@ -1,6 +1,6 @@
 package com.allvens.allworkouts.data_manager;
 
-public interface PreferencesValues {
+public interface Preferences_Values {
 
     String PREFS_NAMES = "com.allvens.AllWorkouts";
     String FIRST_TIME_USING = "first_time_using";

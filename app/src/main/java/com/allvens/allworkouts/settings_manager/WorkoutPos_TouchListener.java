@@ -8,9 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
-import com.allvens.allworkouts.workout_session.workouts.Workout;
-
 class WorkoutPos_TouchListener implements View.OnTouchListener {
 
     private View view;

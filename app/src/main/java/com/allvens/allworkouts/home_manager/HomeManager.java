@@ -1,21 +1,14 @@
 package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.allvens.allworkouts.WorkoutMaximumActivity;
-import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
-import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
 
 public class HomeManager {
@@ -49,7 +42,7 @@ public class HomeManager {
     }
 
     public void setUp_WorkoutsPos(){
-        WorkoutBasics_Prefs workout_basicsPrefs = new WorkoutBasics_Prefs(context);
+        WorkoutBasicsPrefs_Checker workout_basicsPrefs = new WorkoutBasicsPrefs_Checker(context);
 
         WorkoutPosAndStatus[] chosenWorkout = workout_basicsPrefs.get_WorkoutsPos(false);
 

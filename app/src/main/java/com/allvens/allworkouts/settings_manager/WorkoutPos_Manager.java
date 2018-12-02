@@ -11,7 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 
 public class WorkoutPos_Manager {
 
@@ -22,7 +22,7 @@ public class WorkoutPos_Manager {
     }
 
     public void setUp_WorkoutsAndPositions(LinearLayout llWorkoutsAndPositions) {
-        WorkoutBasics_Prefs workout_basicsPrefs = new WorkoutBasics_Prefs(context);
+        WorkoutBasicsPrefs_Checker workout_basicsPrefs = new WorkoutBasicsPrefs_Checker(context);
         WorkoutPos_TouchListener touchListener = new WorkoutPos_TouchListener(context);
 
         for(WorkoutPosAndStatus allWorkoutsAndPositions: workout_basicsPrefs.get_WorkoutsPos(true)) {
@@ -30,7 +30,7 @@ public class WorkoutPos_Manager {
         }
     }
 
-    private ConstraintLayout create_WorkoutPosContainer(final WorkoutPosAndStatus workout, WorkoutPos_TouchListener touchListener, final WorkoutBasics_Prefs workout_basicsPrefs ){
+    private ConstraintLayout create_WorkoutPosContainer(final WorkoutPosAndStatus workout, WorkoutPos_TouchListener touchListener, final WorkoutBasicsPrefs_Checker workout_basicsPrefs ){
 
         ConstraintLayout container = new ConstraintLayout(context);
         container.setId(workout.getResourceID());

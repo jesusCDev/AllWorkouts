@@ -1,23 +1,21 @@
 package com.allvens.allworkouts.settings_manager;
 
 import android.graphics.Color;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.allvens.allworkouts.data_manager.WorkoutBasics_Prefs;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 
 class WorkoutPos_DragListener implements View.OnDragListener {
 
 //    private WorkoutPos_Animation animator;
     private WorkoutPos_TouchListener touchListener;
-    private WorkoutBasics_Prefs workout_basicsPrefs;
+    private WorkoutBasicsPrefs_Checker workout_basicsPrefs;
 
 
-    public WorkoutPos_DragListener(WorkoutPos_TouchListener touchListener, WorkoutBasics_Prefs workout_basicsPrefs){
+    public WorkoutPos_DragListener(WorkoutPos_TouchListener touchListener, WorkoutBasicsPrefs_Checker workout_basicsPrefs){
         this.workout_basicsPrefs = workout_basicsPrefs;
         this.touchListener = touchListener;
     }
