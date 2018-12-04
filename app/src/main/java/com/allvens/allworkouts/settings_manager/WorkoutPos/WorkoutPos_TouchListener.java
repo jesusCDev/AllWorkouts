@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.settings_manager;
+package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
 import android.content.ClipData;
 import android.content.Context;

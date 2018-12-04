@@ -2,7 +2,6 @@ package com.allvens.allworkouts.workout_session;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,14 +24,8 @@ public class WorkoutSession_Manager {
     private WorkoutSession_UI_Manager workoutSessionUi_manager;
     private Timer timer;
 
-    private void pop(String message){
-        Log.d("Bug", message);
-    }
-
     public WorkoutSession_Manager(Context context, String choice){
         this.context = context;
-
-        pop("Workout Choice: " + choice);
 
         Workout_Wrapper wrapper = new Workout_Wrapper(context);
         wrapper.open();
@@ -45,7 +38,6 @@ public class WorkoutSession_Manager {
     }
 
     public void setUp_UiManager(TextView tv_workout_WorkoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_CompleteTask){
-        // create workout
         switch (workout_info.getWorkout()){
             case Constants.PULL_UPS:
                 workout = new PullUps(workout_info.getType(), workout_info.getMax());

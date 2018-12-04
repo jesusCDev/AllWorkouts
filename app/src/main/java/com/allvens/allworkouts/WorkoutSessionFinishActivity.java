@@ -12,7 +12,7 @@ import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
-import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 import com.allvens.allworkouts.workout_session.workouts.PullUps;
 import com.allvens.allworkouts.workout_session.workouts.PushUps;
 import com.allvens.allworkouts.workout_session.workouts.SitUps;

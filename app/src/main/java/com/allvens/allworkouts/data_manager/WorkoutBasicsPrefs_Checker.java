@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
 public class WorkoutBasicsPrefs_Checker {
 

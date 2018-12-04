@@ -1,6 +1,7 @@
 package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +10,7 @@ import android.widget.TextView;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
-import com.allvens.allworkouts.settings_manager.WorkoutPosAndStatus;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
 public class HomeManager {
 
