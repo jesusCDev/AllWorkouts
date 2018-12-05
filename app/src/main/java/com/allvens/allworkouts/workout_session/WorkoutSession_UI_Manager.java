@@ -2,6 +2,11 @@ package com.allvens.allworkouts.workout_session;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.workout_session.workouts.Workout;
 
 public class WorkoutSession_UI_Manager {
@@ -25,7 +32,13 @@ public class WorkoutSession_UI_Manager {
 
     private TextView tv_Timer;
 
-    RelativeLayout[] rl_BottomValues;
+
+    private SettingsPrefs_Manager prefs_manager;
+
+    private Vibrator vibrator;
+    private ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+
+    private RelativeLayout[] rl_BottomValues;
     
     public WorkoutSession_UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
         this.context = context;
@@ -33,6 +46,9 @@ public class WorkoutSession_UI_Manager {
         ll_MainScreen = ll_workout_timeImageHolder;
         ll_ValueHolder = ll_workout_ValueHolder;
         btn_ChangeScreens = btn_workout_completeTask;
+
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        prefs_manager = new SettingsPrefs_Manager(context);
     }
 
     public void set_Progress(int progress){
@@ -85,7 +101,6 @@ public class WorkoutSession_UI_Manager {
         tv_WorkoutName.setText(workout.get_WorkoutName(progress));
         btn_ChangeScreens.setText("Complete");
 
-        // todo update bottom values view
         update_BottomNextValue();
 
         clear_MainView();
@@ -119,9 +134,21 @@ public class WorkoutSession_UI_Manager {
         ll_MainScreen.removeAllViews();
     }
 
-    public void play_basicSound() {
+
+    public void play_StartEndSound(){
+        if(prefs_manager.get_PrefSetting(Preferences_Values.SOUND_ON)){
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 100);
+        }
     }
-    public void vibrate() {
+
+    public void vibrate(){
+        if(prefs_manager.get_PrefSetting(Preferences_Values.VIBRATE_ON)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(500,VibrationEffect.DEFAULT_AMPLITUDE));
+            }else{
+                vibrator.vibrate(500);
+            }
+        }
     }
 
 }

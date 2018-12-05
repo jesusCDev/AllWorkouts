@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
@@ -24,19 +25,24 @@ public class SettingsActivity extends AppCompatActivity{
 
         LinearLayout ll_settings_WorkoutPositions = findViewById(R.id.ll_settings_WorkoutPositions);
 
+        TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
+
         Switch sVibrate = findViewById(R.id.s_settings_Vibrate);
         Switch sSound = findViewById(R.id.s_settings_Sound);
         Switch sScreenOn = findViewById(R.id.s_settings_ScreenTurnOn);
         Switch sNotification = findViewById(R.id.s_settings_Notification);
 
-
         manager = new WorkoutPos_Manager(this);
         manager.setUp_SettingsValues(sVibrate, sSound, sScreenOn, sNotification);
         manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
 
+        manager.setUp_TimeDisplay(tvTimeDisplay);
+
         sVibrate.setOnCheckedChangeListener(manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
         sSound.setOnCheckedChangeListener(manager.update_PrefSettings(Preferences_Values.SOUND_ON));
         sScreenOn.setOnCheckedChangeListener(manager.update_PrefSettings(Preferences_Values.SCREEN_ON));
+
+        sNotification.setOnCheckedChangeListener(manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
     }
 
     public void btnAction_ResetToDefaults(View view){

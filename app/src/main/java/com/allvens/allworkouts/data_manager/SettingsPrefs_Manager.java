@@ -3,14 +3,14 @@ package com.allvens.allworkouts.data_manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class SettingsPrefs_Checker {
+public class SettingsPrefs_Manager {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
 
     private String[] notification_days;
 
-    public SettingsPrefs_Checker(Context context){
+    public SettingsPrefs_Manager(Context context){
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
@@ -48,5 +48,25 @@ public class SettingsPrefs_Checker {
         sb.deleteCharAt((sb.length() - 1));
 
         return sb.toString();
+    }
+
+    public int get_NotifiHour() {
+        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_HOUR, 0);
+    }
+
+    public int get_NotifiMinute(){
+        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINTUE, 0);
+    }
+
+    public boolean get_NotifiDayValue(int dayChanged) {
+        if(Integer.parseInt(notification_days[dayChanged]) == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean get_NotificationDayValue(int i) {
+        return (Integer.parseInt(notification_days[i]) == 1);
     }
 }

@@ -24,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
         if(this.getSharedPreferences(Preferences_Values.PREFS_NAMES, MODE_PRIVATE).getBoolean(Preferences_Values.FIRST_TIME_USING, true)){
             intent = new Intent(this, StartingActivity.class);
         }else{
-            // todo chagne this back
             intent = new Intent(this, HomeActivity.class);
-//            intent = new Intent(this, SettingsActivity.class);
         }
         this.startActivity(intent);
     }

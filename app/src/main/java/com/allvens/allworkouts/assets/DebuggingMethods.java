@@ -1,4 +1,4 @@
-package com.allvens.allworkouts;
+package com.allvens.allworkouts.assets;
 
 import android.util.Log;
 

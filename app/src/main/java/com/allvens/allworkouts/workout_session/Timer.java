@@ -1,5 +1,6 @@
 package com.allvens.allworkouts.workout_session;
 
+import android.content.Context;
 import android.os.Handler;
 
 public class Timer {
@@ -30,8 +31,6 @@ public class Timer {
 
     public void start_timer() {
         timerRunning = true;
-        workoutSessionUi_manager.play_basicSound();
-        workoutSessionUi_manager.vibrate();
 
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
@@ -40,7 +39,7 @@ public class Timer {
     private void onFinish(){
         stop_timer();
         workoutSessionUi_manager.vibrate();
-        workoutSessionUi_manager.play_basicSound();
+        workoutSessionUi_manager.play_StartEndSound();
         workoutSessionUi_manager.changeScreen_Workout();
     }
 

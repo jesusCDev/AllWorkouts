@@ -20,9 +20,6 @@ class WorkoutPos_DragListener implements View.OnDragListener {
         this.touchListener = touchListener;
     }
 
-    int enteredValue;
-    int exitedValue;
-
     @Override
     public boolean onDrag(View v, DragEvent event) {
 
@@ -35,8 +32,6 @@ class WorkoutPos_DragListener implements View.OnDragListener {
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 v.setBackgroundColor(Color.BLUE);
-                pop("Entered: " + v.getId());
-                pop("Index: " + owner.indexOfChild(v));
                 update_View(owner, owner.indexOfChild(v));
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
@@ -55,12 +50,7 @@ class WorkoutPos_DragListener implements View.OnDragListener {
     }
 
     private void update_View(ViewGroup owner, int index){
-        pop("Ran");
         owner.removeView(touchListener.getView());
         owner.addView(touchListener.getView(), index);
-    }
-
-    private static void pop(String messge){
-        Log.d("Bug", messge);
     }
 }

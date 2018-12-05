@@ -105,8 +105,4 @@ public class WorkoutBasicsPrefs_Checker {
             }
         }
     }
-
-    private void pop(String message){
-        Log.d("Bug", message);
-    }
 }
