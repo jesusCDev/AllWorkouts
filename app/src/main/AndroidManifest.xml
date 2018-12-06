@@ -23,12 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" />
         <activity android:name=".WorkoutSessionActivity" />
         <activity android:name=".WorkoutMaximumActivity" />
         <activity android:name=".WorkoutSessionFinishActivity" />
-        <activity android:name=".StartingActivity" />
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".LogActivity" />
 
         <receiver android:name=".settings_manager.Notification_Manager.Notification_Receiver" android:enabled="false">
             <intent-filter>

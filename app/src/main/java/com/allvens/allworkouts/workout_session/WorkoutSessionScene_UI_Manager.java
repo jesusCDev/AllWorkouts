@@ -19,7 +19,7 @@ import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.workout_session.workouts.Workout;
 
-public class WorkoutSession_UI_Manager {
+public class WorkoutSessionScene_UI_Manager {
 
     private Workout workout;
     private int progress = 0;
@@ -40,7 +40,7 @@ public class WorkoutSession_UI_Manager {
 
     private RelativeLayout[] rl_BottomValues;
     
-    public WorkoutSession_UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
+    public WorkoutSessionScene_UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
         ll_MainScreen = ll_workout_timeImageHolder;

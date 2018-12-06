@@ -9,11 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.workout_session.WorkoutSession_Manager;
+import com.allvens.allworkouts.workout_session.WorkoutSessionScene_Manager;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
 
-    private WorkoutSession_Manager manager;
+    private WorkoutSessionScene_Manager manager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         LinearLayout ll_workout_ValueHolder = findViewById(R.id.ll_workout_ValueHolder);
         Button btn_workout_CompleteTask = findViewById(R.id.btn_workout_CompleteTask);
 
-        manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
+        manager = new WorkoutSessionScene_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
         manager.setUp_UiManager(tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
         manager.setUp_Timer();
         manager.start_Screen();

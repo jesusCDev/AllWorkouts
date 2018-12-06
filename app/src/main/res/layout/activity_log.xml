@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="9">
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lc_log_ShowWorkoutProgression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"></com.github.mikephil.charting.charts.LineChart>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_log_ShowAllWorkoutSets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"></android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/button12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="btnAction_ResetWorkoutToZero"
+        android:text="Reset - Workout" />
+</android.widget.LinearLayout>

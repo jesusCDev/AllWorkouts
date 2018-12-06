@@ -1,61 +1,56 @@
 package com.allvens.allworkouts;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.home_manager.HomeScene_Manager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private HomeScene_Manager manager;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
 
-        setContentView(R.layout.activity_main);
-        start_Timer();
+        TextView tv_CurrentWorkout = findViewById(R.id.tv_home_CurrentWorkout);
+        Button btn_ChangeWorkouts = findViewById(R.id.btn_ChangeWorkouts);
+        LinearLayoutCompat ll_home_WorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
+
+        manager = new HomeScene_Manager(this, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+
     }
 
-    private void change_screens(){
-        Intent intent;
-        if(this.getSharedPreferences(Preferences_Values.PREFS_NAMES, MODE_PRIVATE).getBoolean(Preferences_Values.FIRST_TIME_USING, true)){
-            intent = new Intent(this, StartingActivity.class);
-        }else{
-            intent = new Intent(this, HomeActivity.class);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        manager.setUp_WorkoutsPos();
+        manager.update_Workout(manager.get_Workouts()[0]);
+    }
+
+    public void btnAction_changeWorkouts(View view) {
+        manager.clear_WorkoutChanger();
+        if(!manager.get_WorkoutChooserOpen()){
+            manager.open_WorkoutChanger();
         }
-        this.startActivity(intent);
+        manager.set_WorkoutChooserOpen(!manager.get_WorkoutChooserOpen());
     }
 
-    private Handler timerHandler = new Handler();
-    private Runnable timerRunnable;
-
-    public void start_Timer(){
-        create_Timer();
-        timerHandler.postDelayed(timerRunnable, 0);
+    public void btnAction_StartWorkout(View view) {
+        manager.goto_WorkoutScene();
     }
 
-    private void create_Timer(){
+    public void btnAction_Settings(View view) {
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
 
-        final int timer_value = 0;
-//        final int timer_value = 3000; todo set this again
-        final long startTime = System.currentTimeMillis();
-
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                long millis = System.currentTimeMillis() - startTime;
-                timerHandler.postDelayed(this, 1000);
-                long timer_tracker = timer_value - millis;
-
-                if(timer_tracker < 0){
-                    timerHandler.removeCallbacks(timerRunnable);
-                    change_screens();
-                }
-            }
-        };
-
+    public void btnAction_Log(View view) {
+        manager.goto_LogScene();
     }
 }

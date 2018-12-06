@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-class WorkoutPos_TouchListener implements View.OnTouchListener {
+public class WorkoutPos_TouchListener implements View.OnTouchListener {
 
     private View view;
     private int indexOfView;

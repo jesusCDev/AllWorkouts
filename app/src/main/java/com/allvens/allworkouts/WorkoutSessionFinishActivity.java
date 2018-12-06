@@ -135,6 +135,6 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
 
     public void btnAction_workoutFinish_FinishWorkout(View view) {
-        startActivity(new Intent(this, HomeActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

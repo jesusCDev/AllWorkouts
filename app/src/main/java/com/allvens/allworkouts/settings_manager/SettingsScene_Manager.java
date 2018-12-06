@@ -1,10 +1,9 @@
-package com.allvens.allworkouts.settings_manager.WorkoutPos;
+package com.allvens.allworkouts.settings_manager;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -18,22 +17,24 @@ import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.Notification_Manager.Notification_Controller;
-import com.allvens.allworkouts.settings_manager.Settings_UI_Manager;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPos_DragListener;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPos_TouchListener;
 
 import java.util.Calendar;
 
-public class WorkoutPos_Manager {
+public class SettingsScene_Manager {
 
     private Context context;
-    private Settings_UI_Manager ui_manager;
+    private SettingsScene_UI_Manager ui_manager;
     private SettingsPrefs_Manager settingsPrefs;
     private Switch[] posSwitches = new Switch[4];
     private int switchPosTracker = 0;
     private Notification_Controller notiManager;
 
-    public WorkoutPos_Manager(Context context){
+    public SettingsScene_Manager(Context context){
         this.context = context;
-        ui_manager = new Settings_UI_Manager();
+        ui_manager = new SettingsScene_UI_Manager();
         settingsPrefs = new SettingsPrefs_Manager(context);
         notiManager = new Notification_Controller(context, settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());

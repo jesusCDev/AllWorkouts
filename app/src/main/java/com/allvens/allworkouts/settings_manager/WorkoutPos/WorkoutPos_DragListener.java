@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 
-class WorkoutPos_DragListener implements View.OnDragListener {
+public class WorkoutPos_DragListener implements View.OnDragListener {
 
 //    private WorkoutPos_Animation animator;
     private WorkoutPos_TouchListener touchListener;

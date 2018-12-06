@@ -16,15 +16,15 @@ import com.allvens.allworkouts.workout_session.workouts.SitUps;
 import com.allvens.allworkouts.workout_session.workouts.Squats;
 import com.allvens.allworkouts.workout_session.workouts.Workout;
 
-public class WorkoutSession_Manager {
+public class WorkoutSessionScene_Manager {
 
     private Context context;
     private Workout workout;
     private Workout_Info workout_info;
-    private WorkoutSession_UI_Manager workoutSessionUi_manager;
+    private WorkoutSessionScene_UI_Manager workoutSessionUi_manager;
     private Timer timer;
 
-    public WorkoutSession_Manager(Context context, String choice){
+    public WorkoutSessionScene_Manager(Context context, String choice){
         this.context = context;
 
         Workout_Wrapper wrapper = new Workout_Wrapper(context);
@@ -53,7 +53,7 @@ public class WorkoutSession_Manager {
                 break;
         }
 
-        workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
+        workoutSessionUi_manager = new WorkoutSessionScene_UI_Manager(context, tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
         workoutSessionUi_manager.set_Workout(workout);
     }
 

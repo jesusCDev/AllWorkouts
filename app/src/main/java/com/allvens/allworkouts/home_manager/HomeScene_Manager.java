@@ -1,18 +1,20 @@
 package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
-public class HomeManager {
+public class HomeScene_Manager {
 
     private Context context;
     private Home_Ui_Manager uiManager;
@@ -32,7 +34,7 @@ public class HomeManager {
         workoutChooserOpen = value;
     }
 
-    public HomeManager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
+    public HomeScene_Manager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
 
         setUp_WorkoutsPos();
@@ -89,7 +91,13 @@ public class HomeManager {
         uiManager.clear_WorkoutChanger();
     }
 
-    public void start_Workout(){
+    public void goto_WorkoutScene(){
         new Start_WorkoutSession().start_Workout(context, chosenWorkout);
+    }
+
+    public void goto_LogScene(){
+        Intent intent = new Intent(context, LogActivity.class);
+        intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
+        context.startActivity(intent);
     }
 }

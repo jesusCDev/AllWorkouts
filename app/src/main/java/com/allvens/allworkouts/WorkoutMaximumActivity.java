@@ -35,7 +35,7 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
 
     public void btnAction_max_CompleteMax(View view) {
         update_WorkoutProgress();
-        startActivity(new Intent(this, HomeActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void update_WorkoutProgress(){

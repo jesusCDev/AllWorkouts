@@ -2,7 +2,7 @@ package com.allvens.allworkouts.settings_manager;
 
 import android.widget.TextView;
 
-public class Settings_UI_Manager {
+public class SettingsScene_UI_Manager {
 
     public void update_TimeStamp(TextView tv, int selectedHour, int selectedMin){
         StringBuilder timeStamp = new StringBuilder();
