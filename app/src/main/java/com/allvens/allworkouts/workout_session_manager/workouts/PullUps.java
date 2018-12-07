@@ -1,17 +1,17 @@
-package com.allvens.allworkouts.workout_session.workouts;
+package com.allvens.allworkouts.workout_session_manager.workouts;
 
-public class PushUps extends Workout{
-
-    private final static double FIRST_VALUE_DIFFICULTY = 0.5; // Balance
-    private final static double SECOND_VALUE_DIFFICULTY = 0.8; // Normal
-    private final static double THIRD_VALUE_DIFFICULTY = 0.4; // Triangle
-    private final static double FORTH_VALUE_DIFFICULTY = 0.7; // Soldier
+public class PullUps extends Workout{
+    
+    private final static double FIRST_VALUE_DIFFICULTY = 0.5; // Wide Arm
+    private final static double SECOND_VALUE_DIFFICULTY = 0.8; // Front Arm
+    private final static double THIRD_VALUE_DIFFICULTY = 0.4; // Side Arm
+    private final static double FORTH_VALUE_DIFFICULTY = 0.6; // Back Arm
     private final static double FIFTH_VALUE_DIFFICULTY = 0.3; // One Arm
 
-    private final static String FIRST_WORKOUT_NAME = "Balance";
-    private final static String SECOND_WORKOUT_NAME = "Normal";
-    private final static String THIRD_WORKOUT_NAME = "Triangle";
-    private final static String FORTH_WORKOUT_NAME = "Soldier";
+    private final static String FIRST_WORKOUT_NAME = "Wide Arm";
+    private final static String SECOND_WORKOUT_NAME = "Front Arm";
+    private final static String THIRD_WORKOUT_NAME = "Side Arm";
+    private final static String FORTH_WORKOUT_NAME = "Back Arm";
     private final static String FIFTH_WORKOUT_NAME = "One Arm";
 
     private final static double[] DIFFICULTY_VALUES = {FIRST_VALUE_DIFFICULTY,
@@ -25,7 +25,7 @@ public class PushUps extends Workout{
     private final static String[] IMAGE_RESOURCES_MIX = {"","","","",""};
     private final static String[] IMAGE_RESOURCES_SIMPLE = {"","","","",""};
 
-    public PushUps(double type, int max){
+    public PullUps(double type, int max){
         if(type == 0){
             set_DifficultyValues(DIFFICULTY_VALUES);
             set_ImageResources(IMAGE_RESOURCES_MIX);

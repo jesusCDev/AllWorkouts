@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_session;
+package com.allvens.allworkouts.workout_session_manager;
 
 import android.os.Handler;
 

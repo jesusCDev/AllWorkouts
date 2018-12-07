@@ -9,12 +9,11 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
 
 import java.util.Calendar;
 

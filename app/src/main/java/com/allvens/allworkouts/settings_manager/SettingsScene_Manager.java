@@ -4,7 +4,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,8 +15,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.assets.Helper;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.Notification_Manager.Notification_Controller;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
@@ -28,13 +30,13 @@ public class SettingsScene_Manager {
     private Context context;
     private SettingsScene_UI_Manager ui_manager;
     private SettingsPrefs_Manager settingsPrefs;
+    private Notification_Controller notiManager;
     private Switch[] posSwitches = new Switch[4];
     private int switchPosTracker = 0;
-    private Notification_Controller notiManager;
 
     public SettingsScene_Manager(Context context){
         this.context = context;
-        ui_manager = new SettingsScene_UI_Manager();
+        ui_manager = new SettingsScene_UI_Manager(context);
         settingsPrefs = new SettingsPrefs_Manager(context);
         notiManager = new Notification_Controller(context, settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());
@@ -47,7 +49,7 @@ public class SettingsScene_Manager {
         for(WorkoutPosAndStatus allWorkoutsAndPositions: workout_basicsPrefs.get_WorkoutsPos(true)) {
             llWorkoutsAndPositions.addView(create_WorkoutPosContainer(allWorkoutsAndPositions, touchListener, workout_basicsPrefs ));
         }
-        check_AtleastOneSwitchOn();
+        check_OneWorkoutSwitchOn();
     }
 
     public void setUp_SettingsValues(Switch sVibrate, Switch sSound, Switch sScreenOn, Switch sNotification) {
@@ -57,7 +59,7 @@ public class SettingsScene_Manager {
         sNotification.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON));
     }
 
-    private void check_AtleastOneSwitchOn(){
+    private void check_OneWorkoutSwitchOn(){
         int onSwitches = 0;
         for(Switch switchValue: posSwitches){
             if(switchValue.isChecked()){
@@ -97,27 +99,27 @@ public class SettingsScene_Manager {
         mTimePicker.show();
     }
 
-    public void update_DayOfNotification(String day) {
+    public void update_DayOfNotification(Button btn) {
 
         int dayChanged;
 
-        switch (day.toLowerCase()){
-            case "su":
+        switch (btn.getId()){
+            case R.id.btn_settings_notificationDaySU:
                 dayChanged = 0;
                 break;
-            case "m":
+            case R.id.btn_settings_notificationDayM:
                 dayChanged = 1;
                 break;
-            case "tu":
+            case R.id.btn_settings_notificationDayTU:
                 dayChanged = 2;
                 break;
-            case "w":
+            case R.id.btn_settings_notificationDayW:
                 dayChanged = 3;
                 break;
-            case "th":
+            case R.id.btn_settings_notificationDayTH:
                 dayChanged = 4;
                 break;
-            case "f":
+            case R.id.btn_settings_notificationDayF:
                 dayChanged = 5;
                 break;
             default:
@@ -125,6 +127,7 @@ public class SettingsScene_Manager {
                 break;
         }
         settingsPrefs.update_NotificationDay(dayChanged);
+        ui_manager.update_DailyNotificationBtnStyle(btn, settingsPrefs.get_NotificationDayValue(dayChanged));
     }
 
     public CompoundButton.OnCheckedChangeListener update_PrefSettings(final String prefKey){
@@ -157,11 +160,12 @@ public class SettingsScene_Manager {
         container.setId(workout.getResourceID());
 
         container.setOnTouchListener(touchListener);
-        container.setOnDragListener(new WorkoutPos_DragListener(touchListener, workout_basicsPrefs));
+        container.setOnDragListener(new WorkoutPos_DragListener(context, touchListener, workout_basicsPrefs));
 
         ImageView ivDragHandle = new ImageView(context);
         ivDragHandle.setImageResource(R.drawable.ic_drag_handle_black_24dp);
         ivDragHandle.setId(R.id.btn_Pos_id);
+        ivDragHandle.setPadding(0, 0, new Helper(context).get_dpFromPixels(8), 0);
 
         TextView tvTitle = new TextView(context);
         tvTitle.setId(R.id.tv_Pos_Id);
@@ -174,7 +178,7 @@ public class SettingsScene_Manager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 workout_basicsPrefs.update_WorkoutStatusPref(workout.getStatPrefKey(), isChecked);
-                check_AtleastOneSwitchOn();
+                check_OneWorkoutSwitchOn();
             }
         });
         posSwitches[switchPosTracker] = sTurnOffOn;
@@ -189,7 +193,9 @@ public class SettingsScene_Manager {
 
         set.connect(ivDragHandle.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
         set.connect(tvTitle.getId(), ConstraintSet.START, ivDragHandle.getId(), ConstraintSet.END);
+        set.centerVertically(ivDragHandle.getId(), tvTitle.getId());
         set.connect(sTurnOffOn.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT);
+        set.centerVertically(tvTitle.getId(), sTurnOffOn.getId());
 
         set.applyTo(container);
 
@@ -199,5 +205,12 @@ public class SettingsScene_Manager {
     public void setUp_TimeDisplay(TextView tvTime) {
         ui_manager.update_TimeStamp(tvTime, notiManager.get_Hour(), notiManager.get_Min());
         notiManager.set_Time(notiManager.get_Hour(), notiManager.get_Min());
+    }
+
+    public void setUP_DailyNotificationBtns(Button btnSu, Button btnM, Button btnTu, Button btnW, Button btnTh, Button btnF, Button btnSa) {
+        ui_manager.set_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
+        ui_manager.update_DailyNotificationColors(settingsPrefs.get_NotificationDayValue(0), settingsPrefs.get_NotificationDayValue(1),
+                settingsPrefs.get_NotificationDayValue(2), settingsPrefs.get_NotificationDayValue(3), settingsPrefs.get_NotificationDayValue(4),
+                settingsPrefs.get_NotificationDayValue(5), settingsPrefs.get_NotificationDayValue(6));
     }
 }

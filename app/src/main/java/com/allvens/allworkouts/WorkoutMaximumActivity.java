@@ -8,75 +8,45 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.workout_session_manager.WorkoutMaxScene_Manager;
 
 public class WorkoutMaximumActivity extends AppCompatActivity {
 
-    private TextView tv_max_MaxValue;
-    private TextView tv_max_WorkoutName;
-    private int maxValue = 1;
-    private String chosenWorkout;
-    private int type;
+    private WorkoutMaxScene_Manager workoutMaxScene_manager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivty_max);
 
-        tv_max_MaxValue = findViewById(R.id.tv_max_MaxValue);
-        tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
+        TextView tv_max_MaxValue = findViewById(R.id.tv_max_MaxValue);
+        TextView tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
 
-        chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
-        type = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
+        String chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        int type = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
         tv_max_WorkoutName.setText(chosenWorkout);
+
+        workoutMaxScene_manager = new WorkoutMaxScene_Manager(this, chosenWorkout, type);
+        workoutMaxScene_manager.set_tvCounterView(tv_max_MaxValue);
     }
 
 
     public void btnAction_max_CompleteMax(View view) {
-        update_WorkoutProgress();
+        workoutMaxScene_manager.update_WorkoutProgress();
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    public void update_WorkoutProgress(){
-        Workout_Wrapper wrapper = new Workout_Wrapper(this);
-        wrapper.open();
 
-        boolean workoutExist = false;
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
-                workout.setProgress(1);
-                workout.setMax(maxValue);
-                wrapper.update_Workout(workout);
-                workoutExist = true;
-            }
-        }
-
-        if(!workoutExist){
-            wrapper.create_Workout(new Workout_Info(chosenWorkout, maxValue, type, 1));
-        }
-
-        wrapper.close();
-    }
 
     public void btnAction_max_AddFive(View view) {
-        maxValue += 5;
-        update_Counter();
+        workoutMaxScene_manager.add_FiveToMax();
     }
 
     public void btnAction_max_AddOne(View view) {
-        maxValue += 1;
-        update_Counter();
+        workoutMaxScene_manager.add_OneToMax();
     }
 
     public void btnAction_max_SubtractOne(View view) {
-        if(maxValue != 1){
-            maxValue -= 1;
-            update_Counter();
-        }
-    }
-
-    private void update_Counter(){
-        tv_max_MaxValue.setText(Integer.toString(maxValue));
+        workoutMaxScene_manager.subtract_OneFromMax();
     }
 }

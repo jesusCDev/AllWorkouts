@@ -15,6 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Notify"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -122,6 +123,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Notification"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll1" />
 
@@ -147,8 +149,11 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="2:04am"
                 android:onClick="btnAction_SetNotificationTime"
+                android:text="2:04am"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -173,63 +178,88 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/S"
+                android:id="@+id/btn_settings_notificationDaySU"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="SU" />
+                android:text="SU"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button11"
+                android:id="@+id/btn_settings_notificationDayM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="M" />
+                android:text="M"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button10"
+                android:id="@+id/btn_settings_notificationDayTU"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="TU" />
+                android:text="TU"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/btn_settings_notificationDayW"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="W" />
+                android:text="W"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button8"
+                android:id="@+id/btn_settings_notificationDayTH"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="TH" />
+                android:text="TH"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/btn_settings_notificationDayF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="F" />
+                android:text="F"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btn_settings_notificationDaySA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
-                android:text="SA" />
+                android:text="SA"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Workouts: Position And Status"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll2" />
 
     <LinearLayout
 
@@ -243,7 +273,9 @@
         app:layout_constraintBottom_toTopOf="@+id/button13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll2"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button13"
@@ -252,8 +284,11 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:background="@android:color/transparent"
         android:onClick="btnAction_ResetToDefaults"
         android:text="Reset To Defaults"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

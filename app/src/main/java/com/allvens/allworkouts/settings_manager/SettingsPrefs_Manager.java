@@ -1,7 +1,9 @@
-package com.allvens.allworkouts.data_manager;
+package com.allvens.allworkouts.settings_manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.allvens.allworkouts.data_manager.Preferences_Values;
 
 public class SettingsPrefs_Manager {
 
@@ -14,7 +16,7 @@ public class SettingsPrefs_Manager {
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
-        notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "1,1,1,1,1,1,1").split(",");
+        notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "0,0,0,0,0,0,0").split(",");
     }
 
     public boolean get_PrefSetting(String prefKey){
@@ -56,14 +58,6 @@ public class SettingsPrefs_Manager {
 
     public int get_NotifiMinute(){
         return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINTUE, 0);
-    }
-
-    public boolean get_NotifiDayValue(int dayChanged) {
-        if(Integer.parseInt(notification_days[dayChanged]) == 1){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public boolean get_NotificationDayValue(int i) {

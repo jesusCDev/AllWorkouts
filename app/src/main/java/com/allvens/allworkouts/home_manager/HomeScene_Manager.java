@@ -60,6 +60,7 @@ public class HomeScene_Manager {
             @Override
             public void onClick(View v){
                 update_Workout(workout);
+
             }
         });
     }
@@ -72,7 +73,6 @@ public class HomeScene_Manager {
     }
 
     public void open_WorkoutChanger(){
-
         Button[] buttons = uiManager.create_WorkoutButtons(workouts);
         for(Button btn: buttons){
             if(btn.getText().toString().equalsIgnoreCase(Constants.PULL_UPS)){

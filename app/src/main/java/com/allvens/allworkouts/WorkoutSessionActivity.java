@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.workout_session.WorkoutSessionScene_Manager;
+import com.allvens.allworkouts.workout_session_manager.WorkoutSessionScene_Manager;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
 

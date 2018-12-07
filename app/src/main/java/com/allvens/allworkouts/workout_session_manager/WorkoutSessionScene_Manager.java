@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_session;
+package com.allvens.allworkouts.workout_session_manager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +10,11 @@ import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
-import com.allvens.allworkouts.workout_session.workouts.PullUps;
-import com.allvens.allworkouts.workout_session.workouts.PushUps;
-import com.allvens.allworkouts.workout_session.workouts.SitUps;
-import com.allvens.allworkouts.workout_session.workouts.Squats;
-import com.allvens.allworkouts.workout_session.workouts.Workout;
+import com.allvens.allworkouts.workout_session_manager.workouts.PullUps;
+import com.allvens.allworkouts.workout_session_manager.workouts.PushUps;
+import com.allvens.allworkouts.workout_session_manager.workouts.SitUps;
+import com.allvens.allworkouts.workout_session_manager.workouts.Squats;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
 public class WorkoutSessionScene_Manager {
 

@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_session.workouts;
+package com.allvens.allworkouts.workout_session_manager.workouts;
 
 public class Workouts_SimpleValues {
 

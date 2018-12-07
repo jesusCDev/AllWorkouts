@@ -1,4 +1,4 @@
-package com.allvens.allworkouts.workout_session;
+package com.allvens.allworkouts.workout_session_manager;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,8 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.SettingsPrefs_Manager;
-import com.allvens.allworkouts.workout_session.workouts.Workout;
+import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
 public class WorkoutSessionScene_UI_Manager {
 
@@ -31,7 +31,6 @@ public class WorkoutSessionScene_UI_Manager {
     private Button btn_ChangeScreens;
 
     private TextView tv_Timer;
-
 
     private SettingsPrefs_Manager prefs_manager;
 

@@ -1,21 +1,23 @@
 package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 
 public class WorkoutPos_DragListener implements View.OnDragListener {
 
-//    private WorkoutPos_Animation animator;
     private WorkoutPos_TouchListener touchListener;
     private WorkoutBasicsPrefs_Checker workout_basicsPrefs;
+    private Context context;
 
-
-    public WorkoutPos_DragListener(WorkoutPos_TouchListener touchListener, WorkoutBasicsPrefs_Checker workout_basicsPrefs){
+    public WorkoutPos_DragListener(Context context, WorkoutPos_TouchListener touchListener, WorkoutBasicsPrefs_Checker workout_basicsPrefs){
+        this.context = context;
         this.workout_basicsPrefs = workout_basicsPrefs;
         this.touchListener = touchListener;
     }
@@ -31,17 +33,16 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
                 // do nothing
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                v.setBackgroundColor(Color.BLUE);
+                v.setBackgroundColor(context.getResources().getColor(R.color.lightAccent));
                 update_View(owner, owner.indexOfChild(v));
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
-                v.setBackgroundColor(Color.RED);
+                v.setBackgroundColor(Color.TRANSPARENT);
                 break;
             case DragEvent.ACTION_DROP:
-                v.setBackgroundColor(Color.YELLOW);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                v.setBackgroundColor(Color.GREEN);
+                v.setBackgroundColor(Color.TRANSPARENT);
                 workout_basicsPrefs.update_WorkoutsWithViews(owner);
             default:
                 break;

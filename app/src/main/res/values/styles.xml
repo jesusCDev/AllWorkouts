@@ -9,7 +9,25 @@
     </style>
 
     <style name="btn_home_workoutChoice">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:drawable">@drawable/border_set</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <!--<item name="android:textColor">@color/colorAccent</item>-->
+    </style>
+
+    <style name="tv_settings_TimeView">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="btn_settings_DaySelected">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="btn_settings_DayUnSelected">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

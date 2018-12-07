@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 
 public class Home_Ui_Manager {
 
@@ -24,7 +25,8 @@ public class Home_Ui_Manager {
 
     public void update_Screen(String chosenWorkout){
         tv_CurrentWorkout.setText(chosenWorkout);
-        btn_ChangeWorkouts.setText("^" + chosenWorkout);
+        // todo i like this a little better maybe an image butotn with an animation
+        btn_ChangeWorkouts.setText("^");
     }
 
     public void clear_WorkoutChanger(){
@@ -41,6 +43,7 @@ public class Home_Ui_Manager {
 
     private Button create_Button(String workoutName) {
         Button btn = new Button(context);
+        btn.getBackground().setAlpha(0);
         ll_home_WorkoutChooser.addView(btn);
 
         btn.setText(workoutName);
@@ -49,6 +52,7 @@ public class Home_Ui_Manager {
     }
 
     private void set_BtnChoiceStyle(Button btn){
+        DebuggingMethods.pop("Setting Sytle");
         if (Build.VERSION.SDK_INT < 23) {
             btn.setTextAppearance(context, R.style.btn_home_workoutChoice);
         } else {

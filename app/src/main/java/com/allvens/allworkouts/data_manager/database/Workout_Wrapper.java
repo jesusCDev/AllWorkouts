@@ -143,4 +143,13 @@ public class Workout_Wrapper {
     public void delete_AllHistoryWorkouts(){
         int count = database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, null);
     }
+
+    public Workout_Info get_Workout(String chosenWorkout) {
+        for(Workout_Info workout: get_AllWorkouts()){
+            if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
+                return workout;
+            }
+        }
+        return null;
+    }
 }
