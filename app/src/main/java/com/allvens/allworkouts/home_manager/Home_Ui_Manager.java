@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
@@ -13,10 +14,10 @@ public class Home_Ui_Manager {
 
     private Context context;
     private TextView tv_CurrentWorkout;
-    private Button btn_ChangeWorkouts;
+    private ImageButton btn_ChangeWorkouts;
     private LinearLayoutCompat ll_home_WorkoutChooser;
 
-    public Home_Ui_Manager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
+    public Home_Ui_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
         this.tv_CurrentWorkout = tv_CurrentWorkout;
         this.btn_ChangeWorkouts = btn_ChangeWorkouts;
@@ -25,11 +26,10 @@ public class Home_Ui_Manager {
 
     public void update_Screen(String chosenWorkout){
         tv_CurrentWorkout.setText(chosenWorkout);
-        // todo i like this a little better maybe an image butotn with an animation
-        btn_ChangeWorkouts.setText("^");
     }
 
     public void clear_WorkoutChanger(){
+        set_CloseExpandButton();
         ll_home_WorkoutChooser.removeAllViews();
     }
 
@@ -60,4 +60,11 @@ public class Home_Ui_Manager {
         }
     }
 
+    public void set_ExpandButton() {
+        btn_ChangeWorkouts.setImageDrawable(context.getDrawable(R.drawable.ic_expand_more_black_24dp));
+    }
+
+    public void set_CloseExpandButton() {
+        btn_ChangeWorkouts.setImageDrawable(context.getDrawable(R.drawable.ic_expand_less_black_24dp));
+    }
 }

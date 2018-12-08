@@ -53,16 +53,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_ChangeWorkouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:onClick="btnAction_changeWorkouts"
-            android:text="^ Pull Ups"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            app:srcCompat="@drawable/ic_expand_less_black_24dp" />
 
         <Button
             android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.workout_session_manager.workouts.PullUps;
@@ -35,9 +36,7 @@ public class WorkoutSessionScene_Manager {
             }
         }
         wrapper.close();
-    }
 
-    public void setUp_UiManager(TextView tv_workout_WorkoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_CompleteTask){
         switch (workout_info.getWorkout()){
             case Constants.PULL_UPS:
                 workout = new PullUps(workout_info.getType(), workout_info.getMax());
@@ -52,13 +51,10 @@ public class WorkoutSessionScene_Manager {
                 workout = new Squats(workout_info.getType(), workout_info.getMax());
                 break;
         }
-
-        workoutSessionUi_manager = new WorkoutSessionScene_UI_Manager(context, tv_workout_WorkoutName, ll_workout_timeImageHolder, ll_workout_ValueHolder, btn_workout_CompleteTask);
-        workoutSessionUi_manager.set_Workout(workout);
     }
 
     public void start_Screen(){
-        workoutSessionUi_manager.create_BottomValueViews();
+        workoutSessionUi_manager.update_BottomValues();
         workoutSessionUi_manager.changeScreen_Workout();
     }
 
@@ -82,5 +78,10 @@ public class WorkoutSessionScene_Manager {
                 context.startActivity(intent);
             }
         }
+    }
+
+    public void setUp_UiManager(TextView tv_workout_workoutName, LinearLayout llTimeImageHolder, TextView tvValue1, TextView tvValue2, TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_workout_completeTask) {
+        workoutSessionUi_manager = new WorkoutSessionScene_UI_Manager(context, tv_workout_workoutName, llTimeImageHolder, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5, btn_workout_completeTask);
+        workoutSessionUi_manager.set_Workout(workout);
     }
 }

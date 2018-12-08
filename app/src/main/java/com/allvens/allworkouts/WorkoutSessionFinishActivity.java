@@ -1,10 +1,12 @@
 package com.allvens.allworkouts;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
@@ -29,10 +31,14 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private final static int PROG_INC_EASY = 2;
     private final static int PROG_INC_HARD = -1;
 
+    private Button lastBtnSelected;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
+
+        lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
 
         choiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         update_WorkoutProgress();
@@ -90,6 +96,12 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_workoutFinish_setDifficulty(View view) {
+
+        // changes selected and unselected button feedback
+        lastBtnSelected.setTextColor(this.getResources().getColor(R.color.colorPrimaryDark));
+        ((Button)view).setTextColor(Color.BLACK);
+        lastBtnSelected = ((Button)view);
+
         switch ((view).getId()){
             case R.id.btn_workoutFinish_LevelHard:
                 change_WorkoutProgress(PROG_INC_HARD);
@@ -101,16 +113,6 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
                 change_WorkoutProgress(PROG_INC_EASY);
                 break;
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void btnAction_workoutFinish_NextWorkout(View view) {

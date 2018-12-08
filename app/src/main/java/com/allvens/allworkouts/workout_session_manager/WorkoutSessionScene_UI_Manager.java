@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
@@ -23,29 +25,33 @@ public class WorkoutSessionScene_UI_Manager {
 
     private Workout workout;
     private int progress = 0;
-
-    private Context context;
-    private TextView tv_WorkoutName;
-    private LinearLayout ll_MainScreen;
-    private LinearLayout ll_ValueHolder;
-    private Button btn_ChangeScreens;
-
-    private TextView tv_Timer;
-
     private SettingsPrefs_Manager prefs_manager;
-
     private Vibrator vibrator;
     private ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
-    private RelativeLayout[] rl_BottomValues;
-    
-    public WorkoutSessionScene_UI_Manager(Context context, TextView tv_workout_workoutName, LinearLayout ll_workout_timeImageHolder, LinearLayout ll_workout_ValueHolder, Button btn_workout_completeTask) {
+    private Context context;
+    private TextView tv_WorkoutName;
+    private LinearLayout llTimeImageHolder;
+
+    private Button btn_ChangeScreens;
+    private TextView tv_Timer;
+
+    private TextView[] aTvBottomValues = new TextView[5];
+
+    public WorkoutSessionScene_UI_Manager(Context context, TextView tv_workout_workoutName,
+                                          LinearLayout llTimeImageHolder, TextView tvValue1, TextView tvValue2,
+                                          TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_workout_completeTask) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
-        ll_MainScreen = ll_workout_timeImageHolder;
-        ll_ValueHolder = ll_workout_ValueHolder;
-        btn_ChangeScreens = btn_workout_completeTask;
+        this.llTimeImageHolder = llTimeImageHolder;
 
+        aTvBottomValues[0] = tvValue1;
+        aTvBottomValues[1] = tvValue2;
+        aTvBottomValues[2] = tvValue3;
+        aTvBottomValues[3] = tvValue4;
+        aTvBottomValues[4] = tvValue5;
+
+        btn_ChangeScreens = btn_workout_completeTask;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         prefs_manager = new SettingsPrefs_Manager(context);
     }
@@ -69,31 +75,19 @@ public class WorkoutSessionScene_UI_Manager {
     ////////////////////////////////////////////////////// Screen changing methods
 
     private void update_BottomNextValue(){
-        rl_BottomValues[progress].setBackgroundColor(Color.RED);
+        aTvBottomValues[progress].setTextColor(Color.BLACK);
     }
 
     private void update_LastValue(){
-        rl_BottomValues[(progress - 1)].setBackgroundColor(Color.TRANSPARENT);
+        aTvBottomValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
     }
 
-    public void create_BottomValueViews(){
-        rl_BottomValues = new RelativeLayout[5];
-        for(int i = 0; i < 5; i++){
-            rl_BottomValues[i] = create_ValueCounter(workout.get_WorkoutValue(i));
-            ll_ValueHolder.addView(rl_BottomValues[i]);
-        }
-    }
-
-    private RelativeLayout create_ValueCounter(int workoutValue){
-        Log.d("Bug", "WokroutValue: "+ workoutValue);
-        RelativeLayout rl = new RelativeLayout(context);
-
-        TextView tvValue = new TextView(context);
-        tvValue.setText(Integer.toString(workoutValue));
-
-        // todo set style
-        rl.addView(tvValue);
-        return rl;
+    public void update_BottomValues(){
+        aTvBottomValues[0].setText(Integer.toString(workout.get_WorkoutValue(0)));
+        aTvBottomValues[1].setText(Integer.toString(workout.get_WorkoutValue(1)));
+        aTvBottomValues[2].setText(Integer.toString(workout.get_WorkoutValue(2)));
+        aTvBottomValues[3].setText(Integer.toString(workout.get_WorkoutValue(3)));
+        aTvBottomValues[4].setText(Integer.toString(workout.get_WorkoutValue(4)));
     }
 
     public void changeScreen_Workout() {
@@ -124,13 +118,13 @@ public class WorkoutSessionScene_UI_Manager {
         // todo set style
 //        setStyle(tv_finished, R.style.TS_StartingCountDown_Ending);
 
-        ll_MainScreen.addView(tv_Timer);
+        llTimeImageHolder.addView(tv_Timer);
     }
 
     ////////////////////////////////////////////////////// random methods
 
     private void clear_MainView(){
-        ll_MainScreen.removeAllViews();
+        llTimeImageHolder.removeAllViews();
     }
 
 

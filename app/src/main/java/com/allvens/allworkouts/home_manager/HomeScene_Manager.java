@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.LogActivity;
@@ -34,7 +35,7 @@ public class HomeScene_Manager {
         workoutChooserOpen = value;
     }
 
-    public HomeScene_Manager(Context context, TextView tv_CurrentWorkout, Button btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
+    public HomeScene_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
 
         setUp_WorkoutsPos();
@@ -60,7 +61,6 @@ public class HomeScene_Manager {
             @Override
             public void onClick(View v){
                 update_Workout(workout);
-
             }
         });
     }
@@ -73,6 +73,9 @@ public class HomeScene_Manager {
     }
 
     public void open_WorkoutChanger(){
+
+        uiManager.set_ExpandButton();
+
         Button[] buttons = uiManager.create_WorkoutButtons(workouts);
         for(Button btn: buttons){
             if(btn.getText().toString().equalsIgnoreCase(Constants.PULL_UPS)){
