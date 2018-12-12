@@ -27,12 +27,12 @@ public class SettingsActivity extends AppCompatActivity{
 
         LinearLayout ll_settings_WorkoutPositions = findViewById(R.id.ll_settings_WorkoutPositions);
 
-        TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
-
         Switch sVibrate = findViewById(R.id.s_settings_Vibrate);
         Switch sSound = findViewById(R.id.s_settings_Sound);
         Switch sScreenOn = findViewById(R.id.s_settings_ScreenTurnOn);
         Switch sNotification = findViewById(R.id.s_settings_Notification);
+
+        TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
 
         Button btnSu = findViewById(R.id.btn_settings_notificationDaySU);
         Button btnM = findViewById(R.id.btn_settings_notificationDayM);
@@ -41,7 +41,6 @@ public class SettingsActivity extends AppCompatActivity{
         Button btnTh = findViewById(R.id.btn_settings_notificationDayTH);
         Button btnF = findViewById(R.id.btn_settings_notificationDayF);
         Button btnSa = findViewById(R.id.btn_settings_notificationDaySA);
-
 
         settingsScene_manager = new SettingsScene_Manager(this);
         settingsScene_manager.setUp_SettingsValues(sVibrate, sSound, sScreenOn, sNotification);
@@ -64,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity{
                     case DialogInterface.BUTTON_POSITIVE:
                         Workout_Wrapper wrapper = new Workout_Wrapper(SettingsActivity.this);
                         wrapper.open();
+                        // todo take a look at this and try to simplify it
                         wrapper.delete_AllWorkouts();
                         wrapper.delete_AllHistoryWorkouts();
                         wrapper.close();

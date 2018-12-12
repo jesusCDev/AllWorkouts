@@ -2,7 +2,6 @@ package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
                 // do nothing
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                v.setBackgroundColor(context.getResources().getColor(R.color.lightAccent));
+                v.setBackgroundColor(context.getResources().getColor(R.color.focusAccent));
                 update_View(owner, owner.indexOfChild(v));
                 break;
             case DragEvent.ACTION_DRAG_EXITED:

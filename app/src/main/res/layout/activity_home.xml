@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="PushUps"
-            android:textSize="24sp" />
+            android:textSize="@dimen/priority_1" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -70,6 +70,7 @@
             android:onClick="btnAction_StartWorkout"
             android:text="Start"
             android:textColor="@android:color/white"
+            android:textSize="@dimen/btn_textSize"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -87,6 +88,7 @@
                 android:onClick="btnAction_Settings"
                 android:text="Settings"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -97,6 +99,7 @@
                 android:onClick="btnAction_Log"
                 android:text="Log"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
         </LinearLayout>
 

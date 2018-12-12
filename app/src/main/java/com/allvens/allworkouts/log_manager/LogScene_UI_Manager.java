@@ -37,14 +37,17 @@ public class LogScene_UI_Manager {
         logChart_manager = new LogChart_Manager(context, lcShowWorkoutProgress);
     }
 
+    public void reset_GraphToZero(){
+        logChart_manager.reset_Chart();
+    }
     public void update_Graph(ArrayList<LogData_Entry> graphData) {
         logChart_manager.reset_Chart();
         logChart_manager.setUp_ChartValues();
         logChart_manager.create_Chart(graphData);
     }
 
-    public void set_NoDataScreen() {
-        update_CurrentMax(0);
+    public void reset_SetList(){
+        rvShowAllWorkoutSets.setVisibility(View.INVISIBLE);
     }
 
     public void update_SetList(List<WorkoutHistory_Info> historyForWorkout) {

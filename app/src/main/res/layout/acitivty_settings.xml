@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Notify"
+        android:text="Feedback"
+        android:textSize="@dimen/priority_2"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +34,38 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="134dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Turn Screen On"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/priority_3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Switch
+                android:id="@+id/s_settings_ScreenTurnOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
@@ -43,6 +76,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Vibrate"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/priority_3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -71,6 +106,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Sound"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/priority_3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -85,35 +122,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Turn Screen On"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Switch
-                android:id="@+id/s_settings_ScreenTurnOn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 
     <TextView
@@ -123,6 +134,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Notification"
+        android:textSize="@dimen/priority_2"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll1" />
@@ -150,9 +162,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:onClick="btnAction_SetNotificationTime"
-                android:text="2:04am"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp"
+                android:text="2:04 am"
+                android:textColor="@color/importantButton"
+                android:textSize="@dimen/priority_1"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -185,6 +197,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="SU"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -195,6 +209,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="M"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -205,6 +221,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="TU"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -215,6 +233,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="W"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -225,6 +245,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="TH"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -235,6 +257,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="F"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -245,6 +269,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_setDayNotifications"
                 android:text="SA"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
@@ -257,6 +283,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Workouts: Position And Status"
+        android:textSize="@dimen/priority_2"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll2" />
@@ -287,7 +314,8 @@
         android:background="@android:color/transparent"
         android:onClick="btnAction_ResetToDefaults"
         android:text="Reset To Defaults"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/importantButton"
+        android:textSize="@dimen/btn_textSize"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

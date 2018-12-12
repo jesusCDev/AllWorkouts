@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="priority_1">24sp</dimen>
+    <dimen name="priority_2">18sp</dimen>
+    <dimen name="priority_3">16sp</dimen>
+
+
+    <dimen name="btn_textSize">16sp</dimen>
+</resources>

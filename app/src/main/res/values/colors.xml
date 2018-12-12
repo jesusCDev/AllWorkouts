@@ -5,5 +5,9 @@
     <color name="colorAccent">#FF3B3F</color>
 
     <color name="objects">#000000</color>
-    <color name="lightAccent">#CAEBF2</color>
+    <color name="focusAccent">#CAEBF2</color>
+
+    <color name="selectedButton">#000000</color>
+    <color name="unSelectedButton">#A9A9A9</color>
+    <color name="importantButton">#FF3B3F</color>
 </resources>

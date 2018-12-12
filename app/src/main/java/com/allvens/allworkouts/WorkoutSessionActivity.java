@@ -46,8 +46,8 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
     }
 
     public void btnAction_ChangeActivities(View view){

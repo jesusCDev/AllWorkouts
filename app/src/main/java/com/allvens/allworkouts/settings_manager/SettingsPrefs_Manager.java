@@ -16,7 +16,7 @@ public class SettingsPrefs_Manager {
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
-        notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "0,0,0,0,0,0,0").split(",");
+        notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "-1,-1,-1,-1,-1,-1,-1").split(",");
     }
 
     public boolean get_PrefSetting(String prefKey){

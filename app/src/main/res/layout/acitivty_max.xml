@@ -20,7 +20,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="Workout"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="@dimen/priority_1" />
 
         <TextView
             android:id="@+id/tv_max_MaxValue"
@@ -90,7 +91,8 @@
             android:background="@android:color/transparent"
             android:onClick="btnAction_max_CompleteMax"
             android:text="Complete"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/importantButton"
+            android:textSize="@dimen/btn_textSize"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

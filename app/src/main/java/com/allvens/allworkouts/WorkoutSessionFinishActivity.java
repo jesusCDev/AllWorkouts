@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
@@ -38,9 +39,11 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
 
-        lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
-
         choiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+
+        lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
+        ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(choiceWorkout);
+
         update_WorkoutProgress();
     }
 
@@ -96,8 +99,6 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_workoutFinish_setDifficulty(View view) {
-
-        // changes selected and unselected button feedback
         lastBtnSelected.setTextColor(this.getResources().getColor(R.color.colorPrimaryDark));
         ((Button)view).setTextColor(Color.BLACK);
         lastBtnSelected = ((Button)view);

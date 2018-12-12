@@ -23,11 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WorkoutSessionActivity" />
-        <activity android:name=".WorkoutMaximumActivity" />
-        <activity android:name=".WorkoutSessionFinishActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".LogActivity" />
+
+        <activity android:name=".WorkoutSessionActivity" android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WorkoutMaximumActivity" android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WorkoutSessionFinishActivity" android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsActivity" android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LogActivity" android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".settings_manager.Notification_Manager.Notification_Receiver" android:enabled="false">
             <intent-filter>

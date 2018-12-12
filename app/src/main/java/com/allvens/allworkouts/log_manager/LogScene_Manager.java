@@ -39,16 +39,15 @@ public class LogScene_Manager {
 
     public void update_Screen(){
         if(workout != null){
-
-            DebuggingMethods.pop("Updating Screen");
-
             wrapper.open();
             logScene_ui_manager.update_Graph(get_GraphData(workout.getMax(), wrapper.get_HistoryForWorkout(workout.getId())));
             logScene_ui_manager.update_SetList(wrapper.get_HistoryForWorkout(workout.getId()));
             logScene_ui_manager.update_CurrentMax(workout.getMax());
             wrapper.close();
         }else{
-            logScene_ui_manager.set_NoDataScreen();
+            logScene_ui_manager.reset_GraphToZero();
+            logScene_ui_manager.reset_SetList();
+            logScene_ui_manager.update_CurrentMax(0);
         }
     }
 
@@ -57,6 +56,8 @@ public class LogScene_Manager {
             wrapper.open();
             wrapper.delete_Workout(workout);
             wrapper.close();
+
+            workout = null;
             update_Screen();
         }
     }

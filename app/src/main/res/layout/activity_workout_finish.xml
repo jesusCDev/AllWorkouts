@@ -17,16 +17,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Congradulations" />
+            android:text="Congradulations"
+            android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tv_workoutFinish_WorkoutName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:text="Wokrout" />
+            android:text="Wokrout"
+            android:textSize="@dimen/priority_1" />
     </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -53,7 +55,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_workoutFinish_setDifficulty"
                 android:text="Hard"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
             <Button
@@ -63,7 +66,9 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_workoutFinish_setDifficulty"
-                android:text="Neutral" />
+                android:text="Neutral"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/btn_textSize" />
 
             <Button
                 android:id="@+id/btn_workoutFinish_LevelEasy"
@@ -73,7 +78,8 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_workoutFinish_setDifficulty"
                 android:text="Easy"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -92,25 +98,6 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
             <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_workoutFinish_NextWorkout"
-                android:text="Next"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/button2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-            <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,12 +108,33 @@
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_workoutFinish_FinishWorkout"
                 android:text="Done"
-                android:textColor="@android:color/black"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="btnAction_workoutFinish_NextWorkout"
+                android:text="Next"
+                android:textColor="@color/importantButton"
+                android:textSize="@dimen/btn_textSize"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/button2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="Workout"
-            android:textSize="24sp" />
+            android:textSize="@dimen/priority_1" />
 
         <LinearLayout
             android:id="@+id/ll_workout_timeImageHolder"
@@ -54,7 +54,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/priority_2" />
 
             <TextView
                 android:id="@+id/tv_workout_Value2"
@@ -63,7 +64,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/priority_2" />
 
             <TextView
                 android:id="@+id/tv_workout_Value3"
@@ -72,7 +74,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/priority_2" />
 
             <TextView
                 android:id="@+id/tv_workout_Value4"
@@ -81,7 +84,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/priority_2" />
 
             <TextView
                 android:id="@+id/tv_workout_Value5"
@@ -90,7 +94,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/priority_2" />
         </LinearLayout>
 
         <Button
@@ -101,6 +106,7 @@
             android:onClick="btnAction_ChangeActivities"
             android:text="Complete"
             android:textColor="@color/colorAccent"
+            android:textSize="@dimen/btn_textSize"
             android:textStyle="bold" />
 
     </LinearLayout>
