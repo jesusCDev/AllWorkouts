@@ -2,6 +2,7 @@ package com.allvens.allworkouts.assets;
 
 import android.util.Log;
 
+// todo delete - used for debuging purposes
 public class DebuggingMethods {
 
     public static void pop(String message){

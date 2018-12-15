@@ -63,7 +63,6 @@ public class SettingsActivity extends AppCompatActivity{
                     case DialogInterface.BUTTON_POSITIVE:
                         Workout_Wrapper wrapper = new Workout_Wrapper(SettingsActivity.this);
                         wrapper.open();
-                        // todo take a look at this and try to simplify it
                         wrapper.delete_AllWorkouts();
                         wrapper.delete_AllHistoryWorkouts();
                         wrapper.close();

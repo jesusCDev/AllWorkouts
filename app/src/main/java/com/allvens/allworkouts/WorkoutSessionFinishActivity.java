@@ -16,14 +16,10 @@ import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
-import com.allvens.allworkouts.workout_session_manager.workouts.PullUps;
-import com.allvens.allworkouts.workout_session_manager.workouts.PushUps;
-import com.allvens.allworkouts.workout_session_manager.workouts.SitUps;
-import com.allvens.allworkouts.workout_session_manager.workouts.Squats;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout_Generator;
 
 public class WorkoutSessionFinishActivity extends AppCompatActivity{
-
 
     private int maxValue;
     private String choiceWorkout;
@@ -33,6 +29,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private final static int PROG_INC_HARD = -1;
 
     private Button lastBtnSelected;
+    private Workout_Wrapper wrapper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,80 +40,79 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
         ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(choiceWorkout);
+        wrapper = new Workout_Wrapper(this);
+        wrapper.open();
 
         update_WorkoutProgress();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wrapper.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        wrapper.open();
+    }
+
+    /****************************************
+     /**** DATABASE MANAGER
+     ****************************************/
+
+    /********** History Creator **********/
+
     private void update_WorkoutProgress(){
-        Workout_Wrapper wrapper = new Workout_Wrapper(this);
-        wrapper.open();
 
-        for(Workout_Info workout_info: wrapper.get_AllWorkouts()){
-            if(workout_info.getWorkout().equalsIgnoreCase(choiceWorkout)){
+        Workout_Generator workoutGenerator = new Workout_Generator(wrapper.get_Workout(choiceWorkout));
 
-                Workout workout;
-                switch (workout_info.getWorkout()){
-                    case Constants.PULL_UPS:
-                        workout = new PullUps(workout_info.getType(), workout_info.getMax());
-                        break;
-                    case Constants.PUSH_UPS:
-                        workout = new PushUps(workout_info.getType(), workout_info.getMax());
-                        break;
-                    case Constants.SIT_UPS:
-                        workout = new SitUps(workout_info.getType(), workout_info.getMax());
-                        break;
-                    default:
-                        workout = new Squats(workout_info.getType(), workout_info.getMax());
-                        break;
-                }
+        Workout workout = workoutGenerator.get_Workout();
+        Workout_Info workout_info = workoutGenerator.get_WorkoutInfo();
 
-                maxValue = workout_info.getMax();
-                wrapper.create_WorkoutHistory(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
-                        workout.get_WorkoutValue(1), workout.get_WorkoutValue(2),
-                        workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue), workout_info.getId());
+        maxValue = workout_info.getMax();
+        wrapper.create_WorkoutHistory(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
+        workout.get_WorkoutValue(1), workout.get_WorkoutValue(2),
+        workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue), workout_info.getId());
 
-                workout_info.setMax((workout_info.getMax() + PROG_INC_NEUTRAL));
-                workout_info.setProgress((workout_info.getProgress() + 1));
-                wrapper.update_Workout(workout_info);
-            }
-        }
+        workout_info.setMax((workout_info.getMax() + PROG_INC_NEUTRAL));
+        workout_info.setProgress((workout_info.getProgress() + 1));
 
-        wrapper.close();
+        wrapper.update_Workout(workout_info);
     }
 
-    private void change_WorkoutProgress(int progress){
-        Workout_Wrapper wrapper = new Workout_Wrapper(this);
-        wrapper.open();
+    /********** Max Updater **********/
 
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
-            if(workout.getWorkout().equalsIgnoreCase(choiceWorkout)){
-                workout.setMax((maxValue + progress));
-                wrapper.update_Workout(workout);
-            }
-        }
-
-        wrapper.close();
+    private void update_WorkoutProgress(int progress){
+        Workout_Info workout = wrapper.get_Workout(choiceWorkout);
+        workout.setMax((maxValue + progress));
+        wrapper.update_Workout(workout);
     }
 
-    public void btnAction_workoutFinish_setDifficulty(View view) {
+    /****************************************
+     /**** BUTTON ACTIONS
+     ****************************************/
+
+    public void btnAction_setDifficulty(View view) {
         lastBtnSelected.setTextColor(this.getResources().getColor(R.color.colorPrimaryDark));
         ((Button)view).setTextColor(Color.BLACK);
         lastBtnSelected = ((Button)view);
 
         switch ((view).getId()){
             case R.id.btn_workoutFinish_LevelHard:
-                change_WorkoutProgress(PROG_INC_HARD);
+                update_WorkoutProgress(PROG_INC_HARD);
                 break;
             case R.id.btn_workoutFinish_LevelNeutral:
-                change_WorkoutProgress(PROG_INC_NEUTRAL);
+                update_WorkoutProgress(PROG_INC_NEUTRAL);
                 break;
             case R.id.btn_workoutFinish_LevelEasy:
-                change_WorkoutProgress(PROG_INC_EASY);
+                update_WorkoutProgress(PROG_INC_EASY);
                 break;
         }
     }
 
-    public void btnAction_workoutFinish_NextWorkout(View view) {
+    public void btnAction_NextWorkout(View view) {
         WorkoutBasicsPrefs_Checker workoutsPos = new WorkoutBasicsPrefs_Checker(this);
 
         int pos = 0;
@@ -132,12 +128,11 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         }else{
             choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
         }
+
         new Start_WorkoutSession().start_Workout(this, choiceWorkout);
     }
 
-
-
-    public void btnAction_workoutFinish_FinishWorkout(View view) {
+    public void btnAction_GoHome(View view) {
         startActivity(new Intent(this, MainActivity.class));
     }
 }

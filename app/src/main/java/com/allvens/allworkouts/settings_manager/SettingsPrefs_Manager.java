@@ -30,7 +30,7 @@ public class SettingsPrefs_Manager {
 
     public void update_NotificationTime(int hour, int minute) {
         edit.putInt(Preferences_Values.NOTIFICATION_TIME_HOUR, hour);
-        edit.putInt(Preferences_Values.NOTIFICATION_TIME_MINTUE, minute);
+        edit.putInt(Preferences_Values.NOTIFICATION_TIME_MINUTE, minute);
         edit.commit();
     }
 
@@ -57,7 +57,7 @@ public class SettingsPrefs_Manager {
     }
 
     public int get_NotifiMinute(){
-        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINTUE, 0);
+        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINUTE, 0);
     }
 
     public boolean get_NotificationDayValue(int i) {

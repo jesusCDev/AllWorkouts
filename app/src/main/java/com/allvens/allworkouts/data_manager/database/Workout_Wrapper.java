@@ -13,6 +13,10 @@ public class Workout_Wrapper {
     private SQLiteDatabase database;
     private Workout_SQLiteOpenHelper dbHelper;
 
+    /****************************************
+     /**** DATABASE - METHODS
+     ****************************************/
+
     public Workout_Wrapper(Context context){
         this.dbHelper = new Workout_SQLiteOpenHelper(context);
     }
@@ -24,6 +28,10 @@ public class Workout_Wrapper {
     public void close(){
         dbHelper.close();
     }
+
+    /****************************************
+     /**** WORKOUT - DATABASE
+     ****************************************/
 
     public void create_Workout(Workout_Info workout){
         ContentValues values = new ContentValues();
@@ -42,20 +50,15 @@ public class Workout_Wrapper {
         }
     }
 
-    public void create_WorkoutHistory(WorkoutHistory_Info workoutHistory, long workoutID){
+    /********** Getter Methods **********/
 
-        ContentValues values = new ContentValues();
-
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_WORKOUT_ID, workoutID);
-
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FIRST, workoutHistory.getFirst_value());
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_SECOND, workoutHistory.getSecond_value());
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_THIRD, workoutHistory.getThird_value());
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FORTH, workoutHistory.getForth_value());
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FIFTH, workoutHistory.getFifth_value());
-        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_MAX, workoutHistory.getMax_value());
-
-        long rowID = database.insert(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, values);
+    public Workout_Info get_Workout(String chosenWorkout) {
+        for(Workout_Info workout: get_AllWorkouts()){
+            if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
+                return workout;
+            }
+        }
+        return null;
     }
 
     public List<Workout_Info> get_AllWorkouts(){
@@ -81,6 +84,56 @@ public class Workout_Wrapper {
         }
         return workouts;
     }
+
+    /********** Edit Methods **********/
+
+    public void update_Workout(Workout_Info workout){
+        ContentValues values = new ContentValues();
+        values.put(Workout_Contract.Workout_Entry.COLUMN_WORKOUT, workout.getWorkout());
+        values.put(Workout_Contract.Workout_Entry.COLUMN_MAX, workout.getMax());
+        values.put(Workout_Contract.Workout_Entry.COLUMN_TYPE, workout.getType());
+        values.put(Workout_Contract.Workout_Entry.COLUMN_PROGRESS, workout.getProgress());
+
+        String selection = Workout_Contract.Workout_Entry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(workout.getId())};
+
+        database.update(Workout_Contract.Workout_Entry.TABLE_NAME, values, selection, selectionArgs);
+    }
+
+    public void delete_Workout(Workout_Info workout){
+        delete_WorkoutHistory(workout.getId());
+
+        String selection = Workout_Contract.Workout_Entry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(workout.getId())};
+
+        database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void delete_AllWorkouts(){
+        database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, null, null);
+    }
+
+    /****************************************
+     /**** WORKOUT HISTORY - DATABASE
+     ****************************************/
+
+    public void create_WorkoutHistory(WorkoutHistory_Info workoutHistory, long workoutID){
+
+        ContentValues values = new ContentValues();
+
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_WORKOUT_ID, workoutID);
+
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FIRST, workoutHistory.getFirst_value());
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_SECOND, workoutHistory.getSecond_value());
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_THIRD, workoutHistory.getThird_value());
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FORTH, workoutHistory.getForth_value());
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_FIFTH, workoutHistory.getFifth_value());
+        values.put(Workout_Contract.WorkoutHistory_Entry.COLUMN_MAX, workoutHistory.getMax_value());
+
+        database.insert(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, values);
+    }
+
+    /********** Getter Methods **********/
 
     public List<WorkoutHistory_Info> get_HistoryForWorkout(long workoutID){
         List<WorkoutHistory_Info> workouts = new ArrayList<>();
@@ -108,27 +161,7 @@ public class Workout_Wrapper {
         return workouts;
     }
 
-    public void update_Workout(Workout_Info workout){
-        ContentValues values = new ContentValues();
-        values.put(Workout_Contract.Workout_Entry.COLUMN_WORKOUT, workout.getWorkout());
-        values.put(Workout_Contract.Workout_Entry.COLUMN_MAX, workout.getMax());
-        values.put(Workout_Contract.Workout_Entry.COLUMN_TYPE, workout.getType());
-        values.put(Workout_Contract.Workout_Entry.COLUMN_PROGRESS, workout.getProgress());
-
-        String selection = Workout_Contract.Workout_Entry._ID + " = ?";
-        String[] selectionArgs = { String.valueOf(workout.getId())};
-
-        int count = database.update(Workout_Contract.Workout_Entry.TABLE_NAME, values, selection, selectionArgs);
-    }
-
-    public void delete_Workout(Workout_Info workout){
-        delete_WorkoutHistory(workout.getId());
-
-        String selection = Workout_Contract.Workout_Entry._ID + " = ?";
-        String[] selectionArgs = { String.valueOf(workout.getId())};
-
-        int count = database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, selection, selectionArgs);
-    }
+    /********** Edit Methods **********/
 
     private void delete_WorkoutHistory(long id){
         String selection = Workout_Contract.WorkoutHistory_Entry.COLUMN_WORKOUT_ID + " = ?";
@@ -137,19 +170,7 @@ public class Workout_Wrapper {
         database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, selection, selectionArgs);
     }
 
-    public void delete_AllWorkouts(){
-        int count = database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, null, null);
-    }
     public void delete_AllHistoryWorkouts(){
-        int count = database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, null);
-    }
-
-    public Workout_Info get_Workout(String chosenWorkout) {
-        for(Workout_Info workout: get_AllWorkouts()){
-            if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
-                return workout;
-            }
-        }
-        return null;
+        database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, null);
     }
 }

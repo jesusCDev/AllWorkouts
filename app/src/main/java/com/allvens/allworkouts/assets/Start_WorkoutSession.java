@@ -10,6 +10,9 @@ import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 
+/**
+ * Methods for starting workouts depending on their progress.
+ */
 public class Start_WorkoutSession {
 
     public void start_Workout(Context context, String choiceWorkout){
@@ -20,8 +23,11 @@ public class Start_WorkoutSession {
         if(check_WorkoutExist(wrapper, choiceWorkout)){
             if(check_WorkoutProgress(wrapper, choiceWorkout)){
                 intent = new Intent(context, WorkoutSessionActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             }else{
                 intent = new Intent(context, WorkoutMaximumActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
             }
             wrapper.close();
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
@@ -31,6 +37,10 @@ public class Start_WorkoutSession {
             start_newSession(context, choiceWorkout);
         }
     }
+
+    /****************************************
+     /**** PROGRESS CHECKERS
+     ****************************************/
 
     private boolean check_WorkoutExist(Workout_Wrapper wrapper, String choiceWorkout){
         for(Workout_Info workout: wrapper.get_AllWorkouts()){
@@ -49,6 +59,10 @@ public class Start_WorkoutSession {
         }
         return false;
     }
+
+    /****************************************
+     /**** NEW WORKOUT
+     ****************************************/
 
     private void start_newSession(final Context context, final String choiceWorkout){
         final String[] workoutTypes = {"Simple", "Mix"};
@@ -69,6 +83,8 @@ public class Start_WorkoutSession {
 
         intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
         intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
+        intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         context.startActivity(intent);
     }

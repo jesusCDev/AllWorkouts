@@ -12,6 +12,10 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
+/**
+ * Open Source Project - https://github.com/PhilJay/MPAndroidChart
+ * Used to create chart to represent data
+ */
 public class LogChart_Manager {
 
     private LineChart lc;
@@ -22,21 +26,15 @@ public class LogChart_Manager {
         this.lc = lc;
     }
 
-    public void reset_Chart(){
-        lc.invalidate();
-        lc.clear();
-    }
-
-    /**
-     * Sets up basic chart values
-     */
     public void setUp_ChartValues() {
         lc.setDragEnabled(false);
         lc.setScaleEnabled(false);
         lc.getAxisRight().setEnabled(false);
     }
 
-    public void create_Chart(ArrayList<LogData_Entry> currentWeekData){
+    /********** Line Chart Methods **********/
+
+    public void create_Chart(ArrayList<LineChartData_Entry> totalSets){
 
         lc.getXAxis().setDrawLabels(false);
         lc.getXAxis().setTextColor(ContextCompat.getColor(context, R.color.objects));
@@ -45,8 +43,8 @@ public class LogChart_Manager {
         lc.getLegend().setTextColor(ContextCompat.getColor(context, R.color.objects));
         lc.getDescription().setEnabled(false);
 
-        ArrayList<Entry> yValues = create_Entries(currentWeekData);
-        LineDataSet set = new LineDataSet(yValues, "Last 20 Max");
+        ArrayList<Entry> yValues = create_Entries(totalSets);
+        LineDataSet set = new LineDataSet(yValues, "Last 21 Max");
         set.setCircleColor(ContextCompat.getColor(context, R.color.objects));
         set.setValueTextColor(ContextCompat.getColor(context, R.color.objects));
         set.setFillAlpha(110);
@@ -62,16 +60,16 @@ public class LogChart_Manager {
         lc.setData(data);
     }
 
-    /**
-     * Creates Entries for chart
-     * @param currentWeekData
-     * @return Entry List
-     */
-    private ArrayList<Entry> create_Entries(ArrayList<LogData_Entry> currentWeekData){
+    private ArrayList<Entry> create_Entries(ArrayList<LineChartData_Entry> currentWeekData){
         ArrayList<Entry> yValues = new ArrayList<>();
-        for(LogData_Entry entry: currentWeekData){
+        for(LineChartData_Entry entry: currentWeekData){
             yValues.add(new Entry(entry.getPosition(), entry.getValue()));
         }
         return yValues;
+    }
+
+    public void reset_Chart(){
+        lc.invalidate();
+        lc.clear();
     }
 }

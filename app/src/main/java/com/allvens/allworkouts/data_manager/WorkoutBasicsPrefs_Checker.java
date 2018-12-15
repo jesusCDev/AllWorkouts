@@ -2,7 +2,6 @@ package com.allvens.allworkouts.data_manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.allvens.allworkouts.R;
@@ -13,7 +12,7 @@ public class WorkoutBasicsPrefs_Checker {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
-    WorkoutPosAndStatus[] workouts;
+    private WorkoutPosAndStatus[] workouts;
 
     public WorkoutBasicsPrefs_Checker(Context context){
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);

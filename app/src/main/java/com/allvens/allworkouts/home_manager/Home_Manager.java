@@ -2,7 +2,6 @@ package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +14,7 @@ import com.allvens.allworkouts.assets.Start_WorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
-public class HomeScene_Manager {
+public class Home_Manager {
 
     private Context context;
     private Home_Ui_Manager uiManager;
@@ -23,26 +22,16 @@ public class HomeScene_Manager {
     private String chosenWorkout;
     private boolean workoutChooserOpen = false;
 
-    public String[] get_Workouts(){
-        return workouts;
-    }
+    public Home_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
 
-    public boolean get_WorkoutChooserOpen(){
-        return workoutChooserOpen;
-    }
-
-    public void set_WorkoutChooserOpen(boolean value){
-        workoutChooserOpen = value;
-    }
-
-    public HomeScene_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
-
         setUp_WorkoutsPos();
-
         uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+
+        // todo set this to current workout you just observed in log
         chosenWorkout = workouts[0];
         uiManager.update_Screen(workouts[0]);
+
     }
 
     public void setUp_WorkoutsPos(){
@@ -56,24 +45,40 @@ public class HomeScene_Manager {
         }
     }
 
-    public View.OnClickListener update_WorkoutSelection(final String workout){
-        return (new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                update_Workout(workout);
-            }
-        });
+    /****************************************
+     /**** WORKOUT SWITCHER
+     ****************************************/
+
+    /********** Setter/Getter Methods **********/
+
+    public void set_WorkoutChooserOpen(boolean value){
+        workoutChooserOpen = value;
     }
 
-    public void update_Workout(String workout){
+    public void set_Workout(String workout){
         chosenWorkout = workout;
         workoutChooserOpen = false;
         uiManager.clear_WorkoutChanger();
         uiManager.update_Screen(workout);
     }
 
-    public void open_WorkoutChanger(){
+    public boolean get_WorkoutChooserOpen(){
+        return workoutChooserOpen;
+    }
 
+
+    /********** Switcher Methods **********/
+
+    public View.OnClickListener update_WorkoutSelection(final String workout){
+        return (new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                set_Workout(workout);
+            }
+        });
+    }
+
+    public void open_WorkoutChanger(){
         uiManager.set_ExpandButton();
 
         Button[] buttons = uiManager.create_WorkoutButtons(workouts);
@@ -94,11 +99,15 @@ public class HomeScene_Manager {
         uiManager.clear_WorkoutChanger();
     }
 
+    /****************************************
+     /**** SCREEN CHANGER
+     ****************************************/
+
     public void goto_WorkoutScene(){
         new Start_WorkoutSession().start_Workout(context, chosenWorkout);
     }
 
-    public void goto_LogScene(){
+    public void goto_LogScreen(){
         Intent intent = new Intent(context, LogActivity.class);
         intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
         context.startActivity(intent);

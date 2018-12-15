@@ -13,14 +13,14 @@ import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 
 import java.util.ArrayList;
 
-public class ListRecyclerView_Adapter extends RecyclerView.Adapter<ListRecyclerView_Adapter.ViewHolder>{
+public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRecyclerView_Adapter.ViewHolder>{
 
-    private ArrayList<WorkoutHistory_Info> history_infos = new ArrayList<>();
+    private ArrayList<WorkoutHistory_Info> history_info;
     private Context context;
 
-    public ListRecyclerView_Adapter(Context context, ArrayList<WorkoutHistory_Info> history_infos){
+    public SetListRecyclerView_Adapter(Context context, ArrayList<WorkoutHistory_Info> history_info){
         this.context = context;
-        this.history_infos = history_infos;
+        this.history_info = history_info;
     }
 
     @NonNull
@@ -34,25 +34,23 @@ public class ListRecyclerView_Adapter extends RecyclerView.Adapter<ListRecyclerV
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvMax.setText("Max: " + history_infos.get(position).getMax_value());
+        holder.tvMax.setText("Max: " + history_info.get(position).getMax_value());
         holder.tvTotalSet.setText("Total Set: " + get_TotalSetAmount(position));
 
-        holder.tvSet1.setText("Set 1: " + history_infos.get(position).getFirst_value());
-        holder.tvSet2.setText("Set 2: " + history_infos.get(position).getSecond_value());
-        holder.tvSet3.setText("Set 3: " + history_infos.get(position).getThird_value());
-        holder.tvSet4.setText("Set 4: " + history_infos.get(position).getForth_value());
-        holder.tvSet5.setText("Set 5: " + history_infos.get(position).getFifth_value());
+        holder.tvSet1.setText(Integer.toString(history_info.get(position).getFirst_value()));
+        holder.tvSet2.setText(Integer.toString(history_info.get(position).getSecond_value()));
+        holder.tvSet3.setText(Integer.toString(history_info.get(position).getThird_value()));
+        holder.tvSet4.setText(Integer.toString(history_info.get(position).getForth_value()));
+        holder.tvSet5.setText(Integer.toString(history_info.get(position).getFifth_value()));
     }
 
     private int get_TotalSetAmount(int pos){
-        return history_infos.get(pos).getFirst_value() + history_infos.get(pos).getSecond_value() +
-                history_infos.get(pos).getThird_value() + history_infos.get(pos).getForth_value() +
-                history_infos.get(pos).getFifth_value();
+        return history_info.get(pos).get_TotalReps();
     }
 
     @Override
     public int getItemCount() {
-        return history_infos.size();
+        return history_info.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

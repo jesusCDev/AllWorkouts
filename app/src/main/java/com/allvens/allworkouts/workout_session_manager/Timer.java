@@ -19,28 +19,22 @@ public class Timer {
         return timerRunning;
     }
 
-    public void stop_timer(){
-        timerRunning = false;
-        try{
-            timerHandler.removeCallbacks(timerRunnable);
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void start_timer() {
-        timerRunning = true;
-
-        startTime = System.currentTimeMillis();
-        timerHandler.postDelayed(timerRunnable, 0);
-    }
+    /****************************************
+     /**** NON-TIMER METHODS
+     ****************************************/
 
     private void onFinish(){
         stop_timer();
         workoutSessionUi_manager.vibrate();
-        workoutSessionUi_manager.play_StartEndSound();
+        workoutSessionUi_manager.play_Sound();
         workoutSessionUi_manager.changeScreen_Workout();
     }
+
+    /****************************************
+     /**** TIMER METHODS
+     ****************************************/
+
+    /********** Create Timer **********/
 
     public void create_timer(int workoutTime) {
         final int time_forLevel = workoutTime;
@@ -67,4 +61,21 @@ public class Timer {
         };
     }
 
+    /********** Timer Functionality Methods **********/
+
+    public void start_timer() {
+        timerRunning = true;
+
+        startTime = System.currentTimeMillis();
+        timerHandler.postDelayed(timerRunnable, 0);
+    }
+
+    public void stop_timer(){
+        timerRunning = false;
+        try{
+            timerHandler.removeCallbacks(timerRunnable);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
 }

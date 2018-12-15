@@ -6,6 +6,10 @@ public class Helper {
 
     private Context context;
 
+    /**
+     * Consist of helper methods that aren't specific to classes but can be re-used
+     * @param context
+     */
     public Helper(Context context){
         this.context = context;
     }

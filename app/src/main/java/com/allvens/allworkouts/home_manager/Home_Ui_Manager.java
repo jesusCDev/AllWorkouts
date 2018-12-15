@@ -8,7 +8,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.assets.DebuggingMethods;
 
 public class Home_Ui_Manager {
 
@@ -28,10 +27,11 @@ public class Home_Ui_Manager {
         tv_CurrentWorkout.setText(chosenWorkout);
     }
 
-    public void clear_WorkoutChanger(){
-        set_CloseExpandButton();
-        ll_home_WorkoutChooser.removeAllViews();
-    }
+    /****************************************
+     /**** WORKOUT SWITCHER METHODS
+     ****************************************/
+
+    /********** Button Handler **********/
 
     public Button[] create_WorkoutButtons(String[] workoutNames) {
         Button[] workoutButtons = new Button[workoutNames.length];
@@ -52,12 +52,18 @@ public class Home_Ui_Manager {
     }
 
     private void set_BtnChoiceStyle(Button btn){
-        DebuggingMethods.pop("Setting Sytle");
         if (Build.VERSION.SDK_INT < 23) {
             btn.setTextAppearance(context, R.style.btn_home_workoutChoice);
         } else {
             btn.setTextAppearance(R.style.btn_home_workoutChoice);
         }
+    }
+
+    /********** Expand/Collapse Methods **********/
+
+    public void clear_WorkoutChanger(){
+        set_CloseExpandButton();
+        ll_home_WorkoutChooser.removeAllViews();
     }
 
     public void set_ExpandButton() {

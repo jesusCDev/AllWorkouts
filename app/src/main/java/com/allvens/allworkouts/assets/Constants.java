@@ -1,5 +1,10 @@
 package com.allvens.allworkouts.assets;
 
+/**
+ * Values used consitantly throughout the app
+ * todo might switch them out for resources
+ * todo might switch values for key for passing intents
+ */
 public interface Constants {
 
     String PULL_UPS = "Pull Ups";
@@ -9,4 +14,5 @@ public interface Constants {
 
     String CHOSEN_WORKOUT_EXTRA_KEY = "chosenWorkout";
     String WORKOUT_TYPE_KEY = "chosenWorkout";
+    String UPDATING_MAX_IN_SETTINGS = "update_max_value";
 }

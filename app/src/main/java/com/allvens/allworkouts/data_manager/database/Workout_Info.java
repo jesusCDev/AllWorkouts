@@ -2,6 +2,9 @@ package com.allvens.allworkouts.data_manager.database;
 
 import java.util.List;
 
+/**
+ * Workout DataBase Entry
+ */
 public class Workout_Info {
 
     private long id;
