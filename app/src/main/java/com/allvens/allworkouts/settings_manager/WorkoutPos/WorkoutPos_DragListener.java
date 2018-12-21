@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 
+/**
+ * Manages Drag functions for Workout Pos Change
+ */
 public class WorkoutPos_DragListener implements View.OnDragListener {
 
     private WorkoutPos_TouchListener touchListener;
@@ -29,7 +32,6 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
 
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                // do nothing
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 v.setBackgroundColor(context.getResources().getColor(R.color.focusAccent));
@@ -49,6 +51,11 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
         return true;
     }
 
+    /**
+     * Moves View To New View Position
+     * @param owner
+     * @param index
+     */
     private void update_View(ViewGroup owner, int index){
         owner.removeView(touchListener.getView());
         owner.addView(touchListener.getView(), index);

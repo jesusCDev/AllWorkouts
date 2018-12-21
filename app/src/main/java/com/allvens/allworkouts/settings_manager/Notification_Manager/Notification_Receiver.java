@@ -23,6 +23,7 @@ public class Notification_Receiver extends BroadcastReceiver {
 
     private String ANDROID_CHANNEL_ID = "com.android.AllWorkouts";
     private String ANDROID_CHANNEL_NAME = "All Workouts";
+    private String NOTIFICATION_MESSAGE = "Ready To Workout!";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,27 +32,23 @@ public class Notification_Receiver extends BroadcastReceiver {
 
         if (intent.getAction() != null && context != null) {
             if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
-                Notification_Controller notiManager = new Notification_Controller(context, settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
+                // Create Notification Receiver
+                Notification_Manager notiManager = new Notification_Manager(context, settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
                                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());
                 notiManager.create_Notification();
             }
         }
 
         if(settingsPrefs.get_NotificationDayValue((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1))){
-            present_Notification(context);
+            NotificationManager notificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            Notification.Builder mNotifyBuilder = create_Notification(context);
+            notificationManager.notify(MID, mNotifyBuilder.build());
         }
     }
 
-    private void present_Notification(Context context){
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Notification.Builder mNotifyBuilder = getAndroidChannelNotification(context);
-        notificationManager.notify(MID, mNotifyBuilder.build());
-    }
-
-    private Notification.Builder getAndroidChannelNotification(Context context) {
-
+    private Notification.Builder create_Notification(Context context) {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -61,8 +58,8 @@ public class Notification_Receiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             return new Notification.Builder(context.getApplicationContext(), ANDROID_CHANNEL_ID)
-                    .setContentTitle("All Workouts")
-                    .setContentText("Ready To Workout")
+                    .setContentTitle(ANDROID_CHANNEL_NAME)
+                    .setContentText(NOTIFICATION_MESSAGE)
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(R.drawable.ic_drag_handle_black_24dp)
                     .setAutoCancel(true);
@@ -72,8 +69,8 @@ public class Notification_Receiver extends BroadcastReceiver {
 
             return new Notification.Builder(
                     context).setSmallIcon(R.drawable.ic_drag_handle_black_24dp)
-                    .setContentTitle("All Workouts")
-                    .setContentText("Ready To Start?!")
+                    .setContentTitle(ANDROID_CHANNEL_NAME)
+                    .setContentText(NOTIFICATION_MESSAGE)
                     .setSound(alarmSound)
                     .setAutoCancel(true).setWhen(when)
                     .setContentIntent(pendingIntent)

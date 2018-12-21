@@ -19,9 +19,29 @@ public class SettingsPrefs_Manager {
         notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "-1,-1,-1,-1,-1,-1,-1").split(",");
     }
 
+    /****************************************
+     /**** GETTER METHODS
+     ****************************************/
+
     public boolean get_PrefSetting(String prefKey){
         return prefs.getBoolean(prefKey, false);
     }
+
+    public int get_NotifiHour() {
+        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_HOUR, 0);
+    }
+
+    public int get_NotifiMinute(){
+        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINUTE, 0);
+    }
+
+    public boolean get_NotificationDayValue(int i) {
+        return (Integer.parseInt(notification_days[i]) == 1);
+    }
+
+    /****************************************
+     /**** UPDATER METHODS
+     ****************************************/
 
     public void update_PrefSetting(String prefKey, boolean value){
         edit.putBoolean(prefKey, value);
@@ -40,6 +60,8 @@ public class SettingsPrefs_Manager {
         edit.commit();
     }
 
+    /********** Updater - Notification Pref String Converter **********/
+
     private String convert_ArrayToString(String[] notification_days){
         StringBuilder sb = new StringBuilder();
 
@@ -50,17 +72,5 @@ public class SettingsPrefs_Manager {
         sb.deleteCharAt((sb.length() - 1));
 
         return sb.toString();
-    }
-
-    public int get_NotifiHour() {
-        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_HOUR, 0);
-    }
-
-    public int get_NotifiMinute(){
-        return prefs.getInt(Preferences_Values.NOTIFICATION_TIME_MINUTE, 0);
-    }
-
-    public boolean get_NotificationDayValue(int i) {
-        return (Integer.parseInt(notification_days[i]) == 1);
     }
 }

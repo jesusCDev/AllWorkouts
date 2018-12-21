@@ -6,9 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.assets.DebuggingMethods;
 
-public class SettingsScene_UI_Manager {
+public class Settings_UI_Manager {
 
     private Button btnSu;
     private Button btnM;
@@ -19,9 +18,13 @@ public class SettingsScene_UI_Manager {
     private Button btnSa;
     private Context context;
 
-    public SettingsScene_UI_Manager(Context context){
+    public Settings_UI_Manager(Context context){
         this.context = context;
     }
+
+    /****************************************
+     /**** TIME DISPLAY
+     ****************************************/
 
     public void update_TimeStamp(TextView tv, int selectedHour, int selectedMin){
         StringBuilder timeStamp = new StringBuilder();
@@ -32,6 +35,8 @@ public class SettingsScene_UI_Manager {
         timeStamp.append(" " + fix_amPm(selectedHour));
         tv.setText(timeStamp.toString());
     }
+
+    /********** 24 Hour Converter to 12 Hour Format **********/
 
     private String fix_amPm(int selectedHour) {
         if(selectedHour < 12){
@@ -58,6 +63,10 @@ public class SettingsScene_UI_Manager {
         }
     }
 
+    /****************************************
+     /**** NOTIFICATION SETTINGS
+     ****************************************/
+
     public void set_DailyNotificationBtns(Button btnSu, Button btnM, Button btnTu, Button btnW,
                                           Button btnTh, Button btnF, Button btnSa){
         this.btnSu = btnSu;
@@ -80,8 +89,8 @@ public class SettingsScene_UI_Manager {
         update_DailyNotificationBtnStyle(btnSa, sat);
     }
 
-    public void update_DailyNotificationBtnStyle(Button btn, boolean value) {
-        if(value){
+    public void update_DailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
+        if(notiOnDay){
             set_BtnStyle(btn, R.style.btn_settings_DaySelected);
         }else{
             set_BtnStyle(btn, R.style.btn_settings_DayUnSelected);

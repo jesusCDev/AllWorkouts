@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Sets up Touch Listener for when an item is being moved
+ */
 public class WorkoutPos_TouchListener implements View.OnTouchListener {
 
     private View view;
-    private int indexOfView;
     private Context context;
 
     public WorkoutPos_TouchListener(Context context){
@@ -23,16 +25,10 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
             this.view = view;
-            indexOfView = ((ViewGroup)view.getParent()).indexOfChild(view);
 
-//            view.startDrag
-//
-//            // todo might be able to change this
             view.setVisibility(View.INVISIBLE);
             ClipData data = ClipData.newPlainText("", "");
 
-//            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
-//                    view);
             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
                     new ConstraintLayout(context));
 
@@ -45,23 +41,11 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
         }
     }
 
-    private void pop(String message){
-        Log.d("Bug", message);
-    }
-
     public View getView() {
         return view;
     }
 
     public void setView(View view) {
         this.view = view;
-    }
-
-    public int getIndexOfView() {
-        return indexOfView;
-    }
-
-    public void setIndexOfView(int indexOfView) {
-        this.indexOfView = indexOfView;
     }
 }

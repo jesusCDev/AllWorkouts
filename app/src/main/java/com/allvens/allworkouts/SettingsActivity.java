@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
-import com.allvens.allworkouts.settings_manager.SettingsScene_Manager;
+import com.allvens.allworkouts.settings_manager.Settings_Manager;
 
 public class SettingsActivity extends AppCompatActivity{
 
-    private SettingsScene_Manager settingsScene_manager;
+    private Settings_Manager settings_manager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,19 +42,24 @@ public class SettingsActivity extends AppCompatActivity{
         Button btnF = findViewById(R.id.btn_settings_notificationDayF);
         Button btnSa = findViewById(R.id.btn_settings_notificationDaySA);
 
-        settingsScene_manager = new SettingsScene_Manager(this);
-        settingsScene_manager.setUp_SettingsValues(sVibrate, sSound, sScreenOn, sNotification);
-        settingsScene_manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
-        settingsScene_manager.setUp_TimeDisplay(tvTimeDisplay);
-        settingsScene_manager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
+        settings_manager = new Settings_Manager(this);
+        settings_manager.set_SettingsValues(sVibrate, sSound, sScreenOn, sNotification);
+        settings_manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
+        settings_manager.setUp_TimeDisplay(tvTimeDisplay);
+        settings_manager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
 
-        sVibrate.setOnCheckedChangeListener(settingsScene_manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
-        sSound.setOnCheckedChangeListener(settingsScene_manager.update_PrefSettings(Preferences_Values.SOUND_ON));
-        sScreenOn.setOnCheckedChangeListener(settingsScene_manager.update_PrefSettings(Preferences_Values.SCREEN_ON));
+        sVibrate.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
+        sSound.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SOUND_ON));
+        sScreenOn.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SCREEN_ON));
 
-        sNotification.setOnCheckedChangeListener(settingsScene_manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
+        sNotification.setOnCheckedChangeListener(settings_manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
     }
 
+    /****************************************
+     /**** BUTTON ACTIONS
+     ****************************************/
+
+    /********** Settings Switch Value Changes **********/
     public void btnAction_ResetToDefaults(View view){
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -81,11 +86,12 @@ public class SettingsActivity extends AppCompatActivity{
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+    /********** Notification Settings **********/
     public void btnAction_SetNotificationTime(View view){
-        settingsScene_manager.update_NotificationTime(view);
+        settings_manager.update_NotificationTime(view);
     }
 
     public void btnAction_setDayNotifications(View view){
-        settingsScene_manager.update_DayOfNotification(((Button)view));
+        settings_manager.update_DayOfNotification(((Button)view));
     }
 }

@@ -1,5 +1,8 @@
 package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
+/**
+ * Workout Position and Status Container
+ */
 public class WorkoutPosAndStatus {
 
     private String name;
