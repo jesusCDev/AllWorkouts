@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/popup_layout_corners"
+            android:background="@drawable/layout_top_round_corners"
             android:orientation="vertical"></android.support.v7.widget.LinearLayoutCompat>
 
     </RelativeLayout>

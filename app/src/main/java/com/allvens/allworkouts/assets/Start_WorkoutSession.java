@@ -72,6 +72,8 @@ public class Start_WorkoutSession {
         builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                DebuggingMethods.pop("Selected: " + which);
                 create_Workout(which, context, choiceWorkout);
             }
         });
@@ -81,8 +83,8 @@ public class Start_WorkoutSession {
     private void create_Workout(int workoutType, Context context, String choiceWorkout){
         Intent intent = new Intent(context, WorkoutMaximumActivity.class);
 
-        intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
         intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
+        intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
         intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 

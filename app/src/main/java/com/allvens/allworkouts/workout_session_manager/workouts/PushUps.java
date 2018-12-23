@@ -1,5 +1,7 @@
 package com.allvens.allworkouts.workout_session_manager.workouts;
 
+import com.allvens.allworkouts.R;
+
 public class PushUps extends Workout{
 
     private final static double FIRST_VALUE_DIFFICULTY = 0.5; // Balance
@@ -22,8 +24,12 @@ public class PushUps extends Workout{
             SECOND_WORKOUT_NAME, THIRD_WORKOUT_NAME, FORTH_WORKOUT_NAME,
             FIFTH_WORKOUT_NAME};
 
-    private final static String[] IMAGE_RESOURCES_MIX = {"","","","",""};
-    private final static String[] IMAGE_RESOURCES_SIMPLE = {"","","","",""};
+    private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_workout_pullup_wide_arm,
+            R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
+            R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
+    private final static int[] IMAGE_RESOURCES_SIMPLE = {R.drawable.ic_workout_pullup_normal,
+            R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal,
+            R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal};
 
     public PushUps(double type, int max){
         if(type == 0){

@@ -12,7 +12,7 @@ public interface Constants {
     String SIT_UPS = "Sit Ups";
     String SQUATS = "Squats";
 
-    String CHOSEN_WORKOUT_EXTRA_KEY = "chosenWorkout";
-    String WORKOUT_TYPE_KEY = "chosenWorkout";
+    String CHOSEN_WORKOUT_EXTRA_KEY = "chosen_workout";
+    String WORKOUT_TYPE_KEY = "mix_or_simple_workout";
     String UPDATING_MAX_IN_SETTINGS = "update_max_value";
 }

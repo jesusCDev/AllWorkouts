@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
@@ -30,6 +31,12 @@ public class WorkoutSession_Manager {
         Workout_Generator workoutGenerator = new Workout_Generator(wrapper.get_Workout(choice));
         workout_info = workoutGenerator.get_WorkoutInfo();
         workout = workoutGenerator.get_Workout();
+
+
+
+        DebuggingMethods.pop("Getting Workout");
+        DebuggingMethods.pop("Workout: " + workout_info.getWorkout());
+        DebuggingMethods.pop("Type: " + workout_info.getType());
 
         wrapper.close();
     }

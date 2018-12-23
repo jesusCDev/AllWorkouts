@@ -111,6 +111,9 @@ public class WorkoutSessionScene_UI_Manager {
 
         clear_MainView();
         ImageView iv_Workout = new ImageView(context);
+        iv_Workout.setImageResource(workout.get_WorkoutImage(progress));
+
+        llTimeImageHolder.addView(iv_Workout);
     }
 
     public void changeScreen_Timer() {
