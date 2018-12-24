@@ -3,6 +3,7 @@ package com.allvens.allworkouts.workout_session_manager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,8 +20,10 @@ public class WorkoutSession_Manager {
     private Context context;
     private Workout workout;
     private Workout_Info workout_info;
-    private WorkoutSessionScene_UI_Manager workoutSessionUi_manager;
+    private WorkoutSession_UI_Manager workoutSessionUi_manager;
     private Timer timer;
+
+    private boolean workoutHelperOpen = false;
 
     public WorkoutSession_Manager(Context context, String choice){
         this.context = context;
@@ -45,8 +48,13 @@ public class WorkoutSession_Manager {
      /**** SETTER METHODS
      ****************************************/
 
-    public void setUp_UiManager(TextView tv_workout_workoutName, LinearLayout llTimeImageHolder, TextView tvValue1, TextView tvValue2, TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_workout_completeTask) {
-        workoutSessionUi_manager = new WorkoutSessionScene_UI_Manager(context, workout, tv_workout_workoutName, llTimeImageHolder, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5, btn_workout_completeTask);
+    public void setUp_UiManager(TextView tv_workout_workoutName, LinearLayout llTimeImageHolder,
+                                LinearLayout llWorkoutHelper, TextView tvValue1, TextView tvValue2,
+                                TextView tvValue3, TextView tvValue4, TextView tvValue5,
+                                Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
+        workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
+                llTimeImageHolder, llWorkoutHelper, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
+                btn_ChangeScreens, btn_WorkoutHelper);
     }
 
     public void set_Timer(){
@@ -54,7 +62,7 @@ public class WorkoutSession_Manager {
     }
 
     /****************************************
-     /**** SCREEN METHODS
+     /**** SCREEN UPDATING
      ****************************************/
 
     public void start_Screen(){
@@ -77,6 +85,27 @@ public class WorkoutSession_Manager {
                 context.startActivity(intent);
             }
         }
+    }
+
+    /****************************************
+     /**** WORKOUT HELPER
+     ****************************************/
+
+    public void open_WorkoutHelper() {
+        workoutSessionUi_manager.set_ExpandButton();
+        workoutSessionUi_manager.show_WorkoutHelper();
+    }
+
+    public void clear_WorkoutHelper(){
+        workoutSessionUi_manager.clear_WorkoutHelper();
+    }
+
+    public void set_WorkoutHelperOpen(boolean value){
+        workoutHelperOpen = value;
+    }
+
+    public boolean get_WorkoutHelperOpen(){
+        return workoutHelperOpen;
     }
 
     /****************************************

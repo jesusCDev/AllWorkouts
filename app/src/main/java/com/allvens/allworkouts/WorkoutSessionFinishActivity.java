@@ -26,7 +26,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
     private final static int PROG_INC_NEUTRAL = 1;
     private final static int PROG_INC_EASY = 2;
-    private final static int PROG_INC_HARD = -1;
+    private final static int PROG_INC_HARD = -2;
 
     private Button lastBtnSelected;
     private Workout_Wrapper wrapper;
@@ -86,7 +86,11 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
     private void update_WorkoutProgress(int progress){
         Workout_Info workout = wrapper.get_Workout(choiceWorkout);
-        workout.setMax((maxValue + progress));
+
+        int value = maxValue + progress;
+        if(value <= 0) value = 1;
+
+        workout.setMax(value);
         wrapper.update_Workout(workout);
     }
 

@@ -9,24 +9,30 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.workout_session_manager.workouts.PushUps;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
-public class WorkoutSessionScene_UI_Manager {
+public class WorkoutSession_UI_Manager {
 
     private Context context;
     private TextView tv_WorkoutName;
     private LinearLayout llTimeImageHolder;
+    private LinearLayout llWorkoutHelper;
     private Button btn_ChangeScreens;
+    private ImageButton btn_WorkoutHelper;
     private TextView tv_Timer;
 
     private Workout workout;
+    private TextView[] aTvWorkoutValues = new TextView[5];
     boolean soundOn;
     boolean vibrateOn;
     private Vibrator vibrator;
@@ -34,15 +40,13 @@ public class WorkoutSessionScene_UI_Manager {
 
     private int progress = 0;
 
-
-    private TextView[] aTvWorkoutValues = new TextView[5];
-
-    public WorkoutSessionScene_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName,
-                                          LinearLayout llTimeImageHolder, TextView tvValue1, TextView tvValue2,
-                                          TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_workout_completeTask) {
+    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName,
+                                     LinearLayout llTimeImageHolder, LinearLayout llWorkoutHelper, TextView tvValue1, TextView tvValue2,
+                                     TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
         this.llTimeImageHolder = llTimeImageHolder;
+        this.llWorkoutHelper = llWorkoutHelper;
 
         aTvWorkoutValues[0] = tvValue1;
         aTvWorkoutValues[1] = tvValue2;
@@ -50,7 +54,9 @@ public class WorkoutSessionScene_UI_Manager {
         aTvWorkoutValues[3] = tvValue4;
         aTvWorkoutValues[4] = tvValue5;
 
-        btn_ChangeScreens = btn_workout_completeTask;
+        this.btn_ChangeScreens = btn_ChangeScreens;
+        this.btn_WorkoutHelper = btn_WorkoutHelper;
+
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         SettingsPrefs_Manager prefs_manager = new SettingsPrefs_Manager(context);
         soundOn = prefs_manager.get_PrefSetting(Preferences_Values.SOUND_ON);
@@ -101,7 +107,9 @@ public class WorkoutSessionScene_UI_Manager {
         aTvWorkoutValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
     }
 
-    /********** SCREEN CHANGERS **********/
+    /****************************************
+     /**** SCREEN CHANGERS
+     ****************************************/
 
     public void changeScreen_Workout() {
         tv_WorkoutName.setText(workout.get_WorkoutName(progress));
@@ -126,13 +134,47 @@ public class WorkoutSessionScene_UI_Manager {
 
         tv_Timer = new TextView(context);
         tv_Timer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        setStyle(tv_finished, R.style.TS_StartingCountDown_Ending);
+//        setStyle_ForTextView(tv_Timer, R.style.TS_StartingCountDown_Ending);
 
         llTimeImageHolder.addView(tv_Timer);
     }
 
     private void clear_MainView(){
         llTimeImageHolder.removeAllViews();
+    }
+
+
+    /********** Styling Method **********/
+
+    private void setStyle_ForTextView(TextView tv, int style){
+        if (Build.VERSION.SDK_INT < 23) {
+            tv.setTextAppearance(context, style);
+        } else {
+            tv.setTextAppearance(style);
+        }
+    }
+
+    /****************************************
+     /**** WORKOUT HELPER METHODS
+     ****************************************/
+
+    public void show_WorkoutHelper() {
+        TextView tvWorkoutDescription = new TextView(context);
+        tvWorkoutDescription.setText(workout.get_WorkoutDescription(progress));
+        llWorkoutHelper.addView(tvWorkoutDescription);
+    }
+
+    public void clear_WorkoutHelper(){
+        set_CloseExpandButton();
+        llWorkoutHelper.removeAllViews();
+    }
+
+    public void set_ExpandButton() {
+        btn_WorkoutHelper.setImageDrawable(context.getDrawable(R.drawable.ic_expand_less_black_24dp));
+    }
+
+    public void set_CloseExpandButton() {
+        btn_WorkoutHelper.setImageDrawable(context.getDrawable(R.drawable.ic_expand_more_black_24dp));
     }
 
     /****************************************
@@ -154,5 +196,4 @@ public class WorkoutSessionScene_UI_Manager {
             }
         }
     }
-
 }

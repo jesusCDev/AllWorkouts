@@ -4,6 +4,7 @@ public class Workout {
 
     private int[] workoutValues;
     private String[] workoutNames;
+    private String[] workoutsDescription;
     private int[] imageResources;
     private double[] difficultyValues;
     private int[] workoutBreakTime;
@@ -31,6 +32,10 @@ public class Workout {
         return workoutNames[pos];
     }
 
+    public String get_WorkoutDescription(int pos){
+        return workoutsDescription[pos];
+    }
+
     public int get_WorkoutImage(int pos){
         return imageResources[pos];
     }
@@ -41,6 +46,10 @@ public class Workout {
 
     public void set_WorkoutName(String[] workoutName){
         this.workoutNames = workoutName;
+    }
+
+    public void set_WorkoutDescriptions(String[] workoutsDescription){
+        this.workoutsDescription = workoutsDescription;
     }
 
     public void set_ImageResources(int[] imageResources){

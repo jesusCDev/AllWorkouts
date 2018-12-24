@@ -18,6 +18,7 @@ public class Home_Manager {
 
     private Context context;
     private Home_Ui_Manager uiManager;
+
     private String[] workouts;
     private String chosenWorkout;
     private boolean workoutChooserOpen = false;
@@ -55,17 +56,16 @@ public class Home_Manager {
         workoutChooserOpen = value;
     }
 
+    public boolean get_WorkoutChooserOpen(){
+        return workoutChooserOpen;
+    }
+
     public void set_Workout(String workout){
         chosenWorkout = workout;
         workoutChooserOpen = false;
         uiManager.clear_WorkoutChanger();
         uiManager.update_Screen(workout);
     }
-
-    public boolean get_WorkoutChooserOpen(){
-        return workoutChooserOpen;
-    }
-
 
     /********** Switcher Methods **********/
 
@@ -82,6 +82,7 @@ public class Home_Manager {
         uiManager.set_ExpandButton();
 
         Button[] buttons = uiManager.create_WorkoutButtons(workouts);
+
         for(Button btn: buttons){
             if(btn.getText().toString().equalsIgnoreCase(Constants.PULL_UPS)){
                 btn.setOnClickListener(update_WorkoutSelection(Constants.PULL_UPS));

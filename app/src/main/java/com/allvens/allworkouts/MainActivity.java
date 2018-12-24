@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.home_manager.Home_Manager;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // TODO - FIRST TIME WORKOUT - GIVE USER A WARNNIG THAT WE ARE NOT LIABLE FOR ANYTHING
+        // TODO - AND THIS IS NOT SCIENCETIFIC-TESTED WORKOUT JUST A WAY TO TRACK PROGRESS WITH A COURSE TO FOLLOW
+        // TODO - AND THAT THEY SHOULD NOT PUSH THEMSELVES TO A POINT OF CAUSING PAIN OR INJURY
+
         TextView tv_CurrentWorkout = findViewById(R.id.tv_home_CurrentWorkout);
         ImageButton btn_ChangeWorkouts = findViewById(R.id.btn_ChangeWorkouts);
         LinearLayoutCompat ll_home_WorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        manager.setUp_WorkoutsPos();
     }
 
     /****************************************

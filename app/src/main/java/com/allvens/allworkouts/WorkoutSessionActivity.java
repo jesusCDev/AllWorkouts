@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
         TextView tv_workout_WorkoutName = findViewById(R.id.tv_workout_WorkoutName);
         LinearLayout llTimeImageHolder = findViewById(R.id.ll_workout_timeImageHolder);
+        LinearLayout llWorkoutHelper = findViewById(R.id.ll_workout_workout_helper);
 
         TextView tvValue1 = findViewById(R.id.tv_workout_Value1);
         TextView tvValue2 = findViewById(R.id.tv_workout_Value2);
@@ -31,10 +33,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         TextView tvValue4 = findViewById(R.id.tv_workout_Value4);
         TextView tvValue5 = findViewById(R.id.tv_workout_Value5);
 
-        Button btn_workout_CompleteTask = findViewById(R.id.btn_workout_CompleteTask);
+        Button btn_ChangeScreens = findViewById(R.id.btn_workout_CompleteTask);
+        ImageButton btn_WorkoutHelper = findViewById(R.id.btn_workout_WorkoutHelper);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
-        manager.setUp_UiManager(tv_workout_WorkoutName, llTimeImageHolder, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5, btn_workout_CompleteTask);
+        manager.setUp_UiManager(tv_workout_WorkoutName, llTimeImageHolder, llWorkoutHelper, tvValue1,
+                tvValue2, tvValue3, tvValue4, tvValue5, btn_ChangeScreens, btn_WorkoutHelper);
         manager.set_Timer();
         manager.start_Screen();
     }
@@ -60,11 +64,22 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         return true;
     }
 
+    public void btnAction_OpenCloseWorkoutHelper(View view){
+        manager.clear_WorkoutHelper();
+        if(!manager.get_WorkoutHelperOpen()){
+            manager.open_WorkoutHelper();
+        }
+        manager.set_WorkoutHelperOpen(!manager.get_WorkoutHelperOpen());
+    }
+
     /**
      * Switches Screen between - Workout and Timer
      * @param view
      */
     public void btnAction_ChangeActivities(View view){
+
+        manager.clear_WorkoutHelper();
+        manager.set_WorkoutHelperOpen(false);
         manager.update_Screen();
     }
 }

@@ -4,42 +4,93 @@ import com.allvens.allworkouts.R;
 
 public class PushUps extends Workout{
 
-    private final static double FIRST_VALUE_DIFFICULTY = 0.5; // Balance
-    private final static double SECOND_VALUE_DIFFICULTY = 0.8; // Normal
-    private final static double THIRD_VALUE_DIFFICULTY = 0.4; // Triangle
-    private final static double FORTH_VALUE_DIFFICULTY = 0.7; // Soldier
-    private final static double FIFTH_VALUE_DIFFICULTY = 0.3; // One Arm
+    // lower is harder
+    private final static double BALANCE_VALUE_DIFFICULTY = 0.5; // Balance
+    private final static double NORMAL_VALUE_DIFFICULTY = 0.8; // Normal
+    private final static double TRIANGLE_VALUE_DIFFICULTY = 0.4; // Triangle
+    private final static double SOLDIER_VALUE_DIFFICULTY = 0.7; // Soldier
+    private final static double ONE_ARM_VALUE_DIFFICULTY = 0.3; // One Arm
 
-    private final static String FIRST_WORKOUT_NAME = "Balance";
-    private final static String SECOND_WORKOUT_NAME = "Normal";
-    private final static String THIRD_WORKOUT_NAME = "Triangle";
-    private final static String FORTH_WORKOUT_NAME = "Soldier";
-    private final static String FIFTH_WORKOUT_NAME = "One Arm";
+    private final static String BALANCE_WORKOUT_NAME = "Balance Push Up";
+    private final static String NORMAL_WORKOUT_NAME = "Push Up";
+    private final static String TRIANGLE_WORKOUT_NAME = "Triangle Push Up";
+    private final static String SOLIDER_WORKOUT_NAME = "Soldier Push Up";
+    private final static String ONE_ARM_WORKOUT_NAME = "One Arm Push Up";
 
-    private final static double[] DIFFICULTY_VALUES = {FIRST_VALUE_DIFFICULTY,
-            SECOND_VALUE_DIFFICULTY, THIRD_VALUE_DIFFICULTY, FORTH_VALUE_DIFFICULTY,
-            FIFTH_VALUE_DIFFICULTY};
+    private final static String BALANCE_DES = "1. Lay on the ground in a plank position with legs extend out straight.\n" +
+            "2. Place both hands wider apart from your shoulders.\n" +
+            "3. Balance your body on-top of hands and toes. Keep your arms bent a 90 degree angle.\n" +
+            "4. Push off the ground by straightening your arms\n" +
+            "5. Lift one arm off the ground and point it straight forward.\n" +
+            "6. Lift the leg on the same side of the lifting arm off the ground at the same time.\n" +
+            "7. Bring the leg and arm back down.\n" +
+            "8. Make sure to keep your back straight and tighten your core.\n" +
+            "9. Lower yourself back down by bending your arms again to a 90 degree angle.\n" +
+            "10. Repeat steps 4-9 while alternating sides as the number of reps required.";
+    private final static String NORMAL_DES = "1. Lay on the ground in a plank position with legs extend out straight.\n" +
+            "2. Place both hands wider apart from your shoulders.\n" +
+            "3. Balance your body on-top of hands and toes. Keep your arms bent a 90 degree angle.\n" +
+            "4. Push off the ground by straightening your arms\n" +
+            "5. Make sure to keep your back straight and tighten your core.\n" +
+            "6. Lower yourself back down by bending your arms again to a 90 degree angle.\n" +
+            "7. Repeat steps 4-6 as the number of reps required.";
+    private final static String TRIANGLE_DES = "1. Lay on the ground in a plank position with legs extend out straight.\n" +
+            "2. Place both hands in the center of your chest connecting the thumb to thumb and pointing finger to pointing finger creating a triangle.\n" +
+            "3. Balance your body on-top of hands and toes.\n" +
+            "4. Push off the ground by straightening your arms\n" +
+            "5. Make sure to keep your back straight and tighten your core.\n" +
+            "6. Lower yourself back down.\n" +
+            "7. Repeat steps 4-6 as the number of reps required.";
+    private final static String SOLIDER_DES = "1. Lay on the ground in a plank position with legs extend out straight.\n" +
+            "2. Place both hands directly under their respected shoulders.\n" +
+            "3. Balance your body on-top of hands and toes.\n" +
+            "4. Push off the ground by straightening your arms\n" +
+            "5. Keeping your elbows touching your body at all times.\n" +
+            "6. Make sure to keep your back straight and tighten your core.\n" +
+            "7. Lower yourself back down.\n" +
+            "8. Keep your elbows touching your body on your way down.\n" +
+            "9. Repeat steps 4-8 as the number of reps required.";
+    private final static String ONE_ARM_DES = "1. Lay on the ground in a plank position with legs extend out straight.\n" +
+            "2. Place one hand under the general chest area.\n" +
+            "3. Rest your other hand on your back.\n" +
+            "4. Spread your legs apart inorder to make balancing on one hand easier.\n" +
+            "5. Balance your body on-top of hand and toes.\n" +
+            "6. Push off the ground by straightening your arm\n" +
+            "7. Make sure to keep your back straight and tighten your core.\n" +
+            "8. Lower yourself back down.\n" +
+            "9. Repeat steps 6-8 as the number of reps required.";
 
-    private final static String[] WORKOUT_NAMES = {FIRST_WORKOUT_NAME,
-            SECOND_WORKOUT_NAME, THIRD_WORKOUT_NAME, FORTH_WORKOUT_NAME,
-            FIFTH_WORKOUT_NAME};
+    private final static String[] WORKOUT_DESCRIPTIONS_MIX = {BALANCE_DES, NORMAL_DES, TRIANGLE_DES, SOLIDER_DES, ONE_ARM_DES};
+
+    private final static double[] DIFFICULTY_VALUES = {BALANCE_VALUE_DIFFICULTY,
+            NORMAL_VALUE_DIFFICULTY, TRIANGLE_VALUE_DIFFICULTY, SOLDIER_VALUE_DIFFICULTY,
+            ONE_ARM_VALUE_DIFFICULTY};
+
+    private final static String[] WORKOUT_NAMES = {BALANCE_WORKOUT_NAME,
+            NORMAL_WORKOUT_NAME, TRIANGLE_WORKOUT_NAME, SOLIDER_WORKOUT_NAME,
+            ONE_ARM_WORKOUT_NAME};
 
     private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_workout_pullup_wide_arm,
             R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
             R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
-    private final static int[] IMAGE_RESOURCES_SIMPLE = {R.drawable.ic_workout_pullup_normal,
-            R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal,
-            R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal};
 
     public PushUps(double type, int max){
         if(type == 0){
             set_DifficultyValues(DIFFICULTY_VALUES);
             set_ImageResources(IMAGE_RESOURCES_MIX);
             set_WorkoutName(WORKOUT_NAMES);
+            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
         }else{
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
-            set_ImageResources(IMAGE_RESOURCES_SIMPLE);
-            set_WorkoutName(new String[]{"Normal","Normal","Normal","Normal","Normal"});
+
+            set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
+                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal,
+                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal});
+
+            set_WorkoutName(new String[]{NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME,
+                    NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME});
+
+            set_WorkoutDescriptions(new String[]{NORMAL_DES, NORMAL_DES, NORMAL_DES, NORMAL_DES, NORMAL_DES});
         }
 
         set_Max(max);
