@@ -2,6 +2,8 @@ package com.allvens.allworkouts.assets;
 
 import android.util.Log;
 
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
+
 // todo delete - used for debuging purposes
 public class DebuggingMethods {
 

@@ -117,20 +117,20 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_NextWorkout(View view) {
-
-        // TODO FIX THIS!!
         WorkoutBasicsPrefs_Checker workoutsPos = new WorkoutBasicsPrefs_Checker(this);
 
-        int pos = 0;
+        // get current position
+        int currentWorkout_Pos = 0;
         for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
             if(workout.getName().equalsIgnoreCase(choiceWorkout)){
-                pos = workout.getPosition();
                 break;
             }
+            currentWorkout_Pos++;
         }
 
-        if(pos < (workoutsPos.get_WorkoutsPos(false).length - 1)){
-            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(pos +1)].getName();
+        // find workout in next position
+        if(currentWorkout_Pos != (workoutsPos.get_WorkoutsPos(false).length - 1)){
+            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
         }else{
             choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
         }

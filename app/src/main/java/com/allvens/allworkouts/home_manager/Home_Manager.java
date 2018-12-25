@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.assets.Start_WorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
@@ -29,13 +30,13 @@ public class Home_Manager {
         setUp_WorkoutsPos();
         uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
 
-        // todo set this to current workout you just observed in log
         chosenWorkout = workouts[0];
         uiManager.update_Screen(workouts[0]);
 
     }
 
     public void setUp_WorkoutsPos(){
+        // todo set this to current workout you just observed in log
         WorkoutBasicsPrefs_Checker workout_basicsPrefs = new WorkoutBasicsPrefs_Checker(context);
 
         WorkoutPosAndStatus[] chosenWorkout = workout_basicsPrefs.get_WorkoutsPos(false);
