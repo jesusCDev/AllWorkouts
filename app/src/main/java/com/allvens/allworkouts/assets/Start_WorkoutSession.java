@@ -23,10 +23,8 @@ public class Start_WorkoutSession {
         if(check_WorkoutExist(wrapper, choiceWorkout)){
             if(check_WorkoutProgress(wrapper, choiceWorkout)){
                 intent = new Intent(context, WorkoutSessionActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             }else{
                 intent = new Intent(context, WorkoutMaximumActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
             }
             wrapper.close();

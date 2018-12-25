@@ -117,6 +117,8 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_NextWorkout(View view) {
+
+        // TODO FIX THIS!!
         WorkoutBasicsPrefs_Checker workoutsPos = new WorkoutBasicsPrefs_Checker(this);
 
         int pos = 0;

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         manager.setUp_WorkoutsPos();
+        if(!manager.check_IfCurrentWorkoutExistNow()) manager.set_Workout(manager.get_FirstWorkout());
     }
 
     /****************************************
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnAction_Settings(View view) {
+        manager.clear_WorkoutChanger();
+        manager.set_WorkoutChooserOpen(false);
+
         startActivity(new Intent(this, SettingsActivity.class));
     }
 

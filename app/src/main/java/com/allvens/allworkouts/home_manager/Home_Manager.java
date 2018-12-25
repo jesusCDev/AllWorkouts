@@ -46,6 +46,19 @@ public class Home_Manager {
         }
     }
 
+    public String get_FirstWorkout(){
+        return workouts[0];
+    }
+
+    public boolean check_IfCurrentWorkoutExistNow(){
+        for(String workout: workouts){
+            if(workout.equalsIgnoreCase(chosenWorkout)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /****************************************
      /**** WORKOUT SWITCHER
      ****************************************/

@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.DebuggingMethods;
@@ -35,17 +36,11 @@ public class WorkoutSession_Manager {
         workout_info = workoutGenerator.get_WorkoutInfo();
         workout = workoutGenerator.get_Workout();
 
-
-
-        DebuggingMethods.pop("Getting Workout");
-        DebuggingMethods.pop("Workout: " + workout_info.getWorkout());
-        DebuggingMethods.pop("Type: " + workout_info.getType());
-
         wrapper.close();
     }
 
     /****************************************
-     /**** SETTER METHODS
+     /**** SETTER/GETTER METHODS
      ****************************************/
 
     public void setUp_UiManager(TextView tv_workout_workoutName, LinearLayout llTimeImageHolder,
@@ -55,6 +50,15 @@ public class WorkoutSession_Manager {
         workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
                 llTimeImageHolder, llWorkoutHelper, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens, btn_WorkoutHelper);
+    }
+
+    public String get_Workout(){
+        return workout_info.getWorkout();
+    }
+
+    public boolean check_IfFinished() {
+        if(!timer.get_TimerRunning()) workoutSessionUi_manager.set_Progress((workoutSessionUi_manager.get_Progress() + 1));
+        return (workoutSessionUi_manager.get_Progress() < 5);
     }
 
     public void set_Timer(){
@@ -74,18 +78,12 @@ public class WorkoutSession_Manager {
             timer.stop_timer();
             workoutSessionUi_manager.changeScreen_Workout();
         }else{
-            workoutSessionUi_manager.set_Progress((workoutSessionUi_manager.get_Progress() + 1));
-            if(workoutSessionUi_manager.get_Progress() < 5){
-                workoutSessionUi_manager.changeScreen_Timer();
-                timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.get_Progress()));
-                timer.start_timer();
-            }else{
-                Intent intent = new Intent(context, WorkoutSessionFinishActivity.class);
-                intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, workout_info.getWorkout());
-                context.startActivity(intent);
-            }
+            workoutSessionUi_manager.changeScreen_Timer();
+            timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.get_Progress()));
+            timer.start_timer();
         }
     }
+
 
     /****************************************
      /**** WORKOUT HELPER

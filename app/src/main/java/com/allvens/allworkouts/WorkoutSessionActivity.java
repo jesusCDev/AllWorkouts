@@ -77,9 +77,17 @@ public class WorkoutSessionActivity extends AppCompatActivity {
      * @param view
      */
     public void btnAction_ChangeActivities(View view){
-
         manager.clear_WorkoutHelper();
         manager.set_WorkoutHelperOpen(false);
-        manager.update_Screen();
+
+        if(manager.check_IfFinished()){
+            manager.update_Screen();
+        }else{
+            Intent intent = new Intent(this, WorkoutSessionFinishActivity.class);
+            intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, manager.get_Workout());
+            this.startActivity(intent);
+            finish();
+        }
+
     }
 }
