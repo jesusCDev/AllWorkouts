@@ -15,4 +15,9 @@ public interface Constants {
     String CHOSEN_WORKOUT_EXTRA_KEY = "chosen_workout";
     String WORKOUT_TYPE_KEY = "mix_or_simple_workout";
     String UPDATING_MAX_IN_SETTINGS = "update_max_value";
+
+    String OPEN_SOURCE = "open_source";
+    String PRIVACY_POLICY = "privacy_policy";
+    String TERMS_OF_USE = "terms_of_use";
+    String CHOSEN_DOCUMENTATION = "chosenDocumentation";
 }

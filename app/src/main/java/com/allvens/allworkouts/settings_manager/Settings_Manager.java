@@ -45,10 +45,9 @@ public class Settings_Manager {
      /**** SETUP METHODS
      ****************************************/
 
-    public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sScreenOn, Switch sNotification) {
+    public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification) {
         sVibrate.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.VIBRATE_ON));
         sSound.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.SOUND_ON));
-        sScreenOn.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.SCREEN_ON));
         sNotification.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON));
     }
 

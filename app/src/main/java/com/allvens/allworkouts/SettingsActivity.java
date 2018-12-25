@@ -1,6 +1,7 @@
 package com.allvens.allworkouts;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -29,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity{
 
         Switch sVibrate = findViewById(R.id.s_settings_Vibrate);
         Switch sSound = findViewById(R.id.s_settings_Sound);
-        Switch sScreenOn = findViewById(R.id.s_settings_ScreenTurnOn);
         Switch sNotification = findViewById(R.id.s_settings_Notification);
 
         TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
@@ -43,14 +43,13 @@ public class SettingsActivity extends AppCompatActivity{
         Button btnSa = findViewById(R.id.btn_settings_notificationDaySA);
 
         settings_manager = new Settings_Manager(this);
-        settings_manager.set_SettingsValues(sVibrate, sSound, sScreenOn, sNotification);
+        settings_manager.set_SettingsValues(sVibrate, sSound, sNotification);
         settings_manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
         settings_manager.setUp_TimeDisplay(tvTimeDisplay);
         settings_manager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
 
         sVibrate.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
         sSound.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SOUND_ON));
-        sScreenOn.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SCREEN_ON));
 
         sNotification.setOnCheckedChangeListener(settings_manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
     }
@@ -58,6 +57,9 @@ public class SettingsActivity extends AppCompatActivity{
     /****************************************
      /**** BUTTON ACTIONS
      ****************************************/
+    public void btnAction_ShowDocumentation(View view){
+        startActivity(new Intent(this, Settings_AppInfo_SelectorActivity.class));
+    }
 
     /********** Settings Switch Value Changes **********/
     public void btnAction_ResetToDefaults(View view){

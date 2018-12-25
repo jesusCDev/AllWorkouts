@@ -4,4 +4,86 @@
     <string name="push_ups">Push Ups</string>
     <string name="sit_ups">Sit Ups</string>
     <string name="squats">Squats</string>
+
+
+    <!-- Open Source -->
+    <string name="open_source_title">Open Source</string>
+    <string name="open_source_date">Last Updated: December 24 2018</string>
+    <!-- todo - update later -->
+    <string name="open_source_summary">All Workout was created using open source technologies that were under the apache licence 2.0. And all code of the latest builds is posted live at http://github.com/allvens/allworkout</string>
+
+    <string name="open_source_section_1_sub_title">MPAndroidChart</string>
+    <string name="open_source_section_1_summary">MPAndroidChart was use to present a chart in the log screen in the application of the users pass workouts. The library was not alternated or modified in anyway. Find out more at https://github.com/PhilJay/MPAndroidChart</string>
+
+    <!-- Privacy Policy -->
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_date">Effective Date: December 24, 2018</string>
+    <!-- todo - update later -->
+    <string name="privacy_policy_summary_data_collection">We take our customers privacy very seriously, so we make sure any and all data collected from the user is only stored locally and never shared to any outside source. Data collected is stored and used inorder for the app to function properly. To give users full transparency, this project is an open-source project, all code of the latest build can be found at http://github.com/allvens/workoutName.</string>
+    <string name="privacy_policy_summary_privacy_policy">This Privacy Policy applies to your use of the mobile application All-Workout made available in the US version of the Google play store.</string>
+    <string name="privacy_policy_summary_end_user_license">This Privacy Policy is apart of the End User License Agreement. The End User License Agreement governs your use and limits our liability to you. By using our application you agree in the form your data will be used in the way we described in the Privacy Policy. If you do not agree with any of the terms of this Privacy Policy or the End User License Agreement, you may not use the application.</string>
+
+    <string name="privacy_policy_section_1_sub_title">What Information We Collect And How It Is Used</string>
+    <string name="privacy_policy_section_1_body">The only data that is collected is required for the application to function which you provide by using the app. All collected data is done locally for the application\'s usability and no data is ever sent off to any outside source.</string>
+    <string name="privacy_policy_section_1_body_sub_sub_title1">The types of data we collect</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_1">Sets</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_1">The amount of workout session logged.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_2">Reps</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_2">The amount of repetitions per workout performed in a session.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_3">Max</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_3">The amount of repetitions recorded and set as the max amount of repetitions per workout.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_4">Workout Status</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_4">A value representing whether a certain workout is visible and accessible.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_5">Workout Position</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_5">A value representing whether where a workout lies in position to the other workout groups(Pull Ups, Sit Ups, Push Ups, Squats).</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_6">Vibrate Status</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_6">A value representing whether the device will vibrate when instructed to.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_7">Sound Status</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_7">A value representing whether the device will make a sound when instructed to.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_8">Notification</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_8">A value representing whether the device will notify the user when instructed to.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_9">Notification Days</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_9">A value representing the days the device will notify the user when instructed to.</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_sub_title_10">Notification Time</string>
+    <string name="privacy_policy_section_1_body_ol_alpha_body_10">A value representing the time the device will notify the user when instructed to.</string>
+
+    <string name="privacy_policy_section_2_sub_title">All Data</string>
+    <string name="privacy_policy_section_2_body">All data collected is done locally and kept locally on the application. No data is of sent out to any outside source.</string>
+
+    <string name="privacy_policy_section_3_sub_title">Children\'s Privacy Policy</string>
+    <string name="privacy_policy_section_3_body">This application is not intended to be used by anyone under the age of 18. Children under the age of 18 should consult with their legal guardian first before using the application.</string>
+
+    <string name="privacy_policy_section_4_sub_title">Changes to This Privacy Policy</string>
+    <string name="privacy_policy_section_4_body">We reserve the right to amend this Privacy Policy at any time. Any time our privacy policies change, users will be aware to this by checking the effective date. Should material changes occur the user will be notified with accordance of legal requirement. By continuing to use the application after changes have been made, you are confirming that you have read, understood and consented to the latest version of this Privacy Policy.</string>
+
+    <string name="privacy_policy_section_5_sub_title">Contact Information</string>
+    <!-- todo - update later -->
+    <string name="privacy_policy_section_5_body">If you have any questions or opinions regarding this Privacy Policy, you may contact us at allvensinc@gmail.com.</string>
+
+
+    <!-- Terms of Use -->
+    <string name="terms_of_use_title">Terms of Use</string>
+    <string name="terms_of_use_date">Effective Date: December 24, 2018</string>
+    <!-- todo - update later -->
+    <string name="terms_of_use_summary_1">This End User License Agreement is a legal agreement between you and Allvens, that include action and use of the mobile application All Workout. Including any revisions, updates, and modifications. </string>
+    <string name="terms_of_use_summary_2">BY USING THE APPLICATION YOU ACCEPT OUR TERMS OF SERVICE AS STATED BELOW AND PRIVACY POLICY. SHOULD YOU NOT ACCEPT OUR TERMS OR PRIVATE POLICY, YOU ARE NOT PERMITTED TO USE THIS APPLICATION</string>
+
+    <string name="terms_of_use_section_1_sub_title">Privacy</string>
+    <string name="terms_of_use_section_1_body">For information on the collecting, distributing, and usage of your data, view our privacy policy.</string>
+
+    <string name="terms_of_use_section_2_sub_title">Eligibility</string>
+    <string name="terms_of_use_section_2_body">Anyone under the age of 18 is not authorized to use this application without the proper consent of a legal guardian..</string>
+
+    <string name="terms_of_use_section_3_sub_title">Copyright Complaints</string>
+    <!-- todo - update later -->
+    <string name="terms_of_use_section_3_body">Please contact us with any copyright infringement complaints at: allvensinc@gmail.com.</string>
+
+    <string name="terms_of_use_section_4_sub_title">Release</string>
+    <string name="terms_of_use_section_4_body_1">We have and will again make it clear that in no way is any of the workout sessions making claims of weight loss or muscle gain. This application is mainly a tool of logging the given workout sessions with suggested repetitions.</string>
+    <string name="terms_of_use_section_4_body_2">This application has also warn users not to push themselves to a point of pain or injury and that we are not liable should they inquire such injuries or pains from following the recommended workout session info.</string>
+
+    <string name="terms_of_use_section_5_sub_title">Questions</string>
+    <!-- todo - update later -->
+    <string name="terms_of_use_section_5_body">Please contact us with any questions at: allvensinc@gmail.com.</string>
+
 </resources>

@@ -5,6 +5,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <!-- HOME BUTTON -->
     <style name="btn_home_workoutChoice">
         <item name="android:drawable">@drawable/border_set</item>
         <item name="android:colorBackground">@android:color/transparent</item>
@@ -12,6 +14,14 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="button_important">
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/importantButton</item>
+    </style>
+
+
+    <!-- NOTIFICATION -->
     <style name="tv_settings_TimeView">
         <item name="android:textColor">@color/importantButton</item>
         <item name="android:textStyle">bold</item>
@@ -24,6 +34,24 @@
 
     <style name="btn_settings_DayUnSelected">
         <item name="android:textColor">@color/unSelectedButton</item>
+    </style>
+
+    <!-- TEXT DOCUMENTATION STYLES -->
+    <style name="textStyle_Doc_Title">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="textStyle_Doc_SubTitle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+    <style name="textStyle_Doc_Paragraph">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
 </resources>

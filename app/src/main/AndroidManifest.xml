@@ -34,6 +34,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".LogActivity" android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Settings_AppInfo_PresenterActivity" />
+        <activity android:name=".Settings_AppInfo_SelectorActivity" />
 
         <receiver android:name=".settings_manager.Notification_Manager.Notification_Receiver" android:enabled="false">
             <intent-filter>

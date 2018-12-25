@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_settings_appInfo_selector_openSource"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:onClick="btnAction_ShowDocumentation"
+        android:text="Open Source"
+        android:textAlignment="viewStart"
+        android:textColor="@color/importantButton"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_settings_appInfo_selector_termsOfUse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:onClick="btnAction_ShowDocumentation"
+        android:text="TERMS OF USE"
+        android:textAlignment="viewStart"
+        android:textColor="@color/importantButton"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:onClick="btnAction_ShowDocumentation"
+        android:text="Privacy Policy"
+        android:textAlignment="viewStart"
+        android:textColor="@color/importantButton"
+        android:textStyle="bold" />
+
+</android.widget.LinearLayout>

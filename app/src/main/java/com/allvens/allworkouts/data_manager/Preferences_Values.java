@@ -4,6 +4,8 @@ public interface Preferences_Values {
 
     String PREFS_NAMES = "com.allvens.AllWorkouts";
 
+    String FIRST_TIME = "first_time_running_app"; // boolean
+
     /********** Position and Status Keys **********/
     String PULL_POS = "pull_pos";
     String PULL_STAT = "pull_status";

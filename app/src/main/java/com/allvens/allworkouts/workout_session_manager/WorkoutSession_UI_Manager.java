@@ -161,6 +161,7 @@ public class WorkoutSession_UI_Manager {
     public void show_WorkoutHelper() {
         TextView tvWorkoutDescription = new TextView(context);
         tvWorkoutDescription.setText(workout.get_WorkoutDescription(progress));
+        tvWorkoutDescription.setTextColor(context.getResources().getColor(R.color.focusAccent));
         llWorkoutHelper.addView(tvWorkoutDescription);
     }
 
