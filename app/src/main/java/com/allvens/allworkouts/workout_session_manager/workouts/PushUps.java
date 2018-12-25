@@ -74,13 +74,8 @@ public class PushUps extends Workout{
             R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
             R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
 
-    public PushUps(double type, int max){
+    public PushUps(int type, int max){
         if(type == 0){
-            set_DifficultyValues(DIFFICULTY_VALUES);
-            set_ImageResources(IMAGE_RESOURCES_MIX);
-            set_WorkoutName(WORKOUT_NAMES);
-            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
-        }else{
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
@@ -91,6 +86,11 @@ public class PushUps extends Workout{
                     NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME});
 
             set_WorkoutDescriptions(new String[]{NORMAL_DES, NORMAL_DES, NORMAL_DES, NORMAL_DES, NORMAL_DES});
+        }else{
+            set_DifficultyValues(DIFFICULTY_VALUES);
+            set_ImageResources(IMAGE_RESOURCES_MIX);
+            set_WorkoutName(WORKOUT_NAMES);
+            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
         }
 
         set_Max(max);

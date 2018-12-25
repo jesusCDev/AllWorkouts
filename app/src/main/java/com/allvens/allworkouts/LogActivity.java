@@ -22,12 +22,13 @@ public class LogActivity extends AppCompatActivity {
 
         RecyclerView rvShowAllWorkoutSets = findViewById(R.id.rv_log_ShowAllWorkoutSets);
         LineChart lcShowWorkoutProgress = findViewById(R.id.lc_log_ShowWorkoutProgression);
-        TextView tvCurrentMax = findViewById(R.id.tv_settings_CurrentMaxContainer);
+        TextView tvCurrentMax = findViewById(R.id.tv_log_CurrentMaxContainer);
+        TextView tvType = findViewById(R.id.tv_log_type);
 
         String chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
 
         log_manager = new Log_Manager(this, chosenWorkout);
-        log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax);
+        log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
         log_manager.update_Screen();
 
     }
@@ -42,5 +43,8 @@ public class LogActivity extends AppCompatActivity {
 
     public void btnAction_EditCurrentMaxValue(View view) {
         log_manager.update_MaxValue();
+    }
+    public void btnAction_EditType(View view) {
+        log_manager.update_Type();
     }
 }

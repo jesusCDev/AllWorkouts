@@ -93,13 +93,8 @@ public class Squats extends Workout{
             R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
             R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
 
-    public Squats(double type, int max){
+    public Squats(int type, int max){
         if(type == 0){
-            set_DifficultyValues(DIFFICULTY_VALUES);
-            set_ImageResources(IMAGE_RESOURCES_MIX);
-            set_WorkoutName(WORKOUT_NAMES);
-            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
-        }else{
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
@@ -110,6 +105,11 @@ public class Squats extends Workout{
                     SQUAT_WORKOUT_NAME, SQUAT_WORKOUT_NAME});
 
             set_WorkoutDescriptions(new String[] {SQUAT_DES, SQUAT_DES, SQUAT_DES, SQUAT_DES, SQUAT_DES});
+        }else{
+            set_DifficultyValues(DIFFICULTY_VALUES);
+            set_ImageResources(IMAGE_RESOURCES_MIX);
+            set_WorkoutName(WORKOUT_NAMES);
+            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
         }
 
         set_Max(max);

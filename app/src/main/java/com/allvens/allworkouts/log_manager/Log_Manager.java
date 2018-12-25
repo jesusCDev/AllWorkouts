@@ -36,8 +36,8 @@ public class Log_Manager {
         wrapper.close();
     }
 
-    public void setUp_UIManager(RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax){
-        log_ui_manager = new Log_UI_Manager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax);
+    public void setUp_UIManager(RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType){
+        log_ui_manager = new Log_UI_Manager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
     }
 
     /****************************************
@@ -50,6 +50,7 @@ public class Log_Manager {
             log_ui_manager.update_Graph(get_GraphData_TotalReps(wrapper.get_HistoryForWorkout(workout.getId())));
             log_ui_manager.update_SetList(wrapper.get_HistoryForWorkout(workout.getId()));
             log_ui_manager.update_CurrentMax(workout.getMax());
+            log_ui_manager.update_CurrentType(workout.getType());
             wrapper.close();
         }else{
             log_ui_manager.reset_GraphToZero();
@@ -122,8 +123,34 @@ public class Log_Manager {
     }
 
     /****************************************
-     /**** MAX - METHODS
+     /**** Update Values - METHODS
      ****************************************/
+
+    public void update_Type(){
+        if(workout != null) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    int type = 0;
+                    if(which == DialogInterface.BUTTON_NEGATIVE) type = 1;
+
+                    workout.setType(type);
+                    log_ui_manager.update_CurrentType(type);
+
+                    wrapper.open();
+                    wrapper.update_Workout(workout);
+                    wrapper.close();
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Change Workout Type").setPositiveButton("Simple", dialogClickListener)
+                    .setNegativeButton("Mix", dialogClickListener).show();
+        }else{
+            new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void update_MaxValue() {
         if(workout != null) {

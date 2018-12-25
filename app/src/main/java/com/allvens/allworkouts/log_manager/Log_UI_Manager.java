@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
 import com.allvens.allworkouts.log_manager.log_chart.LogChart_Manager;
 import com.allvens.allworkouts.log_manager.log_chart.LineChartData_Entry;
@@ -21,13 +22,15 @@ public class Log_UI_Manager {
     private String chosenWorkout;
     private RecyclerView rvShowAllWorkoutSets;
     private TextView tvCurrentMax;
+    private TextView tvType;
     private LogChart_Manager logChart_manager;
 
-    public Log_UI_Manager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax) {
+    public Log_UI_Manager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
         this.context = context;
         this.chosenWorkout = chosenWorkout;
         this.rvShowAllWorkoutSets = rvShowAllWorkoutSets;
         this.tvCurrentMax = tvCurrentMax;
+        this.tvType = tvType;
 
         logChart_manager = new LogChart_Manager(context, lcShowWorkoutProgress);
     }
@@ -36,6 +39,14 @@ public class Log_UI_Manager {
 
     public void update_CurrentMax(int max) {
         tvCurrentMax.setText("Current Max: " + max);
+    }
+
+    public void update_CurrentType(int type) {
+        DebuggingMethods.pop("Type: " + type);
+        String sType = "Simple";
+        if(type == 1) sType = "Mix";
+
+        tvType.setText("Type: " + sType);
     }
 
     /********** Graph - Methods **********/

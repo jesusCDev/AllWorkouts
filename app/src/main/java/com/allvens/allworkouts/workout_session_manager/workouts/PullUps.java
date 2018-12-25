@@ -70,13 +70,8 @@ public class PullUps extends Workout{
             R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
             R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
 
-    public PullUps(double type, int max){
+    public PullUps(int type, int max){
         if(type == 0){
-            set_DifficultyValues(DIFFICULTY_VALUES);
-            set_ImageResources(IMAGE_RESOURCES_MIX);
-            set_WorkoutName(WORKOUT_NAMES);
-            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
-        }else{
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
@@ -88,6 +83,11 @@ public class PullUps extends Workout{
 
             set_WorkoutDescriptions(new String[]{PUll_UP_DES, PUll_UP_DES, PUll_UP_DES, PUll_UP_DES,
                     PUll_UP_DES});
+        }else{
+            set_DifficultyValues(DIFFICULTY_VALUES);
+            set_ImageResources(IMAGE_RESOURCES_MIX);
+            set_WorkoutName(WORKOUT_NAMES);
+            set_WorkoutDescriptions(WORKOUT_DESCRIPTIONS_MIX);
         }
 
         set_Max(max);
