@@ -134,7 +134,7 @@ public class WorkoutSession_UI_Manager {
 
         tv_Timer = new TextView(context);
         tv_Timer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        setStyle_ForTextView(tv_Timer, R.style.TS_StartingCountDown_Ending);
+        setStyle_ForTextView(tv_Timer, R.style.tv_WorkoutSession_Timer);
 
         llTimeImageHolder.addView(tv_Timer);
     }

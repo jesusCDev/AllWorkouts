@@ -44,6 +44,7 @@ public class LogActivity extends AppCompatActivity {
     public void btnAction_EditCurrentMaxValue(View view) {
         log_manager.update_MaxValue();
     }
+
     public void btnAction_EditType(View view) {
         log_manager.update_Type();
     }

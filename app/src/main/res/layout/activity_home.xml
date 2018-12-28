@@ -25,7 +25,7 @@
             android:textSize="@dimen/priority_1" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_home_WorkoutShow"
             android:layout_width="322dp"
             android:layout_height="320dp"
             android:layout_centerInParent="true"

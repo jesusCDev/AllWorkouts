@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.home_manager.Home_Manager;
@@ -20,10 +21,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         TextView tv_CurrentWorkout = findViewById(R.id.tv_home_CurrentWorkout);
+        ImageView iv_Workout = findViewById(R.id.iv_home_WorkoutShow);
         ImageButton btn_ChangeWorkouts = findViewById(R.id.btn_ChangeWorkouts);
         LinearLayoutCompat ll_home_WorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
 
-        manager = new Home_Manager(this, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+        manager = new Home_Manager(this, tv_CurrentWorkout, iv_Workout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
     }
 
     @Override

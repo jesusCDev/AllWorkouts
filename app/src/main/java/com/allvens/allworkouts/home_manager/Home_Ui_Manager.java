@@ -1,30 +1,55 @@
 package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.DrawableUtils;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
 public class Home_Ui_Manager {
 
     private Context context;
     private TextView tv_CurrentWorkout;
+    private ImageView iv_Workout;
     private ImageButton btn_ChangeWorkouts;
     private LinearLayoutCompat ll_home_WorkoutChooser;
 
-    public Home_Ui_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
+    public Home_Ui_Manager(Context context, TextView tv_CurrentWorkout, ImageView iv_Workout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
         this.context = context;
         this.tv_CurrentWorkout = tv_CurrentWorkout;
+        this.iv_Workout = iv_Workout;
         this.btn_ChangeWorkouts = btn_ChangeWorkouts;
         this.ll_home_WorkoutChooser = ll_home_WorkoutChooser;
     }
 
     public void update_Screen(String chosenWorkout){
         tv_CurrentWorkout.setText(chosenWorkout);
+
+        Drawable resPath = null;
+        switch (chosenWorkout){
+            case Constants.PULL_UPS:
+                resPath = context.getResources().getDrawable(R.drawable.ic_pullup);
+                break;
+            case Constants.SIT_UPS:
+                resPath = context.getResources().getDrawable(R.drawable.ic_situp);
+                break;
+            case Constants.PUSH_UPS:
+                resPath = context.getResources().getDrawable(R.drawable.ic_pushup);
+                break;
+            default:
+                resPath = context.getResources().getDrawable(R.drawable.ic_squat);
+                break;
+        }
+
+        iv_Workout.setImageDrawable(resPath);
     }
 
     /****************************************

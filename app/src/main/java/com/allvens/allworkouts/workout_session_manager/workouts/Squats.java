@@ -89,17 +89,17 @@ public class Squats extends Workout{
             SQUAT_WORKOUT_NAME, KICKING_WORKOUT_NAME, PILE_WORKOUT_NAME,
             JUMPING_WORKOUT_NAME};
 
-    private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_workout_pullup_wide_arm,
-            R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
-            R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
+    private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_squat_punching,
+            R.drawable.ic_squat,R.drawable.ic_squat_kicking,
+            R.drawable.ic_squat_pile, R.drawable.ic_squat_jump};
 
     public Squats(int type, int max){
         if(type == 0){
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
-            set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
-                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal,
-                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal});
+            set_ImageResources(new int[] {R.drawable.ic_squat,
+                    R.drawable.ic_squat,R.drawable.ic_squat,
+                    R.drawable.ic_squat,R.drawable.ic_squat});
 
             set_WorkoutName(new String[]{SQUAT_WORKOUT_NAME, SQUAT_WORKOUT_NAME, SQUAT_WORKOUT_NAME,
                     SQUAT_WORKOUT_NAME, SQUAT_WORKOUT_NAME});

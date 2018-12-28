@@ -70,17 +70,17 @@ public class PushUps extends Workout{
             NORMAL_WORKOUT_NAME, TRIANGLE_WORKOUT_NAME, SOLIDER_WORKOUT_NAME,
             ONE_ARM_WORKOUT_NAME};
 
-    private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_workout_pullup_wide_arm,
-            R.drawable.ic_workout_pullup_front_arm,R.drawable.ic_workout_pullup_side_arm,
-            R.drawable.ic_workout_pullup_back_arm, R.drawable.ic_workout_pullup_one_arm};
+    private final static int[] IMAGE_RESOURCES_MIX = {R.drawable.ic_pushup_balance,
+            R.drawable.ic_pushup,R.drawable.ic_pushup_triangle,
+            R.drawable.ic_pushup_soldier, R.drawable.ic_pushup_onearm};
 
     public PushUps(int type, int max){
         if(type == 0){
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
-            set_ImageResources(new int[] {R.drawable.ic_workout_pullup_normal,
-                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal,
-                    R.drawable.ic_workout_pullup_normal,R.drawable.ic_workout_pullup_normal});
+            set_ImageResources(new int[] {R.drawable.ic_pushup,
+                    R.drawable.ic_pushup,R.drawable.ic_pushup,
+                    R.drawable.ic_pushup,R.drawable.ic_pushup});
 
             set_WorkoutName(new String[]{NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME,
                     NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME});

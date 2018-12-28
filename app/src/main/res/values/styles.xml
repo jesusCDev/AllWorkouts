@@ -1,10 +1,14 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Workout Session Styles -->
+    <style name="tv_WorkoutSession_Timer">
+        <item name="android:textSize">60sp</item>
+    </style>
 
     <!-- HOME BUTTON -->
     <style name="btn_home_workoutChoice">
@@ -25,7 +29,7 @@
     <style name="tv_settings_TimeView">
         <item name="android:textColor">@color/importantButton</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="btn_settings_DaySelected">
@@ -40,18 +44,18 @@
     <style name="textStyle_Doc_Title">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
     </style>
     <style name="textStyle_Doc_SubTitle">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
     <style name="textStyle_Doc_Paragraph">
         <item name="android:textColor">@android:color/darker_gray</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

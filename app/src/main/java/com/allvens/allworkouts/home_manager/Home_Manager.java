@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.LogActivity;
@@ -24,11 +25,11 @@ public class Home_Manager {
     private String chosenWorkout;
     private boolean workoutChooserOpen = false;
 
-    public Home_Manager(Context context, TextView tv_CurrentWorkout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
+    public Home_Manager(Context context, TextView tv_CurrentWorkout, ImageView iv_Workout, ImageButton btn_ChangeWorkouts, LinearLayoutCompat ll_home_WorkoutChooser){
 
         this.context = context;
         setUp_WorkoutsPos();
-        uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+        uiManager = new Home_Ui_Manager(context, tv_CurrentWorkout, iv_Workout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
 
         chosenWorkout = workouts[0];
         uiManager.update_Screen(workouts[0]);
