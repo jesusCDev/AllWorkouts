@@ -12,38 +12,50 @@ public class WorkoutBasicsPrefs_Checker {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
-    private WorkoutPosAndStatus[] workouts;
+    private WorkoutPosAndStatus[] turnOffOn_workouts;
+    private WorkoutPosAndStatus[] turnOn_workouts;
 
     public WorkoutBasicsPrefs_Checker(Context context){
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit = prefs.edit();
 
-        workouts = get_AllWorkoutsPositionsAndStatus();
+        turnOffOn_workouts = get_AllWorkoutsPositionsAndStatus();
+        turnOn_workouts = get_WorkoutsWithOnStatusOnly();
+
     }
 
+    /****************************************
+     /**** GETTER METHODS
+     ****************************************/
+
+    /********** Gets Workout Sets **********/
     public WorkoutPosAndStatus[] get_WorkoutsPos(boolean includeOffStatus) {
         if(includeOffStatus){
-            return workouts;
+            return turnOffOn_workouts;
         }else{
-            WorkoutPosAndStatus[] onWorkouts;
-
-            int size = 0;
-            for(WorkoutPosAndStatus value: workouts){
-                if(value.get_TurnOnStatus()){
-                    size++;
-                }
-            }
-            onWorkouts = new WorkoutPosAndStatus[size];
-
-            int iter = 0;
-            for(int i = 0; i < workouts.length; i++){
-                if(workouts[i].get_TurnOnStatus()){
-                    onWorkouts[iter] = workouts[i];
-                    iter++;
-                }
-            }
-            return onWorkouts;
+            return turnOn_workouts;
         }
+    }
+
+    /********** Gets Workout Sets - for current list  **********/
+    private WorkoutPosAndStatus[] get_WorkoutsWithOnStatusOnly(){
+        WorkoutPosAndStatus[] onWorkouts;
+        int size = 0;
+        for(WorkoutPosAndStatus value: turnOffOn_workouts){
+            if(value.get_TurnOnStatus()){
+                size++;
+            }
+        }
+        onWorkouts = new WorkoutPosAndStatus[size];
+
+        int iter = 0;
+        for(int i = 0; i < turnOffOn_workouts.length; i++){
+            if(turnOffOn_workouts[i].get_TurnOnStatus()){
+                onWorkouts[iter] = turnOffOn_workouts[i];
+                iter++;
+            }
+        }
+        return onWorkouts;
     }
 
     private WorkoutPosAndStatus[] get_AllWorkoutsPositionsAndStatus(){
@@ -55,12 +67,42 @@ public class WorkoutBasicsPrefs_Checker {
         return organize_DataSetByOrder(workouts);
     }
 
-    private WorkoutPosAndStatus get_WorkoutData(String workoutName, String posPrefKey, String statusPrefKey, int resoruceId){
-        WorkoutPosAndStatus workout = new WorkoutPosAndStatus(workoutName, posPrefKey, statusPrefKey, resoruceId);
+    /********** Setting and Get Workout Pos and Status **********/
+    private WorkoutPosAndStatus get_WorkoutData(String workoutName, String posPrefKey, String statusPrefKey, int resourceID){
+        WorkoutPosAndStatus workout = new WorkoutPosAndStatus(workoutName, posPrefKey, statusPrefKey, resourceID);
         workout.setPosition(prefs.getInt(posPrefKey, 1));
         workout.set_TurnOnStatus(prefs.getBoolean(statusPrefKey, true));
         return workout;
     }
+
+
+    private WorkoutPosAndStatus[] organize_DataSetByOrder(WorkoutPosAndStatus[] dataSet){
+        WorkoutPosAndStatus[] newDataSet = dataSet;
+        for(int pos = 1; pos < dataSet.length; pos++){
+            if(dataSet[(pos - 1)].getPosition() > dataSet[pos].getPosition()){
+                newDataSet = organize_DataSetByOrder(switch_DataSetValues(dataSet, (pos-1), pos));
+                break;
+            }
+        }
+        return newDataSet;
+    }
+
+    /**
+     * Switches Values to re-arrange array
+     */
+    private WorkoutPosAndStatus[] switch_DataSetValues(WorkoutPosAndStatus[] dataSet, int beforePos, int afterPos){
+
+        WorkoutPosAndStatus beforeValue = dataSet[beforePos];
+        WorkoutPosAndStatus afterValue = dataSet[afterPos];
+
+        dataSet[beforePos] = afterValue;
+        dataSet[afterPos] = beforeValue;
+        return dataSet;
+    }
+
+    /****************************************
+     /**** UPDATE POS AND STATUS
+     ****************************************/
 
     public void update_WorkoutStatusPref(String prefKey, boolean value){
         edit.putBoolean(prefKey, value);
@@ -72,31 +114,12 @@ public class WorkoutBasicsPrefs_Checker {
         edit.commit();
     }
 
-    private WorkoutPosAndStatus[] organize_DataSetByOrder(WorkoutPosAndStatus[] dataSet){
-        WorkoutPosAndStatus[] newDataSet = dataSet;
-
-        for(int pos = 1; pos < dataSet.length; pos++){
-            if(dataSet[(pos - 1)].getPosition() > dataSet[pos].getPosition()){
-                newDataSet = organize_DataSetByOrder(switch_DataSetValues(dataSet, (pos-1), pos));
-                break;
-            }
-        }
-
-        return newDataSet;
-    }
-
-    private WorkoutPosAndStatus[] switch_DataSetValues(WorkoutPosAndStatus[] dataSet, int beforePos, int afterPos){
-
-        WorkoutPosAndStatus beforeValue = dataSet[beforePos];
-        WorkoutPosAndStatus afterValue = dataSet[afterPos];
-
-        dataSet[beforePos] = afterValue;
-        dataSet[afterPos] = beforeValue;
-        return dataSet;
-    }
-
+    /**
+     * updates position but only when called upon and moved though a drag listener
+     * @param parent
+     */
     public void update_WorkoutsWithViews(ViewGroup parent) {
-        for(WorkoutPosAndStatus workout: workouts){
+        for(WorkoutPosAndStatus workout: turnOffOn_workouts){
             for(int i = 0; i < 4; i++){
                 if(parent.getChildAt(i).getId() == workout.getResourceID()){
                     update_WorkoutPositionPref(workout.getPosPrefKey(), parent.indexOfChild(parent.getChildAt(i)));

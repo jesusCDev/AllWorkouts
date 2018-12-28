@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="cl_Pos" type="id">cl_pos</item>
-    <item name="btn_Pos_id" type="id">btn_pos_pushups_id</item>
-    <item name="tv_Pos_Id" type="id">tv_pos_pushups_id</item>
-    <item name="s_Pos_Id" type="id">s_pos_pushups_id</item>
+    <item name="cl_Pos" type="id"/>
+    <item name="btn_Pos_id" type="id"/>
+    <item name="tv_Pos_Id" type="id"/>
+    <item name="s_Pos_Id" type="id"/>
 
-    <item name="pullUpsPosContainer" type="id">pullups_pos_container</item>
-    <item name="pushUpsPosContainer" type="id">pushups_pos_container</item>
-    <item name="sitUpsPosContainer" type="id">situps_pos_container</item>
-    <item name="squatUpsPosContainer" type="id">squat_pos_container</item>
+    <item name="pullUpsPosContainer" type="id"/>
+    <item name="pushUpsPosContainer" type="id"/>
+    <item name="sitUpsPosContainer" type="id"/>
+    <item name="squatUpsPosContainer" type="id"/>
 </resources>
