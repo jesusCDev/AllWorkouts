@@ -18,6 +18,7 @@ import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.workout_session_manager.workouts.PullUps;
 import com.allvens.allworkouts.workout_session_manager.workouts.PushUps;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
@@ -104,7 +105,7 @@ public class WorkoutSession_UI_Manager {
     }
 
     private void update_WorkoutValuesLastValue(){
-        aTvWorkoutValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        aTvWorkoutValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.unSelectedButton));
     }
 
     /****************************************

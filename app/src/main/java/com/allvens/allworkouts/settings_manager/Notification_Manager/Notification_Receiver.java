@@ -39,7 +39,11 @@ public class Notification_Receiver extends BroadcastReceiver {
             }
         }
 
-        if(settingsPrefs.get_NotificationDayValue((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1))){
+        Calendar rightNow = Calendar.getInstance();
+        int rightNowHour = rightNow.get(Calendar.HOUR);
+        int rightNowMin = rightNow.get(Calendar.MINUTE);
+
+        if(settingsPrefs.get_NotificationDayValue((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)) && (rightNowHour == settingsPrefs.get_NotifiHour()) && (rightNowMin == settingsPrefs.get_NotifiMinute())){
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -61,14 +65,14 @@ public class Notification_Receiver extends BroadcastReceiver {
                     .setContentTitle(ANDROID_CHANNEL_NAME)
                     .setContentText(NOTIFICATION_MESSAGE)
                     .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_drag_handle_black_24dp)
+                    .setSmallIcon(R.drawable.ic_pullup)
                     .setAutoCancel(true);
         }else{
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             long when = System.currentTimeMillis();
 
             return new Notification.Builder(
-                    context).setSmallIcon(R.drawable.ic_drag_handle_black_24dp)
+                    context).setSmallIcon(R.drawable.ic_pullup)
                     .setContentTitle(ANDROID_CHANNEL_NAME)
                     .setContentText(NOTIFICATION_MESSAGE)
                     .setSound(alarmSound)

@@ -17,9 +17,6 @@ public class TextDocumentation_TermsOfService extends TextDocumentation_Manager{
 
         OrderList olContainer_Pos = create_OrderList();
 
-        create_SubTitle(olContainer_Pos.get_NextPos() + getTextFromR(R.string.terms_of_use_section_1_sub_title));
-        create_Paragraph(R.string.terms_of_use_section_1_body);
-
         create_SubTitle(olContainer_Pos.get_NextPos() + getTextFromR(R.string.terms_of_use_section_2_sub_title));
         create_Paragraph(R.string.terms_of_use_section_2_body);
 

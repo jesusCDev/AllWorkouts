@@ -28,13 +28,15 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private final static int PROG_INC_EASY = 2;
     private final static int PROG_INC_HARD = -2;
 
-    private Button lastBtnSelected;
     private Workout_Wrapper wrapper;
+    private Button lastBtnSelected;
+    private Button btnNextWorkout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
+        Button btnNextWorkout = findViewById(R.id.btn_WorkoutFinish_NextWorkout);
 
         choiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
 
@@ -42,8 +44,29 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(choiceWorkout);
         wrapper = new Workout_Wrapper(this);
         wrapper.open();
-
+        set_NextWorkout(btnNextWorkout);
         update_WorkoutProgress();
+    }
+
+    private void set_NextWorkout(Button btnNextWorkout){
+        WorkoutBasicsPrefs_Checker workoutsPos = new WorkoutBasicsPrefs_Checker(this);
+
+        // get current position
+        int currentWorkout_Pos = 0;
+        for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
+            if(workout.getName().equalsIgnoreCase(choiceWorkout)){
+                break;
+            }
+            currentWorkout_Pos++;
+        }
+
+        // find workout in next position
+        if(currentWorkout_Pos != (workoutsPos.get_WorkoutsPos(false).length - 1)){
+            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
+        }else{
+            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
+        }
+        btnNextWorkout.setText(choiceWorkout);
     }
 
     @Override
@@ -99,7 +122,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
      ****************************************/
 
     public void btnAction_setDifficulty(View view) {
-        lastBtnSelected.setTextColor(this.getResources().getColor(R.color.colorPrimaryDark));
+        lastBtnSelected.setTextColor(this.getResources().getColor(R.color.unSelectedButton));
         ((Button)view).setTextColor(Color.BLACK);
         lastBtnSelected = ((Button)view);
 
@@ -117,24 +140,6 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_NextWorkout(View view) {
-        WorkoutBasicsPrefs_Checker workoutsPos = new WorkoutBasicsPrefs_Checker(this);
-
-        // get current position
-        int currentWorkout_Pos = 0;
-        for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
-            if(workout.getName().equalsIgnoreCase(choiceWorkout)){
-                break;
-            }
-            currentWorkout_Pos++;
-        }
-
-        // find workout in next position
-        if(currentWorkout_Pos != (workoutsPos.get_WorkoutsPos(false).length - 1)){
-            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
-        }else{
-            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
-        }
-
         new Start_WorkoutSession().start_Workout(this, choiceWorkout);
     }
 

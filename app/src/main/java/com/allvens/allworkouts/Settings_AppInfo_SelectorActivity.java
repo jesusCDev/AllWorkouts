@@ -23,14 +23,10 @@ public class Settings_AppInfo_SelectorActivity extends AppCompatActivity{
                 value = Constants.OPEN_SOURCE;
                 break;
 
+            default:
             case R.id.btn_settings_appInfo_selector_termsOfUse:
                 value = Constants.TERMS_OF_USE;
                 break;
-
-            default:
-                value = Constants.PRIVACY_POLICY;
-                break;
-
         }
         Intent intent = new Intent(this, Settings_AppInfo_PresenterActivity.class);
         intent.putExtra(Constants.CHOSEN_DOCUMENTATION, value);

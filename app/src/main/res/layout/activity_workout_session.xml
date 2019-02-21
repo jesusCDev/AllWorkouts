@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
                 android:textSize="@dimen/priority_2" />
 
             <TextView
@@ -90,7 +90,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
                 android:textSize="@dimen/priority_2" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
                 android:textSize="@dimen/priority_2" />
 
             <TextView
@@ -110,7 +110,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
                 android:textSize="@dimen/priority_2" />
 
             <TextView
@@ -120,7 +120,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/unSelectedButton"
                 android:textSize="@dimen/priority_2" />
         </LinearLayout>
 

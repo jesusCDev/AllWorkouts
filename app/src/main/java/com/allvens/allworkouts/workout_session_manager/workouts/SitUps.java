@@ -77,9 +77,9 @@ public class SitUps extends Workout{
         if(type == 0){
             set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
 
-            set_ImageResources(new int[] {R.drawable.ic_pullup,
-                    R.drawable.ic_pullup,R.drawable.ic_pullup,
-                    R.drawable.ic_pullup,R.drawable.ic_pullup});
+            set_ImageResources(new int[] {R.drawable.ic_situp,
+                    R.drawable.ic_situp,R.drawable.ic_situp,
+                    R.drawable.ic_situp,R.drawable.ic_situp});
 
             set_WorkoutName(new String[]{NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME,
                     NORMAL_WORKOUT_NAME, NORMAL_WORKOUT_NAME});

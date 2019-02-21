@@ -16,8 +16,9 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Congradulations"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Congradulations!"
             android:textSize="24sp" />
 
         <TextView
@@ -40,48 +41,64 @@
             android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:orientation="horizontal"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/btn_workoutFinish_LevelHard"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_setDifficulty"
-                android:text="Hard"
-                android:textColor="@color/unSelectedButton"
-                android:textSize="@dimen/btn_textSize"
-                android:textStyle="bold" />
+                android:paddingBottom="8dp"
+                android:text="Workout Difficulty"
+                android:textAlignment="center" />
 
-            <Button
-                android:id="@+id/btn_workoutFinish_LevelNeutral"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_setDifficulty"
-                android:text="Neutral"
-                android:textColor="@color/selectedButton"
-                android:textSize="@dimen/btn_textSize"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_workoutFinish_LevelEasy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_setDifficulty"
-                android:text="Easy"
-                android:textColor="@color/unSelectedButton"
-                android:textSize="@dimen/btn_textSize"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/btn_workoutFinish_LevelEasy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:onClick="btnAction_setDifficulty"
+                    android:text="Easy"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/btn_textSize"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_workoutFinish_LevelNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:onClick="btnAction_setDifficulty"
+                    android:text="Normal"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/btn_textSize"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_workoutFinish_LevelHard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:onClick="btnAction_setDifficulty"
+                    android:text="Hard"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/btn_textSize"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -118,12 +135,12 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btn_WorkoutFinish_NextWorkout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
                 android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:onClick="btnAction_NextWorkout"
