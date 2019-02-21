@@ -101,11 +101,12 @@ public class WorkoutSession_UI_Manager {
     }
 
     private void update_WorkoutValuesNextValue(){
-        aTvWorkoutValues[progress].setTextColor(Color.BLACK);
+        setStyle_ForTextView(aTvWorkoutValues[progress], R.style.tv_WorkoutSession_CurrentWorkoutValue);
     }
 
     private void update_WorkoutValuesLastValue(){
         aTvWorkoutValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.unSelectedButton));
+        setStyle_ForTextView(aTvWorkoutValues[(progress - 1)], R.style.tv_WorkoutSession_WorkoutValue);
     }
 
     /****************************************

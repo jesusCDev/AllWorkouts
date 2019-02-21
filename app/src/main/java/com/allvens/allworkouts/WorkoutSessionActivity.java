@@ -44,6 +44,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        manager.kill_Timer();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }

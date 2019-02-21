@@ -8,6 +8,19 @@
     <!-- Workout Session Styles -->
     <style name="tv_WorkoutSession_Timer">
         <item name="android:textSize">60sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="tv_WorkoutSession_CurrentWorkoutValue">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="tv_WorkoutSession_WorkoutValue">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
     </style>
 
     <!-- HOME BUTTON -->
