@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.home_manager.Home_Manager;
 
+
+
+// TODO CHECK IF DATABASE IS STILL BEING INSTALLED
+
 public class MainActivity extends AppCompatActivity {
 
     private Home_Manager manager;
