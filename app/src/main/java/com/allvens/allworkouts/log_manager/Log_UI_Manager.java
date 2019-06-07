@@ -42,7 +42,6 @@ public class Log_UI_Manager {
     }
 
     public void update_CurrentType(int type) {
-        DebuggingMethods.pop("Type: " + type);
         String sType = "Simple";
         if(type == 1) sType = "Mix";
 

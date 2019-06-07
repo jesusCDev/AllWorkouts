@@ -5,11 +5,11 @@ import com.allvens.allworkouts.R;
 public class PushUps extends Workout{
 
     // lower is harder
-    private final static double BALANCE_VALUE_DIFFICULTY = 0.5; // Balance
-    private final static double NORMAL_VALUE_DIFFICULTY = 0.8; // Normal
-    private final static double TRIANGLE_VALUE_DIFFICULTY = 0.4; // Triangle
-    private final static double SOLDIER_VALUE_DIFFICULTY = 0.7; // Soldier
-    private final static double ONE_ARM_VALUE_DIFFICULTY = 0.3; // One Arm
+    private final static double BALANCE_VALUE_DIFFICULTY = 0.4; // Balance
+    private final static double NORMAL_VALUE_DIFFICULTY = 0.7; // Normal
+    private final static double TRIANGLE_VALUE_DIFFICULTY = 0.3; // Triangle
+    private final static double SOLDIER_VALUE_DIFFICULTY = 0.6; // Soldier
+    private final static double ONE_ARM_VALUE_DIFFICULTY = 0.2; // One Arm
 
     private final static String BALANCE_WORKOUT_NAME = "Balance Push Up";
     private final static String NORMAL_WORKOUT_NAME = "Push Up";

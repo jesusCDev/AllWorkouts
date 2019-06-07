@@ -70,8 +70,6 @@ public class Start_WorkoutSession {
         builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                DebuggingMethods.pop("Selected: " + which);
                 create_Workout(which, context, choiceWorkout);
             }
         });

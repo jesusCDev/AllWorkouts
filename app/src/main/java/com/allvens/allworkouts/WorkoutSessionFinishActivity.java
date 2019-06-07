@@ -22,7 +22,8 @@ import com.allvens.allworkouts.workout_session_manager.workouts.Workout_Generato
 public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
     private int maxValue;
-    private String choiceWorkout;
+    private String currentChoiceWorkout;
+    private String nextChoiceWorkout;
 
     private final static int PROG_INC_NEUTRAL = 1;
     private final static int PROG_INC_EASY = 2;
@@ -38,10 +39,10 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         setContentView(R.layout.activity_workout_finish);
         Button btnNextWorkout = findViewById(R.id.btn_WorkoutFinish_NextWorkout);
 
-        choiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        currentChoiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
 
         lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
-        ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(choiceWorkout);
+        ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(currentChoiceWorkout);
         wrapper = new Workout_Wrapper(this);
         wrapper.open();
         set_NextWorkout(btnNextWorkout);
@@ -54,7 +55,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // get current position
         int currentWorkout_Pos = 0;
         for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
-            if(workout.getName().equalsIgnoreCase(choiceWorkout)){
+            if(workout.getName().equalsIgnoreCase(currentChoiceWorkout)){
                 break;
             }
             currentWorkout_Pos++;
@@ -62,11 +63,11 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         // find workout in next position
         if(currentWorkout_Pos != (workoutsPos.get_WorkoutsPos(false).length - 1)){
-            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
+            nextChoiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
         }else{
-            choiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
+            nextChoiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
         }
-        btnNextWorkout.setText(choiceWorkout);
+        btnNextWorkout.setText(nextChoiceWorkout);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
     private void update_WorkoutProgress(){
 
-        Workout_Generator workoutGenerator = new Workout_Generator(wrapper.get_Workout(choiceWorkout));
+        Workout_Generator workoutGenerator = new Workout_Generator(wrapper.get_Workout(currentChoiceWorkout));
 
         Workout workout = workoutGenerator.get_Workout();
         Workout_Info workout_info = workoutGenerator.get_WorkoutInfo();
@@ -108,7 +109,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     /********** Max Updater **********/
 
     private void update_WorkoutProgress(int progress){
-        Workout_Info workout = wrapper.get_Workout(choiceWorkout);
+        Workout_Info workout = wrapper.get_Workout(currentChoiceWorkout);
 
         int value = maxValue + progress;
         if(value <= 0) value = 1;
@@ -140,7 +141,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void btnAction_NextWorkout(View view) {
-        new Start_WorkoutSession().start_Workout(this, choiceWorkout);
+        new Start_WorkoutSession().start_Workout(this, nextChoiceWorkout);
     }
 
     public void btnAction_GoHome(View view) {

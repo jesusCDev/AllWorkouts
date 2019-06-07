@@ -5,11 +5,11 @@ import com.allvens.allworkouts.R;
 public class PullUps extends Workout{
 
     // lower means harder
-    private final static double WIDE_ARM_VALUE_DIFFICULTY = 0.5; // Wide Arm
-    private final static double CHIN_UP_VALUE_DIFFICULTY = 0.6; // Back Arm
+    private final static double WIDE_ARM_VALUE_DIFFICULTY = 0.4; // Wide Arm
+    private final static double CHIN_UP_VALUE_DIFFICULTY = 0.5; // Back Arm
     private final static double SIDE_ARM_VALUE_DIFFICULTY = 0.4; // Side Arm
-    private final static double PULL_UP_VALUE_DIFFICULTY = 0.8; // Pull Up
-    private final static double ONE_ARM_VALUE_DIFFICULTY = 0.3; // One Arm
+    private final static double PULL_UP_VALUE_DIFFICULTY = 0.7; // Pull Up
+    private final static double ONE_ARM_VALUE_DIFFICULTY = 0.2; // One Arm
 
     private final static String WIDE_ARM_WORKOUT_NAME = "Wide Arm Pull Up";
     private final static String CHIN_UP_WORKOUT_NAME = "Chin Up";

@@ -5,11 +5,11 @@ import com.allvens.allworkouts.R;
 public class Squats extends Workout{
 
     // lower means harder
-    private final static double PUNCHING_VALUE_DIFFICULTY = 0.6;
-    private final static double SQUAT_VALUE_DIFFICULTY = 0.8;
-    private final static double KICKING_VALUE_DIFFICULTY = 0.6;
-    private final static double PILE_VALUE_DIFFICULTY = 0.7;
-    private final static double JUMPING_VALUE_DIFFICULTY = 0.4;
+    private final static double PUNCHING_VALUE_DIFFICULTY = 0.5;
+    private final static double SQUAT_VALUE_DIFFICULTY = 0.7;
+    private final static double KICKING_VALUE_DIFFICULTY = 0.5;
+    private final static double PILE_VALUE_DIFFICULTY = 0.6;
+    private final static double JUMPING_VALUE_DIFFICULTY = 0.3;
 
     private final static String PUNCHING_WORKOUT_NAME = "Punching Squat";
     private final static String SQUAT_WORKOUT_NAME = "Squat";

@@ -21,14 +21,17 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:gravity="top"
             android:text="PushUps"
-            android:textSize="@dimen/priority_1" />
+            android:textSize="@dimen/priority_1"
+            android:translationZ="10dp" />
 
         <ImageView
             android:id="@+id/iv_home_WorkoutShow"
             android:layout_width="322dp"
             android:layout_height="320dp"
             android:layout_centerInParent="true"
+            android:translationZ="5dp"
             app:srcCompat="@mipmap/ic_launcher" />
 
         <android.support.v7.widget.LinearLayoutCompat
@@ -37,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/layout_top_round_corners"
-            android:orientation="vertical"></android.support.v7.widget.LinearLayoutCompat>
+            android:orientation="vertical"
+            android:translationZ="10dp"></android.support.v7.widget.LinearLayoutCompat>
 
     </RelativeLayout>
 

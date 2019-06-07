@@ -25,8 +25,6 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         String chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         int type = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
 
-        DebuggingMethods.pop("Type: " + type);
-
         workoutMax_manager = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type);
         tv_max_WorkoutName.setText(chosenWorkout);
     }

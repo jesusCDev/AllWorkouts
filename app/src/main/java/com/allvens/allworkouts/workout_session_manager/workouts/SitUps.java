@@ -5,11 +5,11 @@ import com.allvens.allworkouts.R;
 public class SitUps extends Workout{
 
     // lower is harder
-    private final static double PUNCHING_VALUE_DIFFICULTY = 0.5;
-    private final static double NORMAL_VALUE_DIFFICULTY = 0.8;
-    private final static double TO_KNEE_VALUE_DIFFICULTY = 0.4;
-    private final static double BICYCLE_VALUE_DIFFICULTY = 0.6;
-    private final static double CRUNCH_VALUE_DIFFICULTY = 0.3;
+    private final static double PUNCHING_VALUE_DIFFICULTY = 0.4;
+    private final static double NORMAL_VALUE_DIFFICULTY = 0.7;
+    private final static double TO_KNEE_VALUE_DIFFICULTY = 0.3;
+    private final static double BICYCLE_VALUE_DIFFICULTY = 0.5;
+    private final static double CRUNCH_VALUE_DIFFICULTY = 0.2;
 
     private final static String PUNCHING_WORKOUT_NAME = "Punching Sit Up";
     private final static String NORMAL_WORKOUT_NAME = "Sit Up";

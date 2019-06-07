@@ -53,19 +53,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                //Remove it here unless you want to get this callback for EVERY
-                //layout pass, which can get you into infinite loops if you ever
-                //modify the layout from within this method.
                 content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                Log.d("Height", "Height of contianer:" + content.getHeight());
-
-                //Now you can get the width and height from content
-                // Gets linearlayout
                 LinearLayout layout = findViewById(R.id.fakeSpace);
-                // Gets the layout params that will allow you to resize the layout
                 ViewGroup.LayoutParams params = layout.getLayoutParams();
-                // Changes the height and width to the specified *pixels*
                 params.height = content.getHeight();
                 params.width = 100;
                 layout.setLayoutParams(params);

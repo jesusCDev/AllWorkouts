@@ -6,7 +6,7 @@ import android.util.Log;
 public class DebuggingMethods {
 
     public static void pop(String message){
-        Log.d("Bug", message);
+        Log.d("Bug_Squash", message);
     }
 
     public static void pop(String bugKey, String message){
