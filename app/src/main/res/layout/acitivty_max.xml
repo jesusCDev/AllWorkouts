@@ -53,7 +53,9 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="33dp"
-            android:text="Max Number Of Reps" />
+            android:text="Max Number Of Consecutive Reps"
+            android:textSize="24sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout

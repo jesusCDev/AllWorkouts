@@ -31,6 +31,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
     private Workout_Wrapper wrapper;
     private Button lastBtnSelected;
+    // todo WTF IS THIS BUTTON FOR?
     private Button btnNextWorkout;
 
     @Override

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
+import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
@@ -63,10 +64,11 @@ public class Start_WorkoutSession {
      ****************************************/
 
     private void start_newSession(final Context context, final String choiceWorkout){
-        final String[] workoutTypes = {"Simple", "Mix"};
+        // todo change this!! to resources from variables
+        final String[] workoutTypes = {context.getResources().getString(R.string.simple_workouts), context.getResources().getString(R.string.mix_workouts)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pick workout type.");
+        builder.setTitle(context.getString(R.string.pick_workout_type));
         builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

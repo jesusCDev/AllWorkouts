@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Congratulations!"
-            android:textSize="24sp" />
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_workoutFinish_WorkoutName"
@@ -28,7 +29,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="Wokrout"
-            android:textSize="@dimen/priority_1" />
+            android:textSize="@dimen/priority_1"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -53,7 +55,8 @@
                 android:layout_weight="1"
                 android:paddingBottom="8dp"
                 android:text="Workout Difficulty"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
