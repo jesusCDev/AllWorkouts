@@ -30,6 +30,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         LinearLayout llTimeImageHolder = findViewById(R.id.ll_workout_timeImageHolder);
         LinearLayout llWorkoutHelper = findViewById(R.id.ll_workout_workout_helper);
 
+        TextView tvFront = findViewById(R.id.tv_workout_repNumber_front);
+        TextView tvBack = findViewById(R.id.tv_workout_repNumber_back);
+
         TextView tvValue1 = findViewById(R.id.tv_workout_Value1);
         TextView tvValue2 = findViewById(R.id.tv_workout_Value2);
         TextView tvValue3 = findViewById(R.id.tv_workout_Value3);
@@ -40,9 +43,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         ImageButton btn_WorkoutHelper = findViewById(R.id.btn_workout_WorkoutHelper);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
-        manager.setUp_UiManager(tv_workout_WorkoutName, llTimeImageHolder, llWorkoutHelper, tvValue1,
-                tvValue2, tvValue3, tvValue4, tvValue5, btn_ChangeScreens, btn_WorkoutHelper);
+        manager.setUp_UiManager(tv_workout_WorkoutName, llTimeImageHolder, llWorkoutHelper,
+                tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
+                btn_ChangeScreens, btn_WorkoutHelper);
+
         manager.set_Timer();
+
         manager.start_Screen();
 
         fixImageHieght();

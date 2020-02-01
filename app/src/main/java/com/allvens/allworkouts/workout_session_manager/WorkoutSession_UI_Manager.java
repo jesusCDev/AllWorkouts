@@ -1,7 +1,6 @@
 package com.allvens.allworkouts.workout_session_manager;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
@@ -15,11 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
-import com.allvens.allworkouts.workout_session_manager.workouts.PullUps;
-import com.allvens.allworkouts.workout_session_manager.workouts.PushUps;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
 public class WorkoutSession_UI_Manager {
@@ -34,6 +30,9 @@ public class WorkoutSession_UI_Manager {
 
     private Workout workout;
     private TextView[] aTvWorkoutValues = new TextView[5];
+    private TextView tvFront;
+    private TextView tvBack;
+
     boolean soundOn;
     boolean vibrateOn;
     private Vibrator vibrator;
@@ -42,12 +41,16 @@ public class WorkoutSession_UI_Manager {
     private int progress = 0;
 
     public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName,
-                                     LinearLayout llTimeImageHolder, LinearLayout llWorkoutHelper, TextView tvValue1, TextView tvValue2,
+                                     LinearLayout llTimeImageHolder, LinearLayout llWorkoutHelper,
+                                     TextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
                                      TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
         this.llTimeImageHolder = llTimeImageHolder;
         this.llWorkoutHelper = llWorkoutHelper;
+
+        this.tvFront = tvFront;
+        this.tvBack = tvBack;
 
         aTvWorkoutValues[0] = tvValue1;
         aTvWorkoutValues[1] = tvValue2;
@@ -117,6 +120,7 @@ public class WorkoutSession_UI_Manager {
         tv_WorkoutName.setText(workout.get_WorkoutName(progress));
         btn_ChangeScreens.setText("Complete");
 
+        set_FrontBackWorkoutValues();
         update_WorkoutValuesNextValue();
 
         clear_MainView();
@@ -124,6 +128,14 @@ public class WorkoutSession_UI_Manager {
         iv_Workout.setImageResource(workout.get_WorkoutImage(progress));
 
         llTimeImageHolder.addView(iv_Workout);
+    }
+
+    private void set_FrontBackWorkoutValues(){
+        tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+        tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+
+        setStyle_ForTextView(tvFront, R.style.tv_WorkoutSession_Front);
+        setStyle_ForTextView(tvBack, R.style.tv_WorkoutSession_Back);
     }
 
     public void changeScreen_Timer() {
