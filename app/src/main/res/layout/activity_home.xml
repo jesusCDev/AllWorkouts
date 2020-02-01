@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_dark"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -21,6 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:textColor="@android:color/white"
             android:gravity="top"
             android:text="PushUps"
             android:textSize="@dimen/priority_1"
@@ -71,9 +73,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:textColor="@android:color/white"
             android:onClick="btnAction_StartWorkout"
             android:text="Start"
-            android:textColor="@android:color/white"
             android:textSize="@dimen/btn_textSize"
             android:textStyle="bold" />
 
@@ -89,9 +91,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
                 android:onClick="btnAction_Settings"
                 android:text="Settings"
-                android:textColor="@android:color/white"
                 android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
@@ -100,9 +102,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
                 android:onClick="btnAction_Log"
                 android:text="Log"
-                android:textColor="@android:color/white"
                 android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
         </LinearLayout>

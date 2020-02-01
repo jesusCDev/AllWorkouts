@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#EFEFEF</color>
-    <color name="colorPrimaryDark">#992325</color>
-    <color name="colorAccent">#FF3B3F</color>
+    <color name="colorPrimary">#202933</color>
+    <color name="colorPrimaryDark">#d14321</color>
+    <color name="colorAccent">#FD542C</color>
 
-    <color name="objects">#000000</color>
-    <color name="focusAccent">#CAEBF2</color>
+    <color name="objects">#333A44</color>
+    <color name="focusAccent">#333A44</color>
 
-    <color name="selectedButton">#000000</color>
+    <!-- Background - primary color for background -->
+    <color name="background_dark">#202933</color>
+
+    <!-- Button Text Color - on Orange Background -->
+    <!-- Button Text Color - on Dark Background -->
+
+
+    <!-- Button color - Settings Color -->
+    <color name="selectedButton">#FFFFFF</color>
     <color name="unSelectedButton">#A9A9A9</color>
-    <color name="importantButton">#FF3B3F</color>
+    <color name="importantButton">#FD542C</color>
 </resources>

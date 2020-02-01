@@ -9,12 +9,13 @@
     <style name="tv_WorkoutSession_Timer">
         <item name="android:textSize">60sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="tv_WorkoutSession_CurrentWorkoutValue">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="tv_WorkoutSession_WorkoutValue">
@@ -28,7 +29,7 @@
         <item name="android:drawable">@drawable/border_set</item>
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/unSelectedButton</item>
     </style>
 
     <style name="button_important">
@@ -46,12 +47,13 @@
     </style>
 
     <style name="btn_settings_DaySelected">
-        <item name="android:textColor">@color/selectedButton</item>
+        <item name="android:textColor">@color/importantButton</item>
     </style>
 
     <style name="btn_settings_DayUnSelected">
         <item name="android:textColor">@color/unSelectedButton</item>
     </style>
+
 
     <!-- TEXT DOCUMENTATION STYLES -->
     <style name="textStyle_Doc_Title">
