@@ -1,5 +1,6 @@
 package com.allvens.allworkouts.workout_session_manager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -122,88 +123,84 @@ public class WorkoutSession_UI_Manager {
      ****************************************/
 
     public void changeScreen_Workout() {
-        tv_WorkoutName.setText(workout.get_WorkoutName(progress));
-        btn_ChangeScreens.setText("Complete");
+        Activity act = (Activity)context;
+        act.runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                tv_WorkoutName.setText(workout.get_WorkoutName(progress));
+                btn_ChangeScreens.setText("Complete");
 
-        show_FrontBackWorkoutValues();
-        update_WorkoutValuesNextValue();
 
-        ivWorkoutImageHolder.setImageResource(workout.get_WorkoutImage(progress));
+                tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+                tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
 
-        hide_tvTimer();
-        show_ivWorkout();
+                update_WorkoutValuesNextValue();
+
+                setVisibility_TextView(tvTimerHolder, false);
+
+                setVisibility_TextView(tvFront, true);
+                setVisibility_TextView(tvBack, true);
+
+                setVisibility_ImageView(ivWorkoutImageHolder, true);
+                ivWorkoutImageHolder.setImageResource(workout.get_WorkoutImage(progress));
+            } });
     }
 
-    private void show_FrontBackWorkoutValues(){
-        tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
-        tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
-
-        setStyle_ForTextView(tvFront, R.style.v_workoutSession_show);
-        setStyle_ForTextView(tvBack, R.style.v_workoutSession_show);
-    }
-
-    private void hide_FrontBackWorkoutValues(){
-        tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
-        tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
-
-        setStyle_ForTextView(tvFront, R.style.v_workoutSession_hide);
-        setStyle_ForTextView(tvBack, R.style.v_workoutSession_hide);
-    }
-
-    private void show_tvTimer(){
-        setStyle_ForTextView(tvTimerHolder, R.style.v_workoutSession_show);
-    }
-
-    private void hide_tvTimer(){
-        setStyle_ForTextView(tvTimerHolder, R.style.v_workoutSession_hide);
-    }
-
-    private void show_ivWorkout(){
-        setVisibility_ImageView(ivWorkoutImageHolder, true);
-    }
-
-    private void hide_ivWorkout(){
-        setVisibility_ImageView(ivWorkoutImageHolder, false);
-    }
 
     public void changeScreen_Timer() {
-        tv_WorkoutName.setText(workout.get_WorkoutName(progress));
-        btn_ChangeScreens.setText("Next");
 
-        hide_FrontBackWorkoutValues();
-        update_WorkoutValuesLastValue();
-        update_WorkoutValuesNextValue();
+        Activity act = (Activity)context;
+        act.runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                tv_WorkoutName.setText(workout.get_WorkoutName(progress));
+                btn_ChangeScreens.setText("Next");
 
-        hide_ivWorkout();
-        show_tvTimer();
+                setVisibility_ImageView(ivWorkoutImageHolder, false);
+
+                setVisibility_TextView(tvFront, false);
+
+                setVisibility_TextView(tvBack, false);
+                setVisibility_TextView(tvTimerHolder, true);
+
+                update_WorkoutValuesLastValue();
+                update_WorkoutValuesNextValue();
+            } });
+
     }
 
 
 
     /********** Styling Method **********/
 
-    private void setVisibility_ImageView(ImageView ivImage, boolean visible){
-        int visibleValue;
-        if(visible){
-            visibleValue = View.VISIBLE;
-        }else{
-            visibleValue = View.INVISIBLE;
-        }
-
-        if (Build.VERSION.SDK_INT < 23) {
-            ivImage.setVisibility(visibleValue);
-        }else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                ivImage.onVisibilityAggregated(visible);
-            }
-        }
-    }
-
     private void setStyle_ForTextView(TextView tv, int style){
         if (Build.VERSION.SDK_INT < 23) {
             tv.setTextAppearance(context, style);
         } else {
             tv.setTextAppearance(style);
+        }
+    }
+
+    private void setVisibility_ImageView(ImageView ivImage, boolean visible){
+        int visibleValue = View.INVISIBLE;;
+        if(visible) visibleValue = View.VISIBLE;
+
+        ivImage.setVisibility(visibleValue);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ivImage.onVisibilityAggregated(visible);
+        }
+    }
+
+    private void setVisibility_TextView(TextView tv, boolean visible){
+
+        int visibleValue = View.INVISIBLE;;
+        if(visible) visibleValue = View.VISIBLE;
+
+        tv.setVisibility(visibleValue);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tv.onVisibilityAggregated(visible);
         }
     }
 

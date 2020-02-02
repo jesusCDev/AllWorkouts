@@ -55,22 +55,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
         manager.start_Screen();
 
-        fixImageHieght();
-    }
-
-    public void fixImageHieght(){
-        final View content = findViewById(R.id.workoutExplainationContainer);
-        content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                LinearLayout layout = findViewById(R.id.fakeSpace);
-                ViewGroup.LayoutParams params = layout.getLayoutParams();
-                params.height = content.getHeight();
-                params.width = 100;
-                layout.setLayoutParams(params);
-            }
-        });
     }
 
     @Override

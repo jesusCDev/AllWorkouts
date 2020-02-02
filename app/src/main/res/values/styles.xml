@@ -5,45 +5,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="v_workoutSession_show">
-        <item name="android:visibility">visible</item>
-    </style>
-
-    <style name="v_workoutSession_hide">
-        <item name="android:visibility">invisible</item>
-    </style>
 
     <!-- Workout Session Styles -->
     <style name="tv_WorkoutSession_Timer">
         <item name="android:textSize">60sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorAccent</item>
-    </style>
-
-    <style name="tv_workoutSession_front_show">
-        <item name="android:textSize">300sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="outlineColor">@color/colorAccent</item>
-    </style>
-
-    <style name="tv_workoutSession_front_hide">
-        <item name="android:textSize">300sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="outlineColor">@android:color/transparent</item>
-    </style>
-
-
-    <style name="tv_workoutSession_back_show">
-        <item name="android:textSize">300sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
-
-
-    <style name="tv_workoutSession_back_hide">
-        <item name="android:textSize">300sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/transparent</item>
     </style>
 
     <style name="tv_WorkoutSession_CurrentWorkoutValue">

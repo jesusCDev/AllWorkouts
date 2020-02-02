@@ -1,5 +1,6 @@
 package com.allvens.allworkouts.workout_session_manager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Button;
