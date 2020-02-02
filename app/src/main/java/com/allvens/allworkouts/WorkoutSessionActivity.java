@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.workout_session_manager.WorkoutSession_Manager;
+import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
 
@@ -27,10 +29,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout_session);
 
         TextView tv_workout_WorkoutName = findViewById(R.id.tv_workout_WorkoutName);
-        LinearLayout llTimeImageHolder = findViewById(R.id.ll_workout_timeImageHolder);
         LinearLayout llWorkoutHelper = findViewById(R.id.ll_workout_workout_helper);
 
-        TextView tvFront = findViewById(R.id.tv_workout_repNumber_front);
+        ImageView ivWorkoutImageHolder = findViewById(R.id.iv_workout_workoutImage);
+        TextView tvTimerHolder = findViewById(R.id.tv_workout_timer);
+
+        OutlineTextView tvFront = findViewById(R.id.otv_workout_repNumber_front);
         TextView tvBack = findViewById(R.id.tv_workout_repNumber_back);
 
         TextView tvValue1 = findViewById(R.id.tv_workout_Value1);
@@ -43,7 +47,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         ImageButton btn_WorkoutHelper = findViewById(R.id.btn_workout_WorkoutHelper);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
-        manager.setUp_UiManager(tv_workout_WorkoutName, llTimeImageHolder, llWorkoutHelper,
+        manager.setUp_UiManager(tv_workout_WorkoutName, ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens, btn_WorkoutHelper);
 

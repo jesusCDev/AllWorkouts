@@ -17,16 +17,19 @@ import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
+import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSession_UI_Manager {
 
     private Context context;
     private TextView tv_WorkoutName;
-    private LinearLayout llTimeImageHolder;
     private LinearLayout llWorkoutHelper;
+
     private Button btn_ChangeScreens;
     private ImageButton btn_WorkoutHelper;
-    private TextView tv_Timer;
+
+    private TextView tvTimerHolder;
+    private ImageView ivWorkoutImageHolder;
 
     private Workout workout;
     private TextView[] aTvWorkoutValues = new TextView[5];
@@ -41,13 +44,15 @@ public class WorkoutSession_UI_Manager {
     private int progress = 0;
 
     public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName,
-                                     LinearLayout llTimeImageHolder, LinearLayout llWorkoutHelper,
-                                     TextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
+                                     ImageView ivWorkoutImageHolder, TextView tvTimerHolder, LinearLayout llWorkoutHelper,
+                                     OutlineTextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
                                      TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
-        this.llTimeImageHolder = llTimeImageHolder;
         this.llWorkoutHelper = llWorkoutHelper;
+
+        this.ivWorkoutImageHolder = ivWorkoutImageHolder;
+        this.tvTimerHolder = tvTimerHolder;
 
         this.tvFront = tvFront;
         this.tvBack = tvBack;
@@ -90,7 +95,7 @@ public class WorkoutSession_UI_Manager {
     /********** Timer View  **********/
 
     public void set_TimeTV(long seconds) {
-        tv_Timer.setText(Long.toString(seconds));
+        tvTimerHolder.setText(Long.toString(seconds));
     }
 
     /********** Workout Values - Methods **********/
@@ -120,45 +125,79 @@ public class WorkoutSession_UI_Manager {
         tv_WorkoutName.setText(workout.get_WorkoutName(progress));
         btn_ChangeScreens.setText("Complete");
 
-        set_FrontBackWorkoutValues();
+        show_FrontBackWorkoutValues();
         update_WorkoutValuesNextValue();
 
-        clear_MainView();
-        ImageView iv_Workout = new ImageView(context);
-        iv_Workout.setImageResource(workout.get_WorkoutImage(progress));
+        ivWorkoutImageHolder.setImageResource(workout.get_WorkoutImage(progress));
 
-        llTimeImageHolder.addView(iv_Workout);
+        hide_tvTimer();
+        show_ivWorkout();
     }
 
-    private void set_FrontBackWorkoutValues(){
+    private void show_FrontBackWorkoutValues(){
         tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
         tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
 
-        setStyle_ForTextView(tvFront, R.style.tv_WorkoutSession_Front);
-        setStyle_ForTextView(tvBack, R.style.tv_WorkoutSession_Back);
+        setStyle_ForTextView(tvFront, R.style.v_workoutSession_show);
+        setStyle_ForTextView(tvBack, R.style.v_workoutSession_show);
+    }
+
+    private void hide_FrontBackWorkoutValues(){
+        tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+        tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+
+        setStyle_ForTextView(tvFront, R.style.v_workoutSession_hide);
+        setStyle_ForTextView(tvBack, R.style.v_workoutSession_hide);
+    }
+
+    private void show_tvTimer(){
+        setStyle_ForTextView(tvTimerHolder, R.style.v_workoutSession_show);
+    }
+
+    private void hide_tvTimer(){
+        setStyle_ForTextView(tvTimerHolder, R.style.v_workoutSession_hide);
+    }
+
+    private void show_ivWorkout(){
+        setVisibility_ImageView(ivWorkoutImageHolder, true);
+    }
+
+    private void hide_ivWorkout(){
+        setVisibility_ImageView(ivWorkoutImageHolder, false);
     }
 
     public void changeScreen_Timer() {
         tv_WorkoutName.setText(workout.get_WorkoutName(progress));
         btn_ChangeScreens.setText("Next");
 
-        clear_MainView();
+        hide_FrontBackWorkoutValues();
         update_WorkoutValuesLastValue();
         update_WorkoutValuesNextValue();
 
-        tv_Timer = new TextView(context);
-        tv_Timer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        setStyle_ForTextView(tv_Timer, R.style.tv_WorkoutSession_Timer);
-
-        llTimeImageHolder.addView(tv_Timer);
+        hide_ivWorkout();
+        show_tvTimer();
     }
 
-    private void clear_MainView(){
-        llTimeImageHolder.removeAllViews();
-    }
 
 
     /********** Styling Method **********/
+
+    private void setVisibility_ImageView(ImageView ivImage, boolean visible){
+        int visibleValue;
+        if(visible){
+            visibleValue = View.VISIBLE;
+        }else{
+            visibleValue = View.INVISIBLE;
+        }
+
+        if (Build.VERSION.SDK_INT < 23) {
+            ivImage.setVisibility(visibleValue);
+        }else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                ivImage.onVisibilityAggregated(visible);
+            }
+        }
+    }
 
     private void setStyle_ForTextView(TextView tv, int style){
         if (Build.VERSION.SDK_INT < 23) {

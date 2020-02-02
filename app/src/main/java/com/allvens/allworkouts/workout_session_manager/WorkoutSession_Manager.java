@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout_Generator;
+import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSession_Manager {
 
@@ -43,14 +45,14 @@ public class WorkoutSession_Manager {
      /**** SETTER/GETTER METHODS
      ****************************************/
 
-    public void setUp_UiManager(TextView tv_workout_workoutName, LinearLayout llTimeImageHolder,
-                                LinearLayout llWorkoutHelper, TextView tvFront, TextView tvBack,
+    public void setUp_UiManager(TextView tv_workout_workoutName,  ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
+                                LinearLayout llWorkoutHelper, OutlineTextView tvFront, TextView tvBack,
                                 TextView tvValue1, TextView tvValue2, TextView tvValue3,
                                 TextView tvValue4, TextView tvValue5,
                                 Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
 
         workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
-                llTimeImageHolder, llWorkoutHelper, tvFront, tvBack,
+                ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper, tvFront, tvBack,
                 tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens, btn_WorkoutHelper);
     }

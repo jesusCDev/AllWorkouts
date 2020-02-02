@@ -49,23 +49,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_workout_repNumber_front"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:foregroundGravity="center"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
-        android:translationZ="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workoutExplainationContainer"
-        app:layout_constraintVertical_bias="0.0"/>
-
-    <LinearLayout
-        android:id="@+id/ll_workout_timeImageHolder"
+    <com.iambedant.text.OutlineTextView
+        android:id="@+id/otv_workout_repNumber_front"
+        android:textSize="200sp"
+        android:textColor="@android:color/transparent"
+        app:outlineColor="@color/colorAccent"
+        app:outlineWidth="0.7"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="16dp"
@@ -77,11 +66,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/workoutExplainationContainer"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <ImageView
+        android:id="@+id/iv_workout_workoutImage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:foregroundGravity="center"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:translationZ="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workoutExplainationContainer"
+        app:layout_constraintVertical_bias="0.0"
+        android:contentDescription="Image Of the workout" />
+
+    <TextView
+        android:id="@+id/tv_workout_timer"
+        android:layout_width="match_parent"
+        android:textSize="200sp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:foregroundGravity="center"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:translationZ="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workoutExplainationContainer"
+        app:layout_constraintVertical_bias="0.0"/>
 
     <TextView
         android:id="@+id/tv_workout_repNumber_back"
         android:layout_width="match_parent"
+        android:textSize="200sp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
         android:foregroundGravity="center"
