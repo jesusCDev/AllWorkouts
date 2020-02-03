@@ -7,6 +7,7 @@ import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,6 +30,8 @@ public class WorkoutSession_UI_Manager {
     private Button btn_ChangeScreens;
     private ImageButton btn_WorkoutHelper;
 
+    private ConstraintLayout cTimerRepsWorkoutHolder;
+
     private TextView tvTimerHolder;
     private ImageView ivWorkoutImageHolder;
 
@@ -44,13 +47,15 @@ public class WorkoutSession_UI_Manager {
 
     private int progress = 0;
 
-    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName,
+    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName, ConstraintLayout cTimerRepsWorkoutHolder,
                                      ImageView ivWorkoutImageHolder, TextView tvTimerHolder, LinearLayout llWorkoutHelper,
                                      OutlineTextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
                                      TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
         this.llWorkoutHelper = llWorkoutHelper;
+
+        this.cTimerRepsWorkoutHolder = cTimerRepsWorkoutHolder;
 
         this.ivWorkoutImageHolder = ivWorkoutImageHolder;
         this.tvTimerHolder = tvTimerHolder;

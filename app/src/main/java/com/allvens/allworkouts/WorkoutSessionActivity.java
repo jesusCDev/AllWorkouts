@@ -3,6 +3,7 @@ package com.allvens.allworkouts;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,6 +32,8 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         TextView tv_workout_WorkoutName = findViewById(R.id.tv_workout_WorkoutName);
         LinearLayout llWorkoutHelper = findViewById(R.id.ll_workout_workout_helper);
 
+        ConstraintLayout cTimerRepsWorkoutHolder = findViewById(R.id.c_workoutSession_TimerRepsWorkoutHolder);
+
         ImageView ivWorkoutImageHolder = findViewById(R.id.iv_workout_workoutImage);
         TextView tvTimerHolder = findViewById(R.id.tv_workout_timer);
 
@@ -47,7 +50,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         ImageButton btn_WorkoutHelper = findViewById(R.id.btn_workout_WorkoutHelper);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
-        manager.setUp_UiManager(tv_workout_WorkoutName, ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
+        manager.setUp_UiManager(tv_workout_WorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens, btn_WorkoutHelper);
 

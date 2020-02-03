@@ -3,6 +3,7 @@ package com.allvens.allworkouts.workout_session_manager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,15 +47,15 @@ public class WorkoutSession_Manager {
      /**** SETTER/GETTER METHODS
      ****************************************/
 
-    public void setUp_UiManager(TextView tv_workout_workoutName,  ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
+    public void setUp_UiManager(TextView tv_workout_workoutName, ConstraintLayout cTimerRepsWorkoutHolder,  ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
                                 LinearLayout llWorkoutHelper, OutlineTextView tvFront, TextView tvBack,
                                 TextView tvValue1, TextView tvValue2, TextView tvValue3,
                                 TextView tvValue4, TextView tvValue5,
                                 Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
 
         workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
-                ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper, tvFront, tvBack,
-                tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
+                cTimerRepsWorkoutHolder,ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
+                tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens, btn_WorkoutHelper);
     }
 
