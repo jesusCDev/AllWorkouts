@@ -30,7 +30,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout_session);
 
         TextView tv_workout_WorkoutName = findViewById(R.id.tv_workout_WorkoutName);
-        LinearLayout llWorkoutHelper = findViewById(R.id.ll_workout_workout_helper);
 
         ConstraintLayout cTimerRepsWorkoutHolder = findViewById(R.id.c_workoutSession_TimerRepsWorkoutHolder);
 
@@ -47,12 +46,11 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         TextView tvValue5 = findViewById(R.id.tv_workout_Value5);
 
         Button btn_ChangeScreens = findViewById(R.id.btn_workout_CompleteTask);
-        ImageButton btn_WorkoutHelper = findViewById(R.id.btn_workout_WorkoutHelper);
 
         manager = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
-        manager.setUp_UiManager(tv_workout_WorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
+        manager.setUp_UiManager(tv_workout_WorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
-                btn_ChangeScreens, btn_WorkoutHelper);
+                btn_ChangeScreens);
 
         manager.set_Timer();
 
@@ -88,10 +86,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     }
 
     public void btnAction_OpenCloseWorkoutHelper(View view){
-        manager.clear_WorkoutHelper();
-        if(!manager.get_WorkoutHelperOpen()){
-            manager.open_WorkoutHelper();
-        }
         manager.set_WorkoutHelperOpen(!manager.get_WorkoutHelperOpen());
     }
 
@@ -100,7 +94,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
      * @param view
      */
     public void btnAction_ChangeActivities(View view){
-        manager.clear_WorkoutHelper();
         manager.set_WorkoutHelperOpen(false);
 
         if(manager.check_IfFinished()){

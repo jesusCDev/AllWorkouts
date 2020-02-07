@@ -11,6 +11,7 @@
     <color name="background_dark">#202933</color>
 
     <!-- Button Text Color - on Orange Background -->
+    <color name="colorAccentLess">#90FD542C</color>
     <!-- Button Text Color - on Dark Background -->
 
 

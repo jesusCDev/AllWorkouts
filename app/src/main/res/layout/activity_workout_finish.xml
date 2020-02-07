@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/archivo_black"
             android:text="Congratulations!"
             android:textColor="@android:color/white"
             android:textSize="30sp"
@@ -29,9 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/archivo_black"
             android:text="Wokrout"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/priority_1"
             android:textStyle="bold" />
     </RelativeLayout>

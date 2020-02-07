@@ -25,10 +25,8 @@ public class WorkoutSession_UI_Manager {
 
     private Context context;
     private TextView tv_WorkoutName;
-    private LinearLayout llWorkoutHelper;
 
     private Button btn_ChangeScreens;
-    private ImageButton btn_WorkoutHelper;
 
     private ConstraintLayout cTimerRepsWorkoutHolder;
 
@@ -48,12 +46,11 @@ public class WorkoutSession_UI_Manager {
     private int progress = 0;
 
     public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName, ConstraintLayout cTimerRepsWorkoutHolder,
-                                     ImageView ivWorkoutImageHolder, TextView tvTimerHolder, LinearLayout llWorkoutHelper,
+                                     ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
                                      OutlineTextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
-                                     TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
+                                     TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens) {
         this.context = context;
         tv_WorkoutName = tv_workout_workoutName;
-        this.llWorkoutHelper = llWorkoutHelper;
 
         this.cTimerRepsWorkoutHolder = cTimerRepsWorkoutHolder;
 
@@ -70,7 +67,6 @@ public class WorkoutSession_UI_Manager {
         aTvWorkoutValues[4] = tvValue5;
 
         this.btn_ChangeScreens = btn_ChangeScreens;
-        this.btn_WorkoutHelper = btn_WorkoutHelper;
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         SettingsPrefs_Manager prefs_manager = new SettingsPrefs_Manager(context);
@@ -207,30 +203,6 @@ public class WorkoutSession_UI_Manager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tv.onVisibilityAggregated(visible);
         }
-    }
-
-    /****************************************
-     /**** WORKOUT HELPER METHODS
-     ****************************************/
-
-    public void show_WorkoutHelper() {
-        TextView tvWorkoutDescription = new TextView(context);
-        tvWorkoutDescription.setText(workout.get_WorkoutDescription(progress));
-        tvWorkoutDescription.setTextColor(context.getResources().getColor(R.color.focusAccent));
-        llWorkoutHelper.addView(tvWorkoutDescription);
-    }
-
-    public void clear_WorkoutHelper(){
-        set_CloseExpandButton();
-        llWorkoutHelper.removeAllViews();
-    }
-
-    public void set_ExpandButton() {
-        btn_WorkoutHelper.setImageDrawable(context.getDrawable(R.drawable.ic_expand_less_black_24dp));
-    }
-
-    public void set_CloseExpandButton() {
-        btn_WorkoutHelper.setImageDrawable(context.getDrawable(R.drawable.ic_expand_more_black_24dp));
     }
 
     /****************************************

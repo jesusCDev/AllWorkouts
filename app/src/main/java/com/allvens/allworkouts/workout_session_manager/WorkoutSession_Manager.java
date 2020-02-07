@@ -48,15 +48,15 @@ public class WorkoutSession_Manager {
      ****************************************/
 
     public void setUp_UiManager(TextView tv_workout_workoutName, ConstraintLayout cTimerRepsWorkoutHolder,  ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
-                                LinearLayout llWorkoutHelper, OutlineTextView tvFront, TextView tvBack,
+                                OutlineTextView tvFront, TextView tvBack,
                                 TextView tvValue1, TextView tvValue2, TextView tvValue3,
                                 TextView tvValue4, TextView tvValue5,
-                                Button btn_ChangeScreens, ImageButton btn_WorkoutHelper) {
+                                Button btn_ChangeScreens) {
 
         workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
-                cTimerRepsWorkoutHolder,ivWorkoutImageHolder, tvTimerHolder, llWorkoutHelper,
+                cTimerRepsWorkoutHolder,ivWorkoutImageHolder, tvTimerHolder,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
-                btn_ChangeScreens, btn_WorkoutHelper);
+                btn_ChangeScreens);
     }
 
     public String get_Workout(){
@@ -89,20 +89,6 @@ public class WorkoutSession_Manager {
             timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.get_Progress()));
             timer.start_timer();
         }
-    }
-
-
-    /****************************************
-     /**** WORKOUT HELPER
-     ****************************************/
-
-    public void open_WorkoutHelper() {
-        workoutSessionUi_manager.set_ExpandButton();
-        workoutSessionUi_manager.show_WorkoutHelper();
-    }
-
-    public void clear_WorkoutHelper(){
-        workoutSessionUi_manager.clear_WorkoutHelper();
     }
 
     public void set_WorkoutHelperOpen(boolean value){

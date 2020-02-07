@@ -21,10 +21,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/archivo_black"
             android:gravity="top"
             android:text="PushUps"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/priority_1"
             android:translationZ="10dp" />
 
