@@ -2,23 +2,23 @@ package com.allvens.allworkouts.workout_session_manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.MainActivity;
-import com.allvens.allworkouts.WorkoutMaximumActivity;
+import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
-import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
-import com.allvens.allworkouts.workout_session_manager.workouts.Workout_Generator;
 
 public class WorkoutMaximum_Manager {
 
     private Context context;
 
     private int maxValue = 1;
+    private int startingMax = 1;
     private String chosenWorkout;
     private int type;
 
@@ -44,12 +44,33 @@ public class WorkoutMaximum_Manager {
         wrapper.close();
 
         if(workout_info != null){
+            maxValue = workout_info.getMax();
+            startingMax = maxValue;
             tvCounterView.setText(Integer.toString(workout_info.getMax()));
         }
     }
 
     private void update_Counter(){
         tvCounterView.setText(Integer.toString(maxValue));
+        updateStyle();
+    }
+
+    private void updateStyle(){
+        int style;
+        if(startingMax < maxValue){
+            style = R.style.tv_WorkoutMax_Positive;
+        }else{
+            style = R.style.tv_WorkoutMax_Negative;
+        }
+            setStyle_ForTextView(tvCounterView, style);
+    }
+
+    private void setStyle_ForTextView(TextView tv, int style){
+        if (Build.VERSION.SDK_INT < 23) {
+            tv.setTextAppearance(context, style);
+        } else {
+            tv.setTextAppearance(style);
+        }
     }
 
     /****************************************
