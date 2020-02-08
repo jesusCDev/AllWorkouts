@@ -2,6 +2,7 @@ package com.allvens.allworkouts.workout_session_manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.LogActivity;
@@ -10,6 +11,8 @@ import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.database.Workout_Info;
 import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
+import com.allvens.allworkouts.workout_session_manager.workouts.Workout_Generator;
 
 public class WorkoutMaximum_Manager {
 
@@ -26,6 +29,23 @@ public class WorkoutMaximum_Manager {
         this.tvCounterView = tvCounterView;
         this.chosenWorkout = chosenWorkout;
         this.type = type;
+
+        set_lastWMaxWorkoutValue();
+    }
+
+    private void set_lastWMaxWorkoutValue(){
+
+        Log.d("Bug", chosenWorkout);
+
+        Workout_Wrapper wrapper = new Workout_Wrapper(context);
+
+        wrapper.open();
+        Workout_Info workout_info = wrapper.get_Workout(chosenWorkout);
+        wrapper.close();
+
+        if(workout_info != null){
+            tvCounterView.setText(Integer.toString(workout_info.getMax()));
+        }
     }
 
     private void update_Counter(){

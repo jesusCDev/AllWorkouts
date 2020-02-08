@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.android.support:preference-v7:27.+'
     implementation 'com.github.iamBedant:OutlineTextView:1.0.5'
+//    compile 'com.android.support:percent:25.3.0'
 }

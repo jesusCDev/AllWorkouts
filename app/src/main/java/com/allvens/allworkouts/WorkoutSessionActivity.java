@@ -85,16 +85,11 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         return true;
     }
 
-    public void btnAction_OpenCloseWorkoutHelper(View view){
-        manager.set_WorkoutHelperOpen(!manager.get_WorkoutHelperOpen());
-    }
-
     /**
      * Switches Screen between - Workout and Timer
      * @param view
      */
     public void btnAction_ChangeActivities(View view){
-        manager.set_WorkoutHelperOpen(false);
 
         if(manager.check_IfFinished()){
             manager.update_Screen();

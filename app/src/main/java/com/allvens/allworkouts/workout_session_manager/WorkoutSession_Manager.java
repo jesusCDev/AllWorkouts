@@ -28,8 +28,6 @@ public class WorkoutSession_Manager {
     private WorkoutSession_UI_Manager workoutSessionUi_manager;
     private Timer timer;
 
-    private boolean workoutHelperOpen = false;
-
     public WorkoutSession_Manager(Context context, String choice){
         this.context = context;
 
@@ -89,14 +87,6 @@ public class WorkoutSession_Manager {
             timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.get_Progress()));
             timer.start_timer();
         }
-    }
-
-    public void set_WorkoutHelperOpen(boolean value){
-        workoutHelperOpen = value;
-    }
-
-    public boolean get_WorkoutHelperOpen(){
-        return workoutHelperOpen;
     }
 
     /****************************************
