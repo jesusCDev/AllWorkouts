@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         manager.refreshWorkouts();
 
-        if(!manager.check_IfCurrentWorkoutExistNow()) {
+        if(!manager.checkIfCurrentWorkoutExistNow()) {
             manager.setWorkout(manager.getFirstWorkout());
         }
     }
@@ -46,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
     public void onChangeWorkoutsClicked(View view) {
         manager.clearWorkoutChanger();
 
-        if(!manager.getWorkoutChooserOpen()){
+        if(!manager.isWorkoutChooserOpen()){
             manager.openWorkoutChanger();
         }
 
-        manager.setWorkoutChooserOpen(!manager.getWorkoutChooserOpen());
+        manager.setWorkout_chooser_open(!manager.isWorkoutChooserOpen());
     }
 
     public void onStartWorkoutClicked(View view) {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSettingsClicked(View view) {
         manager.clearWorkoutChanger();
-        manager.setWorkoutChooserOpen(false);
+        manager.setWorkout_chooser_open(false);
         startActivity(new Intent(this, SettingsActivity.class));
     }
 

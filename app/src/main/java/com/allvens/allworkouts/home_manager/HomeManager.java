@@ -18,10 +18,10 @@ import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 public class HomeManager {
 
     private final Context context;
-    private final HomeUiManager uiManager;
+    private final HomeUiManager ui_manager;
     private String[] workouts;
-    private String chosenWorkout;
-    private boolean workoutChooserOpen = false;
+    private String chosen_workout;
+    private boolean workout_chooser_open = false;
 
     public HomeManager(Context context, TextView currentWorkoutText, ImageView ivWorkout,
                        ImageButton changeWorkoutButton, LinearLayoutCompat llWorkoutChooser) {
@@ -29,10 +29,10 @@ public class HomeManager {
 
         refreshWorkouts();
 
-        uiManager     = new HomeUiManager(context, currentWorkoutText, ivWorkout, changeWorkoutButton, llWorkoutChooser);
-        chosenWorkout = workouts[0];
+        ui_manager     = new HomeUiManager(context, currentWorkoutText, ivWorkout, changeWorkoutButton, llWorkoutChooser);
+        chosen_workout = workouts[0];
 
-        uiManager.updateScreen(workouts[0]);
+        ui_manager.updateScreen(workouts[0]);
     }
 
     public void refreshWorkouts() {
@@ -49,9 +49,9 @@ public class HomeManager {
         return workouts[0];
     }
 
-    public boolean check_IfCurrentWorkoutExistNow() {
+    public boolean checkIfCurrentWorkoutExistNow() {
         for(String workout: workouts) {
-            if(workout.equalsIgnoreCase(chosenWorkout)) {
+            if(workout.equalsIgnoreCase(chosen_workout)) {
                 return true;
             }
         }
@@ -59,20 +59,20 @@ public class HomeManager {
         return false;
     }
 
-    public void setWorkoutChooserOpen(boolean value) {
-        workoutChooserOpen = value;
+    public void setWorkout_chooser_open(boolean value) {
+        workout_chooser_open = value;
     }
 
-    public boolean getWorkoutChooserOpen() {
-        return workoutChooserOpen;
+    public boolean isWorkoutChooserOpen() {
+        return workout_chooser_open;
     }
 
     public void setWorkout(String workout) {
-        chosenWorkout      = workout;
-        workoutChooserOpen = false;
+        chosen_workout = workout;
+        workout_chooser_open = false;
 
-        uiManager.clearWorkoutChanger();
-        uiManager.updateScreen(workout);
+        ui_manager.clearWorkoutChanger();
+        ui_manager.updateScreen(workout);
     }
 
     public View.OnClickListener updateWorkoutSelection(final String workout) {
@@ -85,38 +85,29 @@ public class HomeManager {
     }
 
     public void openWorkoutChanger() {
-        uiManager.setExpandButton();
+        ui_manager.setExpandButton();
 
-        Button[] buttons = uiManager.createWorkoutButtons(workouts);
+        Button[] buttons = ui_manager.createWorkoutButtons(workouts);
 
-        for(Button btn: buttons) {
-            if(btn.getText().toString().equalsIgnoreCase(Constants.PULL_UPS)) {
-                btn.setOnClickListener(updateWorkoutSelection(Constants.PULL_UPS));
-            }
-            else if(btn.getText().toString().equalsIgnoreCase(Constants.PUSH_UPS)) {
-                btn.setOnClickListener(updateWorkoutSelection(Constants.PUSH_UPS));
-            }
-            else if(btn.getText().toString().equalsIgnoreCase(Constants.SIT_UPS)) {
-                btn.setOnClickListener(updateWorkoutSelection(Constants.SIT_UPS));
-            }
-            else if(btn.getText().toString().equalsIgnoreCase(Constants.SQUATS)) {
-                btn.setOnClickListener(updateWorkoutSelection(Constants.SQUATS));
-            }
+        for(Button btn : buttons) {
+            String workoutName = btn.getText().toString();
+
+            btn.setOnClickListener(updateWorkoutSelection(workoutName));
         }
     }
 
     public void clearWorkoutChanger() {
-        uiManager.clearWorkoutChanger();
+        ui_manager.clearWorkoutChanger();
     }
 
     public void gotoWorkoutScene() {
-        new Start_WorkoutSession().start_Workout(context, chosenWorkout);
+        new Start_WorkoutSession().start_Workout(context, chosen_workout);
     }
 
     public void gotoLogScreen() {
         Intent intent = new Intent(context, LogActivity.class);
 
-        intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
+        intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosen_workout);
         context.startActivity(intent);
     }
 }

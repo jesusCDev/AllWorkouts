@@ -1,7 +1,6 @@
 package com.allvens.allworkouts.home_manager;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.widget.Button;
@@ -14,89 +13,83 @@ import com.allvens.allworkouts.assets.Constants;
 
 public class HomeUiManager {
 
-    private Context context;
-    private TextView currentWorkoutText;
-    private ImageView ivWorkout;
-    private ImageButton changeWorkoutButton;
-    private LinearLayoutCompat llWorkoutChooser;
+    private final Context context;
+    private final TextView current_workout_text;
+    private final ImageView iv_workout;
+    private final ImageButton change_workout_button;
+    private final LinearLayoutCompat ll_workout_chooser;
 
-    public HomeUiManager(Context context, TextView currentWorkoutText, ImageView ivWorkout, ImageButton changeWorkoutButton, LinearLayoutCompat llWorkoutChooser){
-        this.context             = context;
-        this.currentWorkoutText  = currentWorkoutText;
-        this.ivWorkout           = ivWorkout;
-        this.changeWorkoutButton = changeWorkoutButton;
-        this.llWorkoutChooser    = llWorkoutChooser;
+    public HomeUiManager(Context context, TextView current_workout_text, ImageView iv_workout, ImageButton change_workout_button, LinearLayoutCompat ll_workout_chooser) {
+        this.context               = context;
+        this.current_workout_text  = current_workout_text;
+        this.iv_workout            = iv_workout;
+        this.change_workout_button = change_workout_button;
+        this.ll_workout_chooser    = ll_workout_chooser;
     }
 
-    public void updateScreen(String chosenWorkout){
-        currentWorkoutText.setText(chosenWorkout);
+    public void updateScreen(String chosen_workout) {
+        current_workout_text.setText(chosen_workout);
 
-        Drawable resPath = null;
+        int resource_path;
 
-        switch (chosenWorkout){
+        switch(chosen_workout) {
             case Constants.PULL_UPS:
-                resPath = context.getResources().getDrawable(R.drawable.ic_pullup);
+                resource_path = R.drawable.ic_pullup;
                 break;
             case Constants.SIT_UPS:
-                resPath = context.getResources().getDrawable(R.drawable.ic_situp);
+                resource_path = R.drawable.ic_situp;
                 break;
             case Constants.PUSH_UPS:
-                resPath = context.getResources().getDrawable(R.drawable.ic_pushup);
+                resource_path = R.drawable.ic_pushup;
                 break;
             default:
-                resPath = context.getResources().getDrawable(R.drawable.ic_squat);
+                resource_path = R.drawable.ic_squat;
                 break;
         }
 
-        ivWorkout.setImageDrawable(resPath);
+        iv_workout.setImageDrawable(context.getResources().getDrawable(resource_path));
     }
 
-    /****************************************
-     /**** WORKOUT SWITCHER METHODS
-     ****************************************/
+    public Button[] createWorkoutButtons(String[] workout_names) {
+        Button[] workout_buttons = new Button[workout_names.length];
 
-    /********** Button Handler **********/
-
-    public Button[] createWorkoutButtons(String[] workoutNames) {
-        Button[] workoutButtons = new Button[workoutNames.length];
-
-        for(int i = 0; i < workoutButtons.length; i++){
-            workoutButtons[i] = createButton(workoutNames[i]);
+        for(int i = 0; i < workout_buttons.length; i++) {
+            workout_buttons[i] = createButton(workout_names[i]);
         }
 
-        return workoutButtons;
+        return workout_buttons;
     }
 
-    private Button createButton(String workoutName) {
-        Button btn = new Button(context);
+    private Button createButton(String workout_name) {
+        Button button = new Button(context);
 
-        btn.getBackground().setAlpha(0);
-        llWorkoutChooser.addView(btn);
-        btn.setText(workoutName);
-        setButtonStyle(btn);
+        button.getBackground().setAlpha(0);
+        ll_workout_chooser.addView(button);
+        button.setText(workout_name);
+        setButtonStyle(button);
 
-        return btn;
+        return button;
     }
 
-    private void setButtonStyle(Button btn){
+    private void setButtonStyle(Button button) {
         if (Build.VERSION.SDK_INT < 23) {
-            btn.setTextAppearance(context, R.style.btn_home_workoutChoice);
+            button.setTextAppearance(context, R.style.btn_home_workoutChoice);
         }
         else {
-            btn.setTextAppearance(R.style.btn_home_workoutChoice);
+            button.setTextAppearance(R.style.btn_home_workoutChoice);
         }
     }
 
-    public void clearWorkoutChanger(){
+    public void clearWorkoutChanger() {
         closeExpandButton();
-        llWorkoutChooser.removeAllViews();
+        ll_workout_chooser.removeAllViews();
     }
 
     public void setExpandButton() {
-        changeWorkoutButton.setImageDrawable(context.getDrawable(R.drawable.ic_expand_more_black_24dp));
+        change_workout_button.setImageDrawable(context.getDrawable(R.drawable.ic_expand_more_black_24dp));
     }
 
     public void closeExpandButton() {
-        changeWorkoutButton.setImageDrawable(context.getDrawable(R.drawable.ic_expand_less_black_24dp));
+        change_workout_button.setImageDrawable(context.getDrawable(R.drawable.ic_expand_less_black_24dp));
     }
 }
