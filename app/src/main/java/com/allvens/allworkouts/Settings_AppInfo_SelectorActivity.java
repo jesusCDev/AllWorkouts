@@ -18,6 +18,7 @@ public class Settings_AppInfo_SelectorActivity extends AppCompatActivity{
 
     public void btnAction_ShowDocumentation(View view){
         String value;
+
         switch (view.getId()){
             case R.id.btn_settings_appInfo_selector_openSource:
                 value = Constants.OPEN_SOURCE;
@@ -28,7 +29,9 @@ public class Settings_AppInfo_SelectorActivity extends AppCompatActivity{
                 value = Constants.TERMS_OF_USE;
                 break;
         }
+
         Intent intent = new Intent(this, Settings_AppInfo_PresenterActivity.class);
+
         intent.putExtra(Constants.CHOSEN_DOCUMENTATION, value);
         startActivity(intent);
     }

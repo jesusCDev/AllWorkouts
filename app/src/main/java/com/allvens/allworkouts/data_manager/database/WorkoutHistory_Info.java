@@ -16,13 +16,12 @@ public class WorkoutHistory_Info {
     private int max_value;
 
     public WorkoutHistory_Info(int first_value, int second_value, int third_value, int forth_value, int fifth_value, int max_value){
-        this.first_value = first_value;
+        this.first_value  = first_value;
         this.second_value = second_value;
-        this.third_value = third_value;
-        this.forth_value = forth_value;
-        this.fifth_value = fifth_value;
-
-        this.max_value = max_value;
+        this.third_value  = third_value;
+        this.forth_value  = forth_value;
+        this.fifth_value  = fifth_value;
+        this.max_value    = max_value;
     }
 
     public long getId() {

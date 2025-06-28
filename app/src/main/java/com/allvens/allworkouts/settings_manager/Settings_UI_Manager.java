@@ -36,14 +36,12 @@ public class Settings_UI_Manager {
         tv.setText(timeStamp.toString());
     }
 
-    /********** 24 Hour Converter to 12 Hour Format **********/
-
     private String fix_amPm(int selectedHour) {
         if(selectedHour < 12){
             return "am";
-        }else{
-            return "pm";
         }
+
+        return "pm";
     }
 
     private String fix_Hour(int selectedHour) {
@@ -58,9 +56,9 @@ public class Settings_UI_Manager {
     private String fix_Min(int selectedMin) {
         if(selectedMin < 10){
             return ("0" + Integer.toString(selectedMin));
-        }else{
-            return Integer.toString(selectedMin);
         }
+
+        return Integer.toString(selectedMin);
     }
 
     /****************************************
@@ -70,11 +68,11 @@ public class Settings_UI_Manager {
     public void set_DailyNotificationBtns(Button btnSu, Button btnM, Button btnTu, Button btnW,
                                           Button btnTh, Button btnF, Button btnSa){
         this.btnSu = btnSu;
-        this.btnM = btnM;
+        this.btnM  = btnM;
         this.btnTu = btnTu;
-        this.btnW = btnW;
+        this.btnW  = btnW;
         this.btnTh = btnTh;
-        this.btnF = btnF;
+        this.btnF  = btnF;
         this.btnSa = btnSa;
     }
 
@@ -92,7 +90,8 @@ public class Settings_UI_Manager {
     public void update_DailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
         if(notiOnDay){
             set_BtnStyle(btn, R.style.btn_settings_DaySelected);
-        }else{
+        }
+        else {
             set_BtnStyle(btn, R.style.btn_settings_DayUnSelected);
         }
     }
@@ -100,7 +99,8 @@ public class Settings_UI_Manager {
     private void set_BtnStyle(Button btn, int style){
         if (Build.VERSION.SDK_INT < 23) {
             btn.setTextAppearance(context, style);
-        } else {
+        }
+        else {
             btn.setTextAppearance(style);
         }
     }

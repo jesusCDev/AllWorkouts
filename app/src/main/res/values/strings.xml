@@ -5,6 +5,10 @@
     <string name="sit_ups">Sit Ups</string>
     <string name="squats">Squats</string>
 
+    <string name="logs">Logs</string>
+    <string name="start">Start</string>
+    <string name="settings">Settings</string>
+
     <string name="pick_workout_type">Pick Workout Type</string>
     <string name="simple_workouts">Basic Version Of This Workout</string>
     <string name="mix_workouts">Different Versions Of This Workout</string>

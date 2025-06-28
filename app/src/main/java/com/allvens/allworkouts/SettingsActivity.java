@@ -28,21 +28,22 @@ public class SettingsActivity extends AppCompatActivity{
 
         LinearLayout ll_settings_WorkoutPositions = findViewById(R.id.ll_settings_WorkoutPositions);
 
-        Switch sVibrate = findViewById(R.id.s_settings_Vibrate);
-        Switch sSound = findViewById(R.id.s_settings_Sound);
+        Switch sVibrate      = findViewById(R.id.s_settings_Vibrate);
+        Switch sSound        = findViewById(R.id.s_settings_Sound);
         Switch sNotification = findViewById(R.id.s_settings_Notification);
 
         TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
 
         Button btnSu = findViewById(R.id.btn_settings_notificationDaySU);
-        Button btnM = findViewById(R.id.btn_settings_notificationDayM);
+        Button btnM  = findViewById(R.id.btn_settings_notificationDayM);
         Button btnTu = findViewById(R.id.btn_settings_notificationDayTU);
-        Button btnW = findViewById(R.id.btn_settings_notificationDayW);
+        Button btnW  = findViewById(R.id.btn_settings_notificationDayW);
         Button btnTh = findViewById(R.id.btn_settings_notificationDayTH);
-        Button btnF = findViewById(R.id.btn_settings_notificationDayF);
+        Button btnF  = findViewById(R.id.btn_settings_notificationDayF);
         Button btnSa = findViewById(R.id.btn_settings_notificationDaySA);
 
         settings_manager = new Settings_Manager(this);
+
         settings_manager.set_SettingsValues(sVibrate, sSound, sNotification);
         settings_manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
         settings_manager.setUp_TimeDisplay(tvTimeDisplay);
@@ -84,11 +85,11 @@ public class SettingsActivity extends AppCompatActivity{
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         builder.setMessage("All Workouts Will Be Deleted?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    /********** Notification Settings **********/
     public void btnAction_SetNotificationTime(View view){
         settings_manager.update_NotificationTime(view);
     }

@@ -26,8 +26,8 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private String nextChoiceWorkout;
 
     private final static int PROG_INC_NEUTRAL = 1;
-    private final static int PROG_INC_EASY = 2;
-    private final static int PROG_INC_HARD = -2;
+    private final static int PROG_INC_EASY    = 2;
+    private final static int PROG_INC_HARD    = -2;
 
     private Workout_Wrapper wrapper;
     private Button lastBtnSelected;
@@ -38,13 +38,15 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_finish);
+
         Button btnNextWorkout = findViewById(R.id.btn_WorkoutFinish_NextWorkout);
+        currentChoiceWorkout  = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        lastBtnSelected       = findViewById(R.id.btn_workoutFinish_LevelNeutral);
 
-        currentChoiceWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
-
-        lastBtnSelected = findViewById(R.id.btn_workoutFinish_LevelNeutral);
         ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(currentChoiceWorkout);
+
         wrapper = new Workout_Wrapper(this);
+
         wrapper.open();
         set_NextWorkout(btnNextWorkout);
         update_WorkoutProgress();
@@ -55,19 +57,23 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         // get current position
         int currentWorkout_Pos = 0;
+
         for(WorkoutPosAndStatus workout: workoutsPos.get_WorkoutsPos(false)){
             if(workout.getName().equalsIgnoreCase(currentChoiceWorkout)){
                 break;
             }
+
             currentWorkout_Pos++;
         }
 
         // find workout in next position
         if(currentWorkout_Pos != (workoutsPos.get_WorkoutsPos(false).length - 1)){
             nextChoiceWorkout = workoutsPos.get_WorkoutsPos(false)[(currentWorkout_Pos + 1)].getName();
-        }else{
+        }
+        else{
             nextChoiceWorkout = workoutsPos.get_WorkoutsPos(false)[0].getName();
         }
+
         btnNextWorkout.setText(nextChoiceWorkout);
     }
 
@@ -83,58 +89,47 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         wrapper.open();
     }
 
-    /****************************************
-     /**** DATABASE MANAGER
-     ****************************************/
-
-    /********** History Creator **********/
-
     private void update_WorkoutProgress(){
-
         Workout_Generator workoutGenerator = new Workout_Generator(wrapper.get_Workout(currentChoiceWorkout));
+        Workout workout                    = workoutGenerator.get_Workout();
+        Workout_Info workout_info          = workoutGenerator.get_WorkoutInfo();
+        maxValue                           = workout_info.getMax();
 
-        Workout workout = workoutGenerator.get_Workout();
-        Workout_Info workout_info = workoutGenerator.get_WorkoutInfo();
-
-        maxValue = workout_info.getMax();
         wrapper.create_WorkoutHistory(new WorkoutHistory_Info(workout.get_WorkoutValue(0),
         workout.get_WorkoutValue(1), workout.get_WorkoutValue(2),
         workout.get_WorkoutValue(3), workout.get_WorkoutValue(4), maxValue), workout_info.getId());
-
         workout_info.setMax((workout_info.getMax() + PROG_INC_NEUTRAL));
         workout_info.setProgress((workout_info.getProgress() + 1));
-
         wrapper.update_Workout(workout_info);
     }
 
-    /********** Max Updater **********/
-
     private void update_WorkoutProgress(int progress){
         Workout_Info workout = wrapper.get_Workout(currentChoiceWorkout);
+        int value            = maxValue + progress;
 
-        int value = maxValue + progress;
-        if(value <= 0) value = 1;
+        if(value <= 0) {
+            value = 1;
+        }
 
         workout.setMax(value);
         wrapper.update_Workout(workout);
     }
 
-    /****************************************
-     /**** BUTTON ACTIONS
-     ****************************************/
-
     public void btnAction_setDifficulty(View view) {
         lastBtnSelected.setTextColor(this.getResources().getColor(R.color.unSelectedButton));
         ((Button)view).setTextColor(Color.BLACK);
+
         lastBtnSelected = ((Button)view);
 
         switch ((view).getId()){
             case R.id.btn_workoutFinish_LevelHard:
                 update_WorkoutProgress(PROG_INC_HARD);
                 break;
+
             case R.id.btn_workoutFinish_LevelNeutral:
                 update_WorkoutProgress(PROG_INC_NEUTRAL);
                 break;
+
             case R.id.btn_workoutFinish_LevelEasy:
                 update_WorkoutProgress(PROG_INC_EASY);
                 break;

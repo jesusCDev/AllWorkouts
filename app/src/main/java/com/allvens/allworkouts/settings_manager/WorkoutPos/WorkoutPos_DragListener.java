@@ -13,21 +13,19 @@ import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
  * Manages Drag functions for Workout Pos Change
  */
 public class WorkoutPos_DragListener implements View.OnDragListener {
-
     private WorkoutPos_TouchListener touchListener;
     private WorkoutBasicsPrefs_Checker workout_basicsPrefs;
     private Context context;
 
     public WorkoutPos_DragListener(Context context, WorkoutPos_TouchListener touchListener, WorkoutBasicsPrefs_Checker workout_basicsPrefs){
-        this.context = context;
+        this.context             = context;
         this.workout_basicsPrefs = workout_basicsPrefs;
-        this.touchListener = touchListener;
+        this.touchListener       = touchListener;
     }
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-
-        View view = (View) event.getLocalState();
+        View view       = (View) event.getLocalState();
         ViewGroup owner = (ViewGroup) view.getParent();
 
         switch (event.getAction()) {
@@ -48,6 +46,7 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
             default:
                 break;
         }
+
         return true;
     }
 

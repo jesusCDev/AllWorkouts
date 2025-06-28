@@ -13,10 +13,10 @@ public class WorkoutPosAndStatus {
     private boolean turnOnStatus;
 
     public WorkoutPosAndStatus(String name, String posPrefKey, String statPrefKey, int resourceID) {
-        this.name = name;
-        this.posPrefKey = posPrefKey;
+        this.name        = name;
+        this.posPrefKey  = posPrefKey;
         this.statPrefKey = statPrefKey;
-        this.resourceID = resourceID;
+        this.resourceID  = resourceID;
     }
 
     public int getPosition() {

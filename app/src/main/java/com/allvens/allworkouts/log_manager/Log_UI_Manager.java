@@ -26,13 +26,12 @@ public class Log_UI_Manager {
     private LogChart_Manager logChart_manager;
 
     public Log_UI_Manager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
-        this.context = context;
-        this.chosenWorkout = chosenWorkout;
+        this.context              = context;
+        this.chosenWorkout        = chosenWorkout;
         this.rvShowAllWorkoutSets = rvShowAllWorkoutSets;
-        this.tvCurrentMax = tvCurrentMax;
-        this.tvType = tvType;
-
-        logChart_manager = new LogChart_Manager(context, lcShowWorkoutProgress);
+        this.tvCurrentMax         = tvCurrentMax;
+        this.tvType               = tvType;
+        logChart_manager          = new LogChart_Manager(context, lcShowWorkoutProgress);
     }
 
     /********** Max - Methods **********/
@@ -43,12 +42,13 @@ public class Log_UI_Manager {
 
     public void update_CurrentType(int type) {
         String sType = "Simple";
-        if(type == 1) sType = "Mix";
+
+        if(type == 1) {
+            sType = "Mix";
+        }
 
         tvType.setText("Type: " + sType);
     }
-
-    /********** Graph - Methods **********/
 
     public void update_Graph(ArrayList<LineChartData_Entry> totalSets) {
         logChart_manager.reset_Chart();
@@ -60,14 +60,15 @@ public class Log_UI_Manager {
         logChart_manager.reset_Chart();
     }
 
-    /********** Set List - Methods **********/
-
     public void update_SetList(List<WorkoutHistory_Info> historyForWorkout) {
         Collections.reverse(historyForWorkout);
+
         ArrayList<WorkoutHistory_Info> list = new ArrayList<>();
+
         list.addAll(historyForWorkout);
 
         SetListRecyclerView_Adapter adapter = new SetListRecyclerView_Adapter(context, list);
+
         rvShowAllWorkoutSets.setAdapter(adapter);
         rvShowAllWorkoutSets.setLayoutManager(new LinearLayoutManager(context));
     }

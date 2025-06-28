@@ -21,16 +21,14 @@ public class LogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log);
 
         RecyclerView rvShowAllWorkoutSets = findViewById(R.id.rv_log_ShowAllWorkoutSets);
-        LineChart lcShowWorkoutProgress = findViewById(R.id.lc_log_ShowWorkoutProgression);
-        TextView tvCurrentMax = findViewById(R.id.tv_log_CurrentMaxContainer);
-        TextView tvType = findViewById(R.id.tv_log_type);
+        LineChart lcShowWorkoutProgress   = findViewById(R.id.lc_log_ShowWorkoutProgression);
+        TextView tvCurrentMax             = findViewById(R.id.tv_log_CurrentMaxContainer);
+        TextView tvType                   = findViewById(R.id.tv_log_type);
+        String chosenWorkout              = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        log_manager                       = new Log_Manager(this, chosenWorkout);
 
-        String chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
-
-        log_manager = new Log_Manager(this, chosenWorkout);
         log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
         log_manager.update_Screen();
-
     }
 
     /****************************************

@@ -18,20 +18,26 @@ public class Start_WorkoutSession {
 
     public void start_Workout(Context context, String choiceWorkout){
         Intent intent;
+
         Workout_Wrapper wrapper = new Workout_Wrapper(context);
+
         wrapper.open();
 
         if(check_WorkoutExist(wrapper, choiceWorkout)){
             if(check_WorkoutProgress(wrapper, choiceWorkout)){
                 intent = new Intent(context, WorkoutSessionActivity.class);
-            }else{
+            }
+            else{
                 intent = new Intent(context, WorkoutMaximumActivity.class);
+
                 intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
             }
+
             wrapper.close();
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
             context.startActivity(intent);
-        }else{
+        }
+        else{
             wrapper.close();
             start_newSession(context, choiceWorkout);
         }
@@ -47,6 +53,7 @@ public class Start_WorkoutSession {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -56,6 +63,7 @@ public class Start_WorkoutSession {
                 return (workout.getProgress() < 8);
             }
         }
+
         return false;
     }
 
@@ -66,8 +74,8 @@ public class Start_WorkoutSession {
     private void start_newSession(final Context context, final String choiceWorkout){
         // todo change this!! to resources from variables
         final String[] workoutTypes = {context.getResources().getString(R.string.simple_workouts), context.getResources().getString(R.string.mix_workouts)};
-
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
         builder.setTitle(context.getString(R.string.pick_workout_type));
         builder.setItems(workoutTypes, new DialogInterface.OnClickListener() {
             @Override
@@ -75,6 +83,7 @@ public class Start_WorkoutSession {
                 create_Workout(which, context, choiceWorkout);
             }
         });
+
         builder.show();
     }
 

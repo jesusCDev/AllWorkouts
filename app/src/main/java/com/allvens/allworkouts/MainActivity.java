@@ -9,62 +9,61 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.allvens.allworkouts.home_manager.Home_Manager;
-
-
-
-// TODO CHECK IF DATABASE IS STILL BEING INSTALLED
+import com.allvens.allworkouts.home_manager.HomeManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Home_Manager manager;
+    private HomeManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        TextView tv_CurrentWorkout = findViewById(R.id.tv_home_CurrentWorkout);
-        ImageView iv_Workout = findViewById(R.id.iv_home_WorkoutShow);
-        ImageButton btn_ChangeWorkouts = findViewById(R.id.btn_ChangeWorkouts);
-        LinearLayoutCompat ll_home_WorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
-
-        manager = new Home_Manager(this, tv_CurrentWorkout, iv_Workout, btn_ChangeWorkouts, ll_home_WorkoutChooser);
+        TextView currentWorkoutText         = findViewById(R.id.tv_home_CurrentWorkout);
+        ImageView ivWorkout                 = findViewById(R.id.iv_home_WorkoutShow);
+        ImageButton changeWorkoutButton     = findViewById(R.id.btn_ChangeWorkouts);
+        LinearLayoutCompat llWorkoutChooser = findViewById(R.id.ll_home_WorkoutChooser);
+        manager                             = new HomeManager(
+                this,
+                currentWorkoutText,
+                ivWorkout,
+                changeWorkoutButton,
+                llWorkoutChooser
+        );
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        manager.setUp_WorkoutsPos();
-        if(!manager.check_IfCurrentWorkoutExistNow()) manager.set_Workout(manager.get_FirstWorkout());
-    }
+        manager.refreshWorkouts();
 
-    /****************************************
-     /**** BUTTON ACTIONS
-     ****************************************/
-
-    public void btnAction_changeWorkouts(View view) {
-        manager.clear_WorkoutChanger();
-        if(!manager.get_WorkoutChooserOpen()){
-            manager.open_WorkoutChanger();
+        if(!manager.check_IfCurrentWorkoutExistNow()) {
+            manager.setWorkout(manager.getFirstWorkout());
         }
-        manager.set_WorkoutChooserOpen(!manager.get_WorkoutChooserOpen());
     }
 
-    /********** Screen Changers **********/
+    public void onChangeWorkoutsClicked(View view) {
+        manager.clearWorkoutChanger();
 
-    public void btnAction_StartWorkout(View view) {
-        manager.goto_WorkoutScene();
+        if(!manager.getWorkoutChooserOpen()){
+            manager.openWorkoutChanger();
+        }
+
+        manager.setWorkoutChooserOpen(!manager.getWorkoutChooserOpen());
     }
 
-    public void btnAction_Settings(View view) {
-        manager.clear_WorkoutChanger();
-        manager.set_WorkoutChooserOpen(false);
+    public void onStartWorkoutClicked(View view) {
+        manager.gotoWorkoutScene();
+    }
 
+    public void onSettingsClicked(View view) {
+        manager.clearWorkoutChanger();
+        manager.setWorkoutChooserOpen(false);
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    public void btnAction_Log(View view) {
-        manager.goto_LogScreen();
+    public void onLogClicked(View view) {
+        manager.gotoLogScreen();
     }
 }

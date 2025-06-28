@@ -28,11 +28,14 @@ public class Log_Manager {
     private Log_UI_Manager log_ui_manager;
 
     public Log_Manager(Context context, String chosenWorkout) {
-        this.context = context;
+        this.context       = context;
         this.chosenWorkout = chosenWorkout;
-        wrapper = new Workout_Wrapper(context);
+        wrapper            = new Workout_Wrapper(context);
+
         wrapper.open();
+
         workout = wrapper.get_Workout(chosenWorkout);
+
         wrapper.close();
     }
 
@@ -40,31 +43,24 @@ public class Log_Manager {
         log_ui_manager = new Log_UI_Manager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
     }
 
-    /****************************************
-     /**** SCREEN UPDATER
-     ****************************************/
-
     public void update_Screen(){
-        if(workout != null){
+        if(workout != null) {
             wrapper.open();
             log_ui_manager.update_Graph(get_GraphData_TotalReps(wrapper.get_HistoryForWorkout(workout.getId())));
             log_ui_manager.update_SetList(wrapper.get_HistoryForWorkout(workout.getId()));
             log_ui_manager.update_CurrentMax(workout.getMax());
             log_ui_manager.update_CurrentType(workout.getType());
             wrapper.close();
-        }else{
+        }
+        else{
             log_ui_manager.reset_GraphToZero();
             log_ui_manager.reset_SetList();
             log_ui_manager.update_CurrentMax(0);
         }
     }
 
-    /****************************************
-     /**** DATABASE RELATED METHODS
-     ****************************************/
-
     public void reset_Workout(){
-        if(workout != null){
+        if(workout != null) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -96,21 +92,18 @@ public class Log_Manager {
             wrapper.close();
 
             workout = null;
+
             update_Screen();
         }
     }
-
-    /****************************************
-     /**** GRAPH DATA - METHODS
-     ****************************************/
 
     private ArrayList<LineChartData_Entry> get_GraphData_TotalReps(List<WorkoutHistory_Info> history_infoList){
 
         ArrayList<LineChartData_Entry> entries = new ArrayList<>();
 
-        if(history_infoList != null){
-
+        if(history_infoList != null) {
             int iter = 0;
+
             if(history_infoList.size() > 21){
                 iter = (history_infoList.size() - 21);
             }
@@ -119,12 +112,9 @@ public class Log_Manager {
                 entries.add(new LineChartData_Entry(i, history_infoList.get(i).get_TotalReps()));
             }
         }
+
         return entries;
     }
-
-    /****************************************
-     /**** Update Values - METHODS
-     ****************************************/
 
     public void update_Type(){
         if(workout != null) {
@@ -147,7 +137,8 @@ public class Log_Manager {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage("Change Workout Type").setPositiveButton("Simple", dialogClickListener)
                     .setNegativeButton("Mix", dialogClickListener).show();
-        }else{
+        }
+        else{
             new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
         }
     }
@@ -161,7 +152,8 @@ public class Log_Manager {
             intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, true);
 
             context.startActivity(intent);
-        }else{
+        }
+        else{
             new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
         }
     }

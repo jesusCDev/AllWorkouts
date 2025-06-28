@@ -19,13 +19,12 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivty_max);
 
-        TextView tv_max_MaxValue = findViewById(R.id.tv_max_MaxValue);
+        TextView tv_max_MaxValue    = findViewById(R.id.tv_max_MaxValue);
         TextView tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
+        String chosenWorkout        = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        int type                    = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
+        workoutMax_manager          = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type);
 
-        String chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
-        int type = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
-
-        workoutMax_manager = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type);
         tv_max_WorkoutName.setText(chosenWorkout);
     }
 

@@ -24,7 +24,7 @@
             android:layout_marginTop="24dp"
             android:fontFamily="@font/archivo_black"
             android:gravity="top"
-            android:text="PushUps"
+            android:text="@string/push_ups"
             android:textColor="@android:color/white"
             android:textSize="@dimen/priority_1"
             android:translationZ="10dp" />
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:onClick="btnAction_changeWorkouts"
+            android:onClick="onChangeWorkoutsClicked"
             app:srcCompat="@drawable/ic_expand_less_black_24dp" />
 
         <Button
@@ -75,8 +75,8 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:textColor="@android:color/white"
-            android:onClick="btnAction_StartWorkout"
-            android:text="Start"
+            android:onClick="onStartWorkoutClicked"
+            android:text="@string/start"
             android:textSize="@dimen/btn_textSize"
             android:textStyle="bold" />
 
@@ -93,8 +93,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
-                android:onClick="btnAction_Settings"
-                android:text="Settings"
+                android:onClick="onSettingsClicked"
+                android:text="@string/settings"
                 android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
 
@@ -104,8 +104,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
-                android:onClick="btnAction_Log"
-                android:text="Log"
+                android:onClick="onLogClicked"
+                android:text="@string/logs"
                 android:textSize="@dimen/btn_textSize"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -16,18 +16,18 @@ public class Workout_Info {
     private List<WorkoutHistory_Info> history;
 
     public Workout_Info(String workout, int max, int type, int progress){
-        this.workout = workout;
-        this.type = type;
+        this.workout  = workout;
+        this.type     = type;
         this.progress = progress;
-        this.max = max;
+        this.max      = max;
     }
 
     public Workout_Info(String workout, int max, int type, int progress, List<WorkoutHistory_Info> history){
-        this.workout = workout;
-        this.type = type;
+        this.workout  = workout;
+        this.type     = type;
         this.progress = progress;
-        this.max = max;
-        this.history = history;
+        this.max      = max;
+        this.history  = history;
     }
 
     public List<WorkoutHistory_Info> getHistory()

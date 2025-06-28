@@ -19,14 +19,14 @@ public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRec
     private Context context;
 
     public SetListRecyclerView_Adapter(Context context, ArrayList<WorkoutHistory_Info> history_info){
-        this.context = context;
+        this.context      = context;
         this.history_info = history_info;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_listset_item, parent, false);
+        View view         = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_listset_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
 
         return holder;
@@ -36,7 +36,6 @@ public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRec
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvMax.setText("Max: " + history_info.get(position).getMax_value());
         holder.tvTotalSet.setText("Total Set: " + get_TotalSetAmount(position));
-
         holder.tvSet1.setText(Integer.toString(history_info.get(position).getFirst_value()));
         holder.tvSet2.setText(Integer.toString(history_info.get(position).getSecond_value()));
         holder.tvSet3.setText(Integer.toString(history_info.get(position).getThird_value()));
@@ -54,10 +53,8 @@ public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRec
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
         TextView tvMax;
         TextView tvTotalSet;
-
         TextView tvSet1;
         TextView tvSet2;
         TextView tvSet3;
@@ -66,14 +63,14 @@ public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRec
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvMax = itemView.findViewById(R.id.tv_log_listset_Max);
-            tvTotalSet = itemView.findViewById(R.id.tv_log_listset_TotalSet);
 
-            tvSet1 = itemView.findViewById(R.id.tv_log_listset_Value1);
-            tvSet2 = itemView.findViewById(R.id.tv_log_listset_Value2);
-            tvSet3 = itemView.findViewById(R.id.tv_log_listset_Value3);
-            tvSet4 = itemView.findViewById(R.id.tv_log_listset_Value4);
-            tvSet5 = itemView.findViewById(R.id.tv_log_listset_Value5);
+            tvMax      = itemView.findViewById(R.id.tv_log_listset_Max);
+            tvTotalSet = itemView.findViewById(R.id.tv_log_listset_TotalSet);
+            tvSet1     = itemView.findViewById(R.id.tv_log_listset_Value1);
+            tvSet2     = itemView.findViewById(R.id.tv_log_listset_Value2);
+            tvSet3     = itemView.findViewById(R.id.tv_log_listset_Value3);
+            tvSet4     = itemView.findViewById(R.id.tv_log_listset_Value4);
+            tvSet5     = itemView.findViewById(R.id.tv_log_listset_Value5);
 
         }
     }

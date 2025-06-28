@@ -12,7 +12,6 @@ import android.view.ViewGroup;
  * Sets up Touch Listener for when an item is being moved
  */
 public class WorkoutPos_TouchListener implements View.OnTouchListener {
-
     private View view;
     private Context context;
 
@@ -22,11 +21,12 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
             this.view = view;
 
             view.setVisibility(View.INVISIBLE);
+
             ClipData data = ClipData.newPlainText("", "");
 
             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
@@ -36,9 +36,9 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
             view.setVisibility(View.VISIBLE);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public View getView() {

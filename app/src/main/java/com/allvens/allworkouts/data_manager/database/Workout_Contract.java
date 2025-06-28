@@ -30,27 +30,22 @@ final class Workout_Contract {
                     "UNIQUE ( " + WorkoutHistory_Entry._ID + ") ON CONFLICT REPLACE )";
 
     public static class Workout_Entry implements BaseColumns{
-
-        public static final String TABLE_NAME = "workout_info";
-
-        public static final String COLUMN_WORKOUT = "workout";
-        public static final String COLUMN_TYPE = "type";
+        public static final String TABLE_NAME      = "workout_info";
+        public static final String COLUMN_WORKOUT  = "workout";
+        public static final String COLUMN_TYPE     = "type";
         public static final String COLUMN_PROGRESS = "progress";
-        public static final String COLUMN_MAX = "max";
+        public static final String COLUMN_MAX      = "max";
     }
     
     public static class WorkoutHistory_Entry implements BaseColumns{
-        
-        public static final String TABLE_NAME = "workout_history";
-
+        public static final String TABLE_NAME        = "workout_history";
         public static final String COLUMN_WORKOUT_ID = "id";
-        public static final String COLUMN_FIRST = "first_value";
-        public static final String COLUMN_SECOND = "second_value";
-        public static final String COLUMN_THIRD = "third_value";
-        public static final String COLUMN_FORTH = "fourth_value";
-        public static final String COLUMN_FIFTH = "fifth_value";
-
-        public static final String COLUMN_MAX = "max_value";
+        public static final String COLUMN_FIRST      = "first_value";
+        public static final String COLUMN_SECOND     = "second_value";
+        public static final String COLUMN_THIRD      = "third_value";
+        public static final String COLUMN_FORTH      = "fourth_value";
+        public static final String COLUMN_FIFTH      = "fifth_value";
+        public static final String COLUMN_MAX        = "max_value";
     }
 
 }
