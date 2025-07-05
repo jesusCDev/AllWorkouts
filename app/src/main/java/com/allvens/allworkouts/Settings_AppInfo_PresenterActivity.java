@@ -23,7 +23,6 @@ public class Settings_AppInfo_PresenterActivity extends AppCompatActivity {
                 new textDocumentation_OpenSource(this).showViews(llContainer);
                 break;
 
-            default:
             case Constants.TERMS_OF_USE:
                 new TextDocumentation_TermsOfService(this).showViews(llContainer);
                 break;
