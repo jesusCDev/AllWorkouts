@@ -39,7 +39,7 @@
         <item name="android:drawable">@drawable/border_set</item>
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/unSelectedButton</item>
+        <item name="android:textColor">@color/selectedButton</item>
     </style>
 
     <style name="button_important">

@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         refreshWorkouts();
 
-        // make sure the previously-chosen workout still exists
         if(chosenWorkout == null || !workoutExists(chosenWorkout)) {
             setWorkout(workouts.length > 0 ? workouts[0] : null);
         }
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             openWorkoutChooser();
         }
+
         chooserIsOpen = !chooserIsOpen;
     }
 
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         for(String w : workouts) {
             if(w.equalsIgnoreCase(workoutName)) return true;
         }
+
         return false;
     }
 
@@ -136,12 +137,12 @@ public class MainActivity extends AppCompatActivity {
     private void openWorkoutChooser() {
         changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
 
-        for(String wName : workouts) {
-            final String name = wName;
-            Button btn        = createWorkoutButton(name);
+        for(String workoutName : workouts) {
+            final String name = workoutName;
+            Button button     = createWorkoutButton(name);
 
-            btn.setOnClickListener(v -> setWorkout(name));
-            workoutChooser.addView(btn);
+            button.setOnClickListener(v -> setWorkout(name));
+            workoutChooser.addView(button);
         }
     }
 
@@ -156,14 +157,16 @@ public class MainActivity extends AppCompatActivity {
         button.getBackground().setAlpha(0);            // transparent background
         button.setText(workoutName);
         styleChooserButton(button);
+
         return button;
     }
 
-    private void styleChooserButton(Button btn) {
+    private void styleChooserButton(Button button) {
         if(Build.VERSION.SDK_INT < 23) {
-            btn.setTextAppearance(this, R.style.btn_home_workoutChoice);
-        } else {
-            btn.setTextAppearance(R.style.btn_home_workoutChoice);
+            button.setTextAppearance(this, R.style.btn_home_workoutChoice);
+        }
+        else {
+            button.setTextAppearance(R.style.btn_home_workoutChoice);
         }
     }
 
@@ -184,12 +187,14 @@ public class MainActivity extends AppCompatActivity {
         currentWorkoutText.setText(workout);
 
         int drawableRes;
+
         switch (workout) {
             case Constants.PULL_UPS: drawableRes = R.drawable.ic_pullup; break;
             case Constants.SIT_UPS : drawableRes = R.drawable.ic_situp ; break;
             case Constants.PUSH_UPS: drawableRes = R.drawable.ic_pushup; break;
             default                : drawableRes = R.drawable.ic_squat ; break;
         }
+
         workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
     }
 }
