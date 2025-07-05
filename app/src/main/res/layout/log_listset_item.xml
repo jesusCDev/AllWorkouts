@@ -4,20 +4,27 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:background="@drawable/border_set"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
+    <!-- Max value (highlight) -->
     <TextView
         android:id="@+id/tv_log_listset_Max"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@color/importantButton"
+        android:textStyle="bold" />
 
+    <!-- Total sets -->
     <TextView
         android:id="@+id/tv_log_listset_TotalSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@color/selectedButton" />
 
+    <!-- Individual set values -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,37 +33,47 @@
 
         <TextView
             android:id="@+id/tv_log_listset_Value1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/unSelectedButton" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/unSelectedButton" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/unSelectedButton" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value4"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/unSelectedButton" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value5"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/unSelectedButton" />
     </LinearLayout>
 </android.widget.LinearLayout>

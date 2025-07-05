@@ -16,6 +16,7 @@
 
     <!-- Open Source -->
     <string name="open_source_title">Open Source</string>
+    <string name="workout_image">Workout Image</string>
     <string name="open_source_date">Last Updated: December 24 2018</string>
     <!-- todo - update later -->
     <string name="open_source_summary">4Basic Workouts was created using open source technologies that were under the apache licence 2.0. And all code of the latest builds is posted live at http://github.com/allvens/allworkout</string>

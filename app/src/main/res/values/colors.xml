@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#202933</color>
-    <color name="colorPrimaryDark">#d14321</color>
-    <color name="colorAccent">#FD542C</color>
+    <!-- Dark background & its slightly lighter status-bar shade -->
+    <color name="colorPrimary">#1B1F27</color>        <!-- app background -->
+    <color name="colorPrimaryDark">#20252E</color>    <!-- status / toolbar -->
 
-    <color name="objects">#333A44</color>
-    <color name="focusAccent">#333A44</color>
+    <!-- Accent (CTA, sliders, active icons) -->
+    <color name="colorAccent">#FF7844</color>
 
-    <!-- Background - primary color for background -->
-    <color name="background_dark">#202933</color>
+    <!-- Brand blues for icons, outlines, “objects” -->
+    <color name="objects">#46566E</color>
+    <color name="focusAccent">#5F7491</color>         <!-- hover / focused state -->
 
-    <!-- Button Text Color - on Orange Background -->
-    <color name="colorAccentLess">#90FD542C</color>
-    <!-- Button Text Color - on Dark Background -->
+    <!-- Back-compat alias for the background -->
+    <color name="background_dark">#1B1F27</color>
 
+    <!-- Translucent accent (56 % opacity) for ripples / pressed states -->
+    <color name="colorAccentLess">#90FF7844</color>
 
-    <!-- Button color - Settings Color -->
+    <!-- Buttons & text states -->
     <color name="selectedButton">#FFFFFF</color>
-    <color name="unSelectedButton">#A9A9A9</color>
-    <color name="importantButton">#FD542C</color>
+    <color name="unSelectedButton">#8B93A3</color>    <!-- 38 % white -->
+    <color name="importantButton">#FF7844</color>     <!-- same as accent -->
+
+    <color name="background_elevated">#20252E</color>
+
 </resources>

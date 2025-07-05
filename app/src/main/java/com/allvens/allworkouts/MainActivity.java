@@ -151,14 +151,20 @@ public class MainActivity extends AppCompatActivity {
         workoutChooser.removeAllViews();
     }
 
-    private Button createWorkoutButton(String workoutName) {
-        Button button = new Button(this);
+    private Button createWorkoutButton(String name) {
+        Button btn = new Button(this);
+        btn.setText(name);
+        styleChooserButton(btn);
+        btn.getBackground().setAlpha(0);            // transparent background
 
-        button.getBackground().setAlpha(0);            // transparent background
-        button.setText(workoutName);
-        styleChooserButton(button);
+        LinearLayoutCompat.LayoutParams lp =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.spacing_2);
+        btn.setLayoutParams(lp);
 
-        return button;
+        return btn;
     }
 
     private void styleChooserButton(Button button) {

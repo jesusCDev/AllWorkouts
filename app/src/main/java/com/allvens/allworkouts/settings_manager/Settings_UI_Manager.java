@@ -26,17 +26,17 @@ public class Settings_UI_Manager {
      /**** TIME DISPLAY
      ****************************************/
 
-    public void update_TimeStamp(TextView tv, int selectedHour, int selectedMin){
+    public void updateTimeStamp(TextView tv, int selectedHour, int selectedMin){
         StringBuilder timeStamp = new StringBuilder();
 
-        timeStamp.append(fix_Hour(selectedHour));
+        timeStamp.append(fixHour(selectedHour));
         timeStamp.append(":");
-        timeStamp.append(fix_Min(selectedMin));
-        timeStamp.append(" " + fix_amPm(selectedHour));
+        timeStamp.append(fixMin(selectedMin));
+        timeStamp.append(" " + fixAmPm(selectedHour));
         tv.setText(timeStamp.toString());
     }
 
-    private String fix_amPm(int selectedHour) {
+    private String fixAmPm(int selectedHour) {
         if(selectedHour < 12){
             return "am";
         }
@@ -44,7 +44,7 @@ public class Settings_UI_Manager {
         return "pm";
     }
 
-    private String fix_Hour(int selectedHour) {
+    private String fixHour(int selectedHour) {
         if(selectedHour == 0) return "12";
         if(selectedHour <= 12){
             return Integer.toString(selectedHour);
@@ -53,7 +53,7 @@ public class Settings_UI_Manager {
         }
     }
 
-    private String fix_Min(int selectedMin) {
+    private String fixMin(int selectedMin) {
         if(selectedMin < 10){
             return ("0" + Integer.toString(selectedMin));
         }
@@ -76,27 +76,27 @@ public class Settings_UI_Manager {
         this.btnSa = btnSa;
     }
 
-    public void update_DailyNotificationColors(boolean sun, boolean mon, boolean tue, boolean wed,
-                                               boolean thur, boolean fri, boolean sat){
-        update_DailyNotificationBtnStyle(btnSu, sun);
-        update_DailyNotificationBtnStyle(btnM, mon);
-        update_DailyNotificationBtnStyle(btnTu, tue);
-        update_DailyNotificationBtnStyle(btnW, wed);
-        update_DailyNotificationBtnStyle(btnTh, thur);
-        update_DailyNotificationBtnStyle(btnF, fri);
-        update_DailyNotificationBtnStyle(btnSa, sat);
+    public void updateDailyNotificationColors(boolean sun, boolean mon, boolean tue, boolean wed,
+                                              boolean thur, boolean fri, boolean sat){
+        updateDailyNotificationBtnStyle(btnSu, sun);
+        updateDailyNotificationBtnStyle(btnM, mon);
+        updateDailyNotificationBtnStyle(btnTu, tue);
+        updateDailyNotificationBtnStyle(btnW, wed);
+        updateDailyNotificationBtnStyle(btnTh, thur);
+        updateDailyNotificationBtnStyle(btnF, fri);
+        updateDailyNotificationBtnStyle(btnSa, sat);
     }
 
-    public void update_DailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
+    public void updateDailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
         if(notiOnDay){
-            set_BtnStyle(btn, R.style.btn_settings_DaySelected);
+            setBtnStyle(btn, R.style.btn_settings_DaySelected);
         }
         else {
-            set_BtnStyle(btn, R.style.btn_settings_DayUnSelected);
+            setBtnStyle(btn, R.style.btn_settings_DayUnSelected);
         }
     }
 
-    private void set_BtnStyle(Button btn, int style){
+    private void setBtnStyle(Button btn, int style){
         if (Build.VERSION.SDK_INT < 23) {
             btn.setTextAppearance(context, style);
         }

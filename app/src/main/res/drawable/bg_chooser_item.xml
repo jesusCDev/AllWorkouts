@@ -1,0 +1,19 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorAccentLess">
+
+    <!-- pressed colour comes from ripple; item itself stays clear -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid   android:color="@color/colorAccent"/>
+            <corners android:radius="@dimen/corner_radius"/>
+        </shape>
+    </item>
+
+    <!-- normal state – fully transparent -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid   android:color="@android:color/transparent"/>
+            <corners android:radius="@dimen/corner_radius"/>
+        </shape>
+    </item>
+</ripple>

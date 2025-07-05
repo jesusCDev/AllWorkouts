@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +8,7 @@
     android:background="@color/background_dark"
     android:layout_weight="4">
 
+    <!-- ─────────────  TOP: WORKOUT NAME  ───────────── -->
     <LinearLayout
         android:id="@+id/workoutExplainationContainer"
         android:layout_width="match_parent"
@@ -14,9 +16,9 @@
         android:gravity="top"
         android:orientation="vertical"
         android:translationZ="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/tv_workout_WorkoutName"
@@ -26,107 +28,92 @@
             android:fontFamily="@font/archivo_black"
             android:text="Workout"
             android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/selectedButton"
             android:textSize="@dimen/priority_1" />
-
     </LinearLayout>
 
+    <!-- ─────────────  CENTER: TIMER / REPS / IMAGE  ───────────── -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/c_workoutSession_TimerRepsWorkoutHolder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/workoutExplainationContainer"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.22">
 
         <TextView
             android:id="@+id/tv_workout_timer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:foregroundGravity="center"
-            android:gravity="center_horizontal|center_vertical"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="300sp"
             android:translationZ="5dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- translucent outline number in front -->
         <com.iambedant.text.OutlineTextView
             android:id="@+id/otv_workout_repNumber_front"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:foregroundGravity="center"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/transparent"
             android:textSize="300sp"
             android:translationZ="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:outlineColor="@color/colorAccentLess"
-            app:outlineWidth="0.7" />
+            app:outlineWidth="0.7"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/iv_workout_workoutImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Image Of the workout"
-            android:foregroundGravity="center"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
+            android:contentDescription="Image of the workout"
+            android:gravity="center"
             android:translationZ="5dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- solid number behind -->
         <TextView
             android:id="@+id/tv_workout_repNumber_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:foregroundGravity="center"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="300sp"
             android:translationZ="0dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
+    <!-- ─────────────  BOTTOM: VALUES & COMPLETE BUTTON  ───────────── -->
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:id="@+id/ll_workout_ValueHolder"
@@ -136,10 +123,9 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-
             <TextView
                 android:id="@+id/tv_workout_Value1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -149,7 +135,7 @@
 
             <TextView
                 android:id="@+id/tv_workout_Value2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -159,7 +145,7 @@
 
             <TextView
                 android:id="@+id/tv_workout_Value3"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -169,7 +155,7 @@
 
             <TextView
                 android:id="@+id/tv_workout_Value4"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -179,7 +165,7 @@
 
             <TextView
                 android:id="@+id/tv_workout_Value5"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -195,11 +181,9 @@
             android:background="@android:color/transparent"
             android:onClick="btnAction_ChangeActivities"
             android:text="Complete"
-            android:textColor="@android:color/white"
+            android:textColor="@color/importantButton"
             android:textSize="@dimen/btn_textSize"
             android:textStyle="bold" />
-
     </LinearLayout>
-
 
 </android.support.constraint.ConstraintLayout>

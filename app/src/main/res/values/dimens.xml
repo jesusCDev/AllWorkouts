@@ -6,4 +6,13 @@
 
 
     <dimen name="btn_textSize">16sp</dimen>
+
+    <dimen name="spacing_1">4dp</dimen>
+    <dimen name="spacing_2">8dp</dimen>
+    <dimen name="spacing_3">16dp</dimen>
+    <dimen name="spacing_4">24dp</dimen>
+
+    <dimen name="corner_radius">12dp</dimen>
+    <dimen name="elevation_card">2dp</dimen>
+
 </resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- drag handle -->
+    <ImageView
+        android:id="@+id/iv_drag"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_drag_handle_black_24dp"
+        android:tint="@color/selectedButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- workout name -->
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/WorkoutRowTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/iv_drag"
+        app:layout_constraintEnd_toStartOf="@id/sw_toggle"
+        app:layout_constraintTop_toTopOf="@id/iv_drag"
+        app:layout_constraintBottom_toBottomOf="@id/iv_drag" />
+
+    <!-- on/off switch -->
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/sw_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_drag"
+        app:layout_constraintBottom_toBottomOf="@id/iv_drag" />
+
+</android.support.constraint.ConstraintLayout>

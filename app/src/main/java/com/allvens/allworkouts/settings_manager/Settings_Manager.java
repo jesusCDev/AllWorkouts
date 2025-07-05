@@ -24,13 +24,17 @@ import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPos_TouchListe
 
 import java.util.Calendar;
 
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
+
 public class Settings_Manager {
 
     private Context context;
     private Settings_UI_Manager ui_manager;
     private SettingsPrefs_Manager settingsPrefs;
     private Notification_Manager notiManager;
-    private Switch[] posSwitches = new Switch[4];
+    private SwitchCompat[] posSwitches = new SwitchCompat[4];
     private int switchPosTracker = 0;
 
     public Settings_Manager(Context context){
@@ -54,107 +58,99 @@ public class Settings_Manager {
     /********** Notification Settings **********/
 
     public void setUp_TimeDisplay(TextView tvTime) {
-        ui_manager.update_TimeStamp(tvTime, notiManager.get_Hour(), notiManager.get_Min());
+        ui_manager.updateTimeStamp(tvTime, notiManager.get_Hour(), notiManager.get_Min());
         notiManager.set_Time(notiManager.get_Hour(), notiManager.get_Min());
     }
 
     public void setUP_DailyNotificationBtns(Button btnSu, Button btnM, Button btnTu, Button btnW, Button btnTh, Button btnF, Button btnSa) {
         ui_manager.set_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
-        ui_manager.update_DailyNotificationColors(settingsPrefs.get_NotificationDayValue(0), settingsPrefs.get_NotificationDayValue(1),
+        ui_manager.updateDailyNotificationColors(settingsPrefs.get_NotificationDayValue(0), settingsPrefs.get_NotificationDayValue(1),
                 settingsPrefs.get_NotificationDayValue(2), settingsPrefs.get_NotificationDayValue(3), settingsPrefs.get_NotificationDayValue(4),
                 settingsPrefs.get_NotificationDayValue(5), settingsPrefs.get_NotificationDayValue(6));
     }
 
-    /********** Workout Position And Status  **********/
+
+    /* ---------- Workout Position & Status ---------- */
 
     public void setUp_WorkoutsAndPositions(LinearLayout llWorkoutsAndPositions) {
-        WorkoutBasicsPrefs_Checker workout_basicsPrefs = new WorkoutBasicsPrefs_Checker(context);
-        WorkoutPos_TouchListener touchListener         = new WorkoutPos_TouchListener(context);
+        WorkoutBasicsPrefs_Checker prefsChecker = new WorkoutBasicsPrefs_Checker(context);
+        WorkoutPos_TouchListener touchListener  = new WorkoutPos_TouchListener(context);
 
-        for(WorkoutPosAndStatus allWorkoutsAndPositions: workout_basicsPrefs.get_WorkoutsPos(true)) {
-            llWorkoutsAndPositions.addView(create_WorkoutPosContainer(allWorkoutsAndPositions, touchListener, workout_basicsPrefs ));
+        for(WorkoutPosAndStatus w : prefsChecker.get_WorkoutsPos(true)) {
+            llWorkoutsAndPositions.addView(
+                    create_WorkoutPosContainer(w, touchListener, prefsChecker));
         }
-
         insure_OneWorkoutIsOn();
     }
 
-    /********** -- Workout Position And Status - Methods  **********/
+    /* ---------- Helper to build each row ---------- */
 
-    private ConstraintLayout create_WorkoutPosContainer(final WorkoutPosAndStatus workout, WorkoutPos_TouchListener touchListener, final WorkoutBasicsPrefs_Checker workout_basicsPrefs){
+    private ConstraintLayout create_WorkoutPosContainer(final WorkoutPosAndStatus workout,
+                                                        WorkoutPos_TouchListener touchListener,
+                                                        final WorkoutBasicsPrefs_Checker prefsChecker){
+
         ConstraintLayout container = new ConstraintLayout(context);
-
         container.setId(workout.getResourceID());
         container.setOnTouchListener(touchListener);
-        container.setOnDragListener(new WorkoutPos_DragListener(context, touchListener, workout_basicsPrefs));
+        container.setOnDragListener(new WorkoutPos_DragListener(context, touchListener, prefsChecker));
 
-        ImageView ivDragHandle = new ImageView(context);
+        /* Drag handle */
+        ImageView ivDrag = new ImageView(context);
+        ivDrag.setId(R.id.btn_Pos_id);
+        ivDrag.setImageResource(R.drawable.ic_drag_handle_black_24dp);
+        ivDrag.setPadding(0, 0, new Helper(context).get_dpFromPixels(8), 0);
+        // Tint icon white for dark theme
+        DrawableCompat.setTint(ivDrag.getDrawable(),
+                ContextCompat.getColor(context, R.color.selectedButton));
 
-        ivDragHandle.setImageResource(R.drawable.ic_drag_handle_black_24dp);
-        ivDragHandle.setId(R.id.btn_Pos_id);
-        ivDragHandle.setPadding(0, 0, new Helper(context).get_dpFromPixels(8), 0);
-
+        /* Title */
         TextView tvTitle = new TextView(context);
-
         tvTitle.setId(R.id.tv_Pos_Id);
         tvTitle.setText(workout.getName());
+        tvTitle.setTextColor(ContextCompat.getColor(context, R.color.selectedButton));
 
-        Switch sTurnOffOn = new Switch(context);
-
-        sTurnOffOn.setId(R.id.s_Pos_Id);
-        sTurnOffOn.setChecked(workout.get_TurnOnStatus());
-        sTurnOffOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                workout_basicsPrefs.update_WorkoutStatusPref(workout.getStatPrefKey(), isChecked);
-                insure_OneWorkoutIsOn();
-            }
+        /* Toggle switch */
+        SwitchCompat swToggle = new SwitchCompat(context);
+        swToggle.setId(R.id.s_Pos_Id);
+        swToggle.setChecked(workout.get_TurnOnStatus());
+        swToggle.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+            prefsChecker.update_WorkoutStatusPref(workout.getStatPrefKey(), isChecked);
+            insure_OneWorkoutIsOn();
         });
 
-        posSwitches[switchPosTracker] = sTurnOffOn;
-        switchPosTracker++;
+        /* Keep reference for the “at least one on” rule */
+        posSwitches[switchPosTracker++] = swToggle;
 
-        container.addView(ivDragHandle);
+        /* Add & constrain */
+        container.addView(ivDrag);
         container.addView(tvTitle);
-        container.addView(sTurnOffOn);
+        container.addView(swToggle);
 
         ConstraintSet set = new ConstraintSet();
-
         set.clone(container);
-        set.connect(ivDragHandle.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
-        set.connect(tvTitle.getId(), ConstraintSet.START, ivDragHandle.getId(), ConstraintSet.END);
-        set.centerVertically(ivDragHandle.getId(), tvTitle.getId());
-        set.connect(sTurnOffOn.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT);
-        set.centerVertically(tvTitle.getId(), sTurnOffOn.getId());
+
+        set.connect(ivDrag.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        set.connect(tvTitle.getId(), ConstraintSet.START, ivDrag.getId(), ConstraintSet.END);
+        set.centerVertically(ivDrag.getId(), tvTitle.getId());
+
+        set.connect(swToggle.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        set.centerVertically(tvTitle.getId(), swToggle.getId());
+
         set.applyTo(container);
 
         return container;
     }
 
-    /**
-     * Makes sure at the very least one workout is set to on.
-     */
     private void insure_OneWorkoutIsOn(){
-        int onSwitches = 0;
-
-        for(Switch switchValue: posSwitches){
-            if(switchValue.isChecked()){
-                onSwitches++;
-            }
+        int on = 0;
+        
+        for(SwitchCompat s : posSwitches){
+            if(s != null && s.isChecked()) on++;
         }
 
-        if(onSwitches == 1){
-            for(Switch switchValue: posSwitches){
-                if(switchValue.isChecked()){
-                    switchValue.setClickable(false);
-                }
-            }
-        }
-        else{
-            for(Switch switchValue: posSwitches){
-                if(!switchValue.isClickable()){
-                    switchValue.setClickable(true);
-                }
-            }
+        for(SwitchCompat s : posSwitches){
+            if(s == null) continue;
+            s.setClickable(!(on == 1 && s.isChecked()));
         }
     }
 
@@ -186,7 +182,7 @@ public class Settings_Manager {
         }
 
         settingsPrefs.update_NotificationDay(dayChanged);
-        ui_manager.update_DailyNotificationBtnStyle(btn, settingsPrefs.get_NotificationDayValue(dayChanged));
+        ui_manager.updateDailyNotificationBtnStyle(btn, settingsPrefs.get_NotificationDayValue(dayChanged));
     }
 
     public CompoundButton.OnCheckedChangeListener update_PrefSettings(final String prefKey){
@@ -225,7 +221,7 @@ public class Settings_Manager {
         mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                ui_manager.update_TimeStamp(((TextView)view), selectedHour, selectedMinute);
+                ui_manager.updateTimeStamp(((TextView)view), selectedHour, selectedMinute);
                 settingsPrefs.update_NotificationTime(selectedHour, selectedMinute);
                 notiManager.update_Time(selectedHour, selectedMinute);
             }
