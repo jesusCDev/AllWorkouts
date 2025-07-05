@@ -8,18 +8,18 @@ import android.support.v7.app.AlertDialog;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.WorkoutSessionActivity;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
 /**
  * Methods for starting workouts depending on their progress.
  */
-public class Start_WorkoutSession {
+public class StartWorkoutSession {
 
-    public void start_Workout(Context context, String choiceWorkout){
+    public void startWorkout(Context context, String choiceWorkout){
         Intent intent;
 
-        Workout_Wrapper wrapper = new Workout_Wrapper(context);
+        WorkoutWrapper wrapper = new WorkoutWrapper(context);
 
         wrapper.open();
 
@@ -47,8 +47,8 @@ public class Start_WorkoutSession {
      /**** PROGRESS CHECKERS
      ****************************************/
 
-    private boolean check_WorkoutExist(Workout_Wrapper wrapper, String choiceWorkout){
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
+    private boolean check_WorkoutExist(WorkoutWrapper wrapper, String choiceWorkout){
+        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choiceWorkout)) {
                 return true;
             }
@@ -57,8 +57,8 @@ public class Start_WorkoutSession {
         return false;
     }
 
-    private boolean check_WorkoutProgress(Workout_Wrapper wrapper, String choiceWorkout){
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
+    private boolean check_WorkoutProgress(WorkoutWrapper wrapper, String choiceWorkout){
+        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choiceWorkout)) {
                 return (workout.getProgress() < 8);
             }

@@ -55,8 +55,12 @@
     </style>
 
 
-
-
+    <!-- ─────────── TYPOGRAPHY HIERARCHY ─────────── -->
+    <!-- default body text for chips / small labels -->
+    <style name="TextAppearance.App.Body" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/selectedButton</item>
+    </style>
 
     <style name="button_important">
         <item name="android:colorBackground">@android:color/transparent</item>
@@ -131,6 +135,15 @@
     <style name="Widget.App.Button.Primary" parent="Widget.App.Button">
         <item name="android:textColor">@color/importantButton</item>
     </style>
+
+    <!-- large primary button, finger-friendly -->
+    <style name="Widget.App.Button.Primary.Large" parent="Widget.App.Button.Primary">
+        <item name="android:minHeight">64dp</item>           <!-- default is ~48 -->
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
 
     <!-- Icon-only buttons (ImageButton / ImageView) -->
     <style name="Widget.App.IconButton" parent="Widget.AppCompat.ImageButton">

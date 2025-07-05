@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.settings_manager.Settings_Manager;
 
 public class SettingsActivity extends AppCompatActivity{
@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity{
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        Workout_Wrapper wrapper = new Workout_Wrapper(SettingsActivity.this);
+                        WorkoutWrapper wrapper = new WorkoutWrapper(SettingsActivity.this);
                         wrapper.open();
                         wrapper.delete_AllWorkouts();
                         wrapper.delete_AllHistoryWorkouts();

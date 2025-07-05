@@ -11,8 +11,8 @@ import android.widget.Toast;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.log_manager.log_chart.LineChartData_Entry;
 import com.github.mikephil.charting.charts.LineChart;
 
@@ -23,14 +23,14 @@ public class Log_Manager {
 
     private String chosenWorkout;
     private Context context;
-    private Workout_Wrapper wrapper;
-    private Workout_Info workout;
+    private WorkoutWrapper wrapper;
+    private WorkoutInfo workout;
     private Log_UI_Manager log_ui_manager;
 
     public Log_Manager(Context context, String chosenWorkout) {
         this.context       = context;
         this.chosenWorkout = chosenWorkout;
-        wrapper            = new Workout_Wrapper(context);
+        wrapper            = new WorkoutWrapper(context);
 
         wrapper.open();
 

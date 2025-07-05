@@ -10,8 +10,8 @@ import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
-import com.allvens.allworkouts.data_manager.database.Workout_Wrapper;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
 public class WorkoutMaximum_Manager {
 
@@ -37,10 +37,10 @@ public class WorkoutMaximum_Manager {
 
         Log.d("Bug", chosenWorkout);
 
-        Workout_Wrapper wrapper = new Workout_Wrapper(context);
+        WorkoutWrapper wrapper = new WorkoutWrapper(context);
 
         wrapper.open();
-        Workout_Info workout_info = wrapper.get_Workout(chosenWorkout);
+        WorkoutInfo workout_info = wrapper.get_Workout(chosenWorkout);
         wrapper.close();
 
         if(workout_info != null){
@@ -99,11 +99,11 @@ public class WorkoutMaximum_Manager {
     /********** Value Savor **********/
 
     public void update_WorkoutProgress(){
-        Workout_Wrapper wrapper = new Workout_Wrapper(context);
+        WorkoutWrapper wrapper = new WorkoutWrapper(context);
         wrapper.open();
 
         boolean workoutExist = false;
-        for(Workout_Info workout: wrapper.get_AllWorkouts()){
+        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
             if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
                 workout.setProgress(1);
                 workout.setMax(maxValue);
@@ -113,7 +113,7 @@ public class WorkoutMaximum_Manager {
         }
 
         if(!workoutExist){
-            wrapper.create_Workout(new Workout_Info(chosenWorkout, maxValue, type, 1));
+            wrapper.create_Workout(new WorkoutInfo(chosenWorkout, maxValue, type, 1));
         }
 
         wrapper.close();

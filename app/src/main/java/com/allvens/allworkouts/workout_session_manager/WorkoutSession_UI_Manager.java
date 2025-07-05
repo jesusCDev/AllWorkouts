@@ -10,9 +10,7 @@ import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
@@ -103,11 +101,11 @@ public class WorkoutSession_UI_Manager {
     /********** Workout Values - Methods **********/
 
     private void update_WorkoutValuesTextViews(){
-        aTvWorkoutValues[0].setText(Integer.toString(workout.get_WorkoutValue(0)));
-        aTvWorkoutValues[1].setText(Integer.toString(workout.get_WorkoutValue(1)));
-        aTvWorkoutValues[2].setText(Integer.toString(workout.get_WorkoutValue(2)));
-        aTvWorkoutValues[3].setText(Integer.toString(workout.get_WorkoutValue(3)));
-        aTvWorkoutValues[4].setText(Integer.toString(workout.get_WorkoutValue(4)));
+        aTvWorkoutValues[0].setText(Integer.toString(workout.getWorkoutValue(0)));
+        aTvWorkoutValues[1].setText(Integer.toString(workout.getWorkoutValue(1)));
+        aTvWorkoutValues[2].setText(Integer.toString(workout.getWorkoutValue(2)));
+        aTvWorkoutValues[3].setText(Integer.toString(workout.getWorkoutValue(3)));
+        aTvWorkoutValues[4].setText(Integer.toString(workout.getWorkoutValue(4)));
     }
 
     private void update_WorkoutValuesNextValue(){
@@ -132,8 +130,8 @@ public class WorkoutSession_UI_Manager {
                 btn_ChangeScreens.setText("Complete");
 
 
-                tvFront.setText(Integer.toString(workout.get_WorkoutValue(progress)));
-                tvBack.setText(Integer.toString(workout.get_WorkoutValue(progress)));
+                tvFront.setText(Integer.toString(workout.getWorkoutValue(progress)));
+                tvBack.setText(Integer.toString(workout.getWorkoutValue(progress)));
 
                 update_WorkoutValuesNextValue();
 

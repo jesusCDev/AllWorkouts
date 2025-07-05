@@ -24,7 +24,7 @@ public class Workout {
         }
     }
 
-    public int get_WorkoutValue(int pos){
+    public int getWorkoutValue(int pos){
         return workoutValues[pos];
     }
 

@@ -1,17 +1,17 @@
 package com.allvens.allworkouts.workout_session_manager.workouts;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.database.Workout_Info;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 
-public class Workout_Generator {
+public class WorkoutGenerator {
 
-    private Workout_Info workout_info;
+    private WorkoutInfo workout_info;
 
-    public Workout_Generator(Workout_Info workout_info){
+    public WorkoutGenerator(WorkoutInfo workout_info){
         this.workout_info = workout_info;
     }
 
-    public Workout_Info get_WorkoutInfo() {
+    public WorkoutInfo get_WorkoutInfo() {
         return workout_info;
     }
 

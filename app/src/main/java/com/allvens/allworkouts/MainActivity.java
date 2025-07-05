@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.assets.Start_WorkoutSession;
+import com.allvens.allworkouts.assets.StartWorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStartWorkoutClicked(View view) {
         if(chosenWorkout == null) return;
 
-        new Start_WorkoutSession().start_Workout(this, chosenWorkout);
+        new StartWorkoutSession().startWorkout(this, chosenWorkout);
     }
 
     public void onSettingsClicked(View view) {
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         Button btn = new Button(this);
         btn.setText(name);
         styleChooserButton(btn);
-        btn.getBackground().setAlpha(0);            // transparent background
+        btn.getBackground().setAlpha(0);
 
         LinearLayoutCompat.LayoutParams lp =
                 new LinearLayoutCompat.LayoutParams(
