@@ -5,20 +5,20 @@ import android.content.SharedPreferences;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 
-public class SettingsPrefs_Manager {
+public class SettingsPrefsManager {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
     private String[] notification_days;
 
-    public SettingsPrefs_Manager(Context context){
+    public SettingsPrefsManager(Context context){
         prefs = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
         edit  = prefs.edit();
 
         notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "-1,-1,-1,-1,-1,-1,-1").split(",");
     }
 
-    public boolean get_PrefSetting(String prefKey){
+    public boolean getPrefSetting(String prefKey){
         return prefs.getBoolean(prefKey, false);
     }
 

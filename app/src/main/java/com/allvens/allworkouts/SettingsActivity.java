@@ -71,8 +71,8 @@ public class SettingsActivity extends AppCompatActivity{
                     case DialogInterface.BUTTON_POSITIVE:
                         WorkoutWrapper wrapper = new WorkoutWrapper(SettingsActivity.this);
                         wrapper.open();
-                        wrapper.delete_AllWorkouts();
-                        wrapper.delete_AllHistoryWorkouts();
+                        wrapper.deleteAllWorkouts();
+                        wrapper.deleteAllHistoryWorkouts();
                         wrapper.close();
                         new Toast(SettingsActivity.this).makeText(SettingsActivity.this, "Workout Data Deleted", Toast.LENGTH_SHORT).show();
                         break;

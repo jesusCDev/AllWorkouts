@@ -40,7 +40,7 @@ public class WorkoutMaximum_Manager {
         WorkoutWrapper wrapper = new WorkoutWrapper(context);
 
         wrapper.open();
-        WorkoutInfo workout_info = wrapper.get_Workout(chosenWorkout);
+        WorkoutInfo workout_info = wrapper.getWorkout(chosenWorkout);
         wrapper.close();
 
         if(workout_info != null){
@@ -103,17 +103,17 @@ public class WorkoutMaximum_Manager {
         wrapper.open();
 
         boolean workoutExist = false;
-        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
+        for(WorkoutInfo workout: wrapper.getAllWorkouts()){
             if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
                 workout.setProgress(1);
                 workout.setMax(maxValue);
-                wrapper.update_Workout(workout);
+                wrapper.updateWorkout(workout);
                 workoutExist = true;
             }
         }
 
         if(!workoutExist){
-            wrapper.create_Workout(new WorkoutInfo(chosenWorkout, maxValue, type, 1));
+            wrapper.createWorkout(new WorkoutInfo(chosenWorkout, maxValue, type, 1));
         }
 
         wrapper.close();

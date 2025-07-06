@@ -13,7 +13,7 @@ import android.os.Build;
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 
 import java.util.Calendar;
 
@@ -25,12 +25,12 @@ public class Notification_Receiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SettingsPrefs_Manager settingsPrefs = new SettingsPrefs_Manager(context);
+        SettingsPrefsManager settingsPrefs = new SettingsPrefsManager(context);
 
         if(intent.getAction() != null && context != null) {
             if(intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
                 // Create Notification Receiver
-                Notification_Manager notiManager = new Notification_Manager(context, settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
+                Notification_Manager notiManager = new Notification_Manager(context, settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON),
                                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());
 
                 notiManager.create_Notification();

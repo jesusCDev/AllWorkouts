@@ -26,7 +26,7 @@ public class WorkoutSession_Manager {
         WorkoutWrapper wrapper = new WorkoutWrapper(context);
         wrapper.open();
 
-        WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.get_Workout(choice));
+        WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(choice));
         workout_info = workoutGenerator.get_WorkoutInfo();
         workout = workoutGenerator.get_Workout();
 
@@ -54,8 +54,8 @@ public class WorkoutSession_Manager {
     }
 
     public boolean check_IfFinished() {
-        if(!timer.get_TimerRunning()) workoutSessionUi_manager.set_Progress((workoutSessionUi_manager.get_Progress() + 1));
-        return (workoutSessionUi_manager.get_Progress() < 5);
+        if(!timer.get_TimerRunning()) workoutSessionUi_manager.setProgress((workoutSessionUi_manager.getProgress() + 1));
+        return (workoutSessionUi_manager.getProgress() < 5);
     }
 
     public void set_Timer(){
@@ -67,16 +67,16 @@ public class WorkoutSession_Manager {
      ****************************************/
 
     public void start_Screen(){
-        workoutSessionUi_manager.changeScreen_Workout();
+        workoutSessionUi_manager.changeScreenToWorkout();
     }
 
     public void update_Screen(){
         if(timer.get_TimerRunning()){
             timer.stop_timer();
-            workoutSessionUi_manager.changeScreen_Workout();
+            workoutSessionUi_manager.changeScreenToWorkout();
         }else{
-            workoutSessionUi_manager.changeScreen_Timer();
-            timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.get_Progress()));
+            workoutSessionUi_manager.changeScreenToTimer();
+            timer.create_timer(workout.get_BreakTime(workoutSessionUi_manager.getProgress()));
             timer.start_timer();
         }
     }

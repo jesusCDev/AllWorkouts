@@ -26,8 +26,8 @@ public class Timer {
     private void onFinish(){
         stop_timer();
         workoutSessionUi_manager.vibrate();
-        workoutSessionUi_manager.play_Sound();
-        workoutSessionUi_manager.changeScreen_Workout();
+        workoutSessionUi_manager.playSound();
+        workoutSessionUi_manager.changeScreenToWorkout();
     }
 
     /****************************************
@@ -49,7 +49,7 @@ public class Timer {
                 long secondsLeft = (time_tracker / 1000);
 
                 // update ui
-                workoutSessionUi_manager.set_TimeTV(secondsLeft);
+                workoutSessionUi_manager.setTimeTV(secondsLeft);
 
                 timerHandler.postDelayed(this, 1000);
                 if(time_tracker < 0){

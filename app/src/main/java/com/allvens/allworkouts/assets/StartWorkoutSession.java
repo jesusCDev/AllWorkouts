@@ -48,7 +48,7 @@ public class StartWorkoutSession {
      ****************************************/
 
     private boolean check_WorkoutExist(WorkoutWrapper wrapper, String choiceWorkout){
-        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
+        for(WorkoutInfo workout: wrapper.getAllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choiceWorkout)) {
                 return true;
             }
@@ -58,7 +58,7 @@ public class StartWorkoutSession {
     }
 
     private boolean check_WorkoutProgress(WorkoutWrapper wrapper, String choiceWorkout){
-        for(WorkoutInfo workout: wrapper.get_AllWorkouts()){
+        for(WorkoutInfo workout: wrapper.getAllWorkouts()){
             if (workout.getWorkout().equalsIgnoreCase(choiceWorkout)) {
                 return (workout.getProgress() < 8);
             }

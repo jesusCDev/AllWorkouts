@@ -15,16 +15,16 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.settings_manager.SettingsPrefs_Manager;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSession_UI_Manager {
 
     private Context context;
-    private TextView tv_WorkoutName;
+    private TextView workoutNameTitle;
 
-    private Button btn_ChangeScreens;
+    private Button completeButton;
 
     private ConstraintLayout cTimerRepsWorkoutHolder;
 
@@ -43,20 +43,20 @@ public class WorkoutSession_UI_Manager {
 
     private int progress = 0;
 
-    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView tv_workout_workoutName, ConstraintLayout cTimerRepsWorkoutHolder,
+    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView workoutNameTitle,
+                                     ConstraintLayout cTimerRepsWorkoutHolder,
                                      ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
-                                     OutlineTextView tvFront, TextView tvBack, TextView tvValue1, TextView tvValue2,
-                                     TextView tvValue3, TextView tvValue4, TextView tvValue5, Button btn_ChangeScreens) {
-        this.context = context;
-        tv_WorkoutName = tv_workout_workoutName;
-
+                                     OutlineTextView tvFront, TextView tvBack, TextView tvValue1,
+                                     TextView tvValue2,
+                                     TextView tvValue3, TextView tvValue4, TextView tvValue5,
+                                     Button completeButton) {
+        this.context                 = context;
+        this.workoutNameTitle        = workoutNameTitle;
         this.cTimerRepsWorkoutHolder = cTimerRepsWorkoutHolder;
-
-        this.ivWorkoutImageHolder = ivWorkoutImageHolder;
-        this.tvTimerHolder = tvTimerHolder;
-
-        this.tvFront = tvFront;
-        this.tvBack = tvBack;
+        this.ivWorkoutImageHolder    = ivWorkoutImageHolder;
+        this.tvTimerHolder           = tvTimerHolder;
+        this.tvFront                 = tvFront;
+        this.tvBack                  = tvBack;
 
         aTvWorkoutValues[0] = tvValue1;
         aTvWorkoutValues[1] = tvValue2;
@@ -64,27 +64,28 @@ public class WorkoutSession_UI_Manager {
         aTvWorkoutValues[3] = tvValue4;
         aTvWorkoutValues[4] = tvValue5;
 
-        this.btn_ChangeScreens = btn_ChangeScreens;
+        this.completeButton = completeButton;
 
-        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        SettingsPrefs_Manager prefs_manager = new SettingsPrefs_Manager(context);
-        soundOn = prefs_manager.get_PrefSetting(Preferences_Values.SOUND_ON);
-        vibrateOn = prefs_manager.get_PrefSetting(Preferences_Values.VIBRATE_ON);
+        this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        SettingsPrefsManager prefs_manager = new SettingsPrefsManager(context);
+        soundOn                            = prefs_manager.getPrefSetting(Preferences_Values.SOUND_ON);
+        vibrateOn                          = prefs_manager.getPrefSetting(Preferences_Values.VIBRATE_ON);
 
         this.workout = workout;
 
-        update_WorkoutValuesTextViews();
+        updateWorkoutValuesTextViews();
     }
 
     /****************************************
      /**** SETTER/GETTER METHODS
      ****************************************/
 
-    public void set_Progress(int progress){
+    public void setProgress(int progress) {
         this.progress = progress;
     }
 
-    public int get_Progress() {
+    public int getProgress() {
         return progress;
     }
 
@@ -92,15 +93,11 @@ public class WorkoutSession_UI_Manager {
      /**** UI UPDATERS
      ****************************************/
 
-    /********** Timer View  **********/
-
-    public void set_TimeTV(long seconds) {
+    public void setTimeTV(long seconds) {
         tvTimerHolder.setText(Long.toString(seconds));
     }
 
-    /********** Workout Values - Methods **********/
-
-    private void update_WorkoutValuesTextViews(){
+    private void updateWorkoutValuesTextViews() {
         aTvWorkoutValues[0].setText(Integer.toString(workout.getWorkoutValue(0)));
         aTvWorkoutValues[1].setText(Integer.toString(workout.getWorkoutValue(1)));
         aTvWorkoutValues[2].setText(Integer.toString(workout.getWorkoutValue(2)));
@@ -108,71 +105,68 @@ public class WorkoutSession_UI_Manager {
         aTvWorkoutValues[4].setText(Integer.toString(workout.getWorkoutValue(4)));
     }
 
-    private void update_WorkoutValuesNextValue(){
-        setStyle_ForTextView(aTvWorkoutValues[progress], R.style.tv_WorkoutSession_CurrentWorkoutValue);
+    private void updateWorkoutValuesNextValue() {
+        setStyleForTextView(aTvWorkoutValues[progress], R.style.tv_WorkoutSession_CurrentWorkoutValue);
     }
 
-    private void update_WorkoutValuesLastValue(){
+    private void updateWorkoutValuesLastValue() {
         aTvWorkoutValues[(progress - 1)].setTextColor(context.getResources().getColor(R.color.unSelectedButton));
-        setStyle_ForTextView(aTvWorkoutValues[(progress - 1)], R.style.tv_WorkoutSession_WorkoutValue);
+        setStyleForTextView(aTvWorkoutValues[(progress - 1)], R.style.tv_WorkoutSession_WorkoutValue);
     }
 
     /****************************************
      /**** SCREEN CHANGERS
      ****************************************/
 
-    public void changeScreen_Workout() {
-        Activity act = (Activity)context;
-        act.runOnUiThread(new Runnable(){
+    public void changeScreenToWorkout() {
+        Activity activity = (Activity) context;
+
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_WorkoutName.setText(workout.get_WorkoutName(progress));
-                btn_ChangeScreens.setText("Complete");
-
+                workoutNameTitle.setText(workout.get_WorkoutName(progress));
+                completeButton.setText("Complete");
 
                 tvFront.setText(Integer.toString(workout.getWorkoutValue(progress)));
                 tvBack.setText(Integer.toString(workout.getWorkoutValue(progress)));
 
-                update_WorkoutValuesNextValue();
+                updateWorkoutValuesNextValue();
 
-                setVisibility_TextView(tvTimerHolder, false);
+                setVisibilityTextView(tvTimerHolder, false);
 
-                setVisibility_TextView(tvFront, true);
-                setVisibility_TextView(tvBack, true);
+                setVisibilityTextView(tvFront, true);
+                setVisibilityTextView(tvBack, true);
 
-                setVisibility_ImageView(ivWorkoutImageHolder, true);
+                setVisibilityImageView(ivWorkoutImageHolder, true);
                 ivWorkoutImageHolder.setImageResource(workout.get_WorkoutImage(progress));
-            } });
+            }
+        });
     }
 
 
-    public void changeScreen_Timer() {
+    public void changeScreenToTimer() {
+        Activity activity = (Activity)context;
 
-        Activity act = (Activity)context;
-        act.runOnUiThread(new Runnable(){
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_WorkoutName.setText(workout.get_WorkoutName(progress));
-                btn_ChangeScreens.setText("Next");
+                workoutNameTitle.setText(workout.get_WorkoutName(progress));
+                completeButton.setText("Next");
 
-                setVisibility_ImageView(ivWorkoutImageHolder, false);
+                setVisibilityImageView(ivWorkoutImageHolder, false);
 
-                setVisibility_TextView(tvFront, false);
+                setVisibilityTextView(tvFront, false);
+                setVisibilityTextView(tvBack, false);
+                setVisibilityTextView(tvTimerHolder, true);
 
-                setVisibility_TextView(tvBack, false);
-                setVisibility_TextView(tvTimerHolder, true);
-
-                update_WorkoutValuesLastValue();
-                update_WorkoutValuesNextValue();
-            } });
-
+                updateWorkoutValuesLastValue();
+                updateWorkoutValuesNextValue();
+            }
+        });
     }
 
-
-
     /********** Styling Method **********/
-
-    private void setStyle_ForTextView(TextView tv, int style){
+    private void setStyleForTextView(TextView tv, int style) {
         if (Build.VERSION.SDK_INT < 23) {
             tv.setTextAppearance(context, style);
         } else {
@@ -180,44 +174,30 @@ public class WorkoutSession_UI_Manager {
         }
     }
 
-    private void setVisibility_ImageView(ImageView ivImage, boolean visible){
-        int visibleValue = View.INVISIBLE;;
-        if(visible) visibleValue = View.VISIBLE;
-
-        ivImage.setVisibility(visibleValue);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ivImage.onVisibilityAggregated(visible);
-        }
+    private void setVisibilityTextView(TextView textView, boolean visible) {
+        textView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void setVisibility_TextView(TextView tv, boolean visible){
-
-        int visibleValue = View.INVISIBLE;;
-        if(visible) visibleValue = View.VISIBLE;
-
-        tv.setVisibility(visibleValue);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tv.onVisibilityAggregated(visible);
-        }
+    private void setVisibilityImageView(ImageView imageView, boolean visible) {
+        imageView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     /****************************************
      /**** FEEDBACK METHODS
      ****************************************/
 
-    public void play_Sound(){
-        if(soundOn){
+    public void playSound() {
+        if(soundOn) {
             toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 100);
         }
     }
 
-    public void vibrate(){
-        if(vibrateOn){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    public void vibrate() {
+        if(vibrateOn) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(500,VibrationEffect.DEFAULT_AMPLITUDE));
-            }else{
+            }
+            else{
                 vibrator.vibrate(500);
             }
         }

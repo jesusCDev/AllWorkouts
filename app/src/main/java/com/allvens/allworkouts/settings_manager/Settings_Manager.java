@@ -32,7 +32,7 @@ public class Settings_Manager {
 
     private Context context;
     private Settings_UI_Manager ui_manager;
-    private SettingsPrefs_Manager settingsPrefs;
+    private SettingsPrefsManager settingsPrefs;
     private Notification_Manager notiManager;
     private SwitchCompat[] posSwitches = new SwitchCompat[4];
     private int switchPosTracker = 0;
@@ -40,8 +40,8 @@ public class Settings_Manager {
     public Settings_Manager(Context context){
         this.context  = context;
         ui_manager    = new Settings_UI_Manager(context);
-        settingsPrefs = new SettingsPrefs_Manager(context);
-        notiManager   = new Notification_Manager(context   , settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON),
+        settingsPrefs = new SettingsPrefsManager(context);
+        notiManager   = new Notification_Manager(context   , settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON),
                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());
     }
 
@@ -50,9 +50,9 @@ public class Settings_Manager {
      ****************************************/
 
     public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification) {
-        sVibrate.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.VIBRATE_ON));
-        sSound.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.SOUND_ON));
-        sNotification.setChecked(settingsPrefs.get_PrefSetting(Preferences_Values.NOTIFICATION_ON));
+        sVibrate.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.VIBRATE_ON));
+        sSound.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.SOUND_ON));
+        sNotification.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON));
     }
 
     /********** Notification Settings **********/

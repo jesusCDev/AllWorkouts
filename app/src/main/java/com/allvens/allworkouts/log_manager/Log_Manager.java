@@ -34,7 +34,7 @@ public class Log_Manager {
 
         wrapper.open();
 
-        workout = wrapper.get_Workout(chosenWorkout);
+        workout = wrapper.getWorkout(chosenWorkout);
 
         wrapper.close();
     }
@@ -46,8 +46,8 @@ public class Log_Manager {
     public void update_Screen(){
         if(workout != null) {
             wrapper.open();
-            log_ui_manager.update_Graph(get_GraphData_TotalReps(wrapper.get_HistoryForWorkout(workout.getId())));
-            log_ui_manager.update_SetList(wrapper.get_HistoryForWorkout(workout.getId()));
+            log_ui_manager.update_Graph(get_GraphData_TotalReps(wrapper.getHistoryForWorkout(workout.getId())));
+            log_ui_manager.update_SetList(wrapper.getHistoryForWorkout(workout.getId()));
             log_ui_manager.update_CurrentMax(workout.getMax());
             log_ui_manager.update_CurrentType(workout.getType());
             wrapper.close();
@@ -88,7 +88,7 @@ public class Log_Manager {
     private void delete_Workout() {
         if(workout != null){
             wrapper.open();
-            wrapper.delete_Workout(workout);
+            wrapper.deleteWorkout(workout);
             wrapper.close();
 
             workout = null;
@@ -129,7 +129,7 @@ public class Log_Manager {
                     log_ui_manager.update_CurrentType(type);
 
                     wrapper.open();
-                    wrapper.update_Workout(workout);
+                    wrapper.updateWorkout(workout);
                     wrapper.close();
                 }
             };

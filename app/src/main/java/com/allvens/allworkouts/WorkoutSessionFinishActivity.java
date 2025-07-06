@@ -60,7 +60,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         wrapper.open();
         setNextWorkout(nextWorkoutButton);
 
-        WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.get_Workout(currentChoiceWorkout));
+        WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(currentChoiceWorkout));
         Workout workout                   = workoutGenerator.get_Workout();
         WorkoutInfo workoutInfo           = workoutGenerator.get_WorkoutInfo();
         maxValue                          = workoutInfo.getMax();
@@ -79,7 +79,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         workoutInfo.setMax((workoutInfo.getMax() + PROG_INC_NEUTRAL));
         workoutInfo.setProgress((workoutInfo.getProgress() + 1));
-        wrapper.update_Workout(workoutInfo);
+        wrapper.updateWorkout(workoutInfo);
     }
 
     private void setNextWorkout(Button nextWorkoutButton) {
@@ -108,7 +108,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     private void updateWorkoutProgress(int progress){
-        WorkoutInfo workout = wrapper.get_Workout(currentChoiceWorkout);
+        WorkoutInfo workout = wrapper.getWorkout(currentChoiceWorkout);
         int value           = maxValue + progress;
 
         if(value <= 0) {
@@ -116,16 +116,16 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         }
 
         workout.setMax(value);
-        wrapper.update_Workout(workout);
+        wrapper.updateWorkout(workout);
     }
 
     public void setDifficulty(View view) {
         lastButtonSelected.setTextColor(this.getResources().getColor(R.color.unSelectedButton));
-        ((Button)view).setTextColor(Color.BLACK);
+        ((Button)view).setTextColor(this.getResources().getColor(R.color.selectedButton));
 
         lastButtonSelected = ((Button)view);
 
-        switch ((view).getId()){
+        switch((view).getId()){
             case R.id.btn_workoutFinish_LevelHard:
                 updateWorkoutProgress(PROG_INC_HARD);
                 break;

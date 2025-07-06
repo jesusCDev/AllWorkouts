@@ -25,7 +25,7 @@ public class WorkoutWrapper {
         dbHelper.close();
     }
 
-    public void create_Workout(WorkoutInfo workout){
+    public void createWorkout(WorkoutInfo workout){
         ContentValues values = new ContentValues();
 
         values.put(Workout_Contract.Workout_Entry.COLUMN_WORKOUT, workout.getWorkout());
@@ -33,10 +33,14 @@ public class WorkoutWrapper {
         values.put(Workout_Contract.Workout_Entry.COLUMN_PROGRESS, workout.getProgress());
         values.put(Workout_Contract.Workout_Entry.COLUMN_MAX, workout.getMax());
 
-        long rowID                         = database.insert(Workout_Contract.Workout_Entry.TABLE_NAME, null, values);
         List<WorkoutHistory_Info> workouts = workout.getHistory();
+        long rowID                         = database.insert(
+                Workout_Contract.Workout_Entry.TABLE_NAME,
+                null,
+                values
+        );
 
-        if(workouts != null && workouts.size() > 0){
+        if(workouts != null && !workouts.isEmpty()){
             for(WorkoutHistory_Info history: workouts){
                 createWorkoutHistory(history, rowID);
             }
@@ -45,8 +49,8 @@ public class WorkoutWrapper {
 
     /********** Getter Methods **********/
 
-    public WorkoutInfo get_Workout(String chosenWorkout) {
-        for(WorkoutInfo workout: get_AllWorkouts()){
+    public WorkoutInfo getWorkout(String chosenWorkout) {
+        for(WorkoutInfo workout: getAllWorkouts()){
             if(workout.getWorkout().equalsIgnoreCase(chosenWorkout)){
                 return workout;
             }
@@ -55,7 +59,7 @@ public class WorkoutWrapper {
         return null;
     }
 
-    public List<WorkoutInfo> get_AllWorkouts(){
+    public List<WorkoutInfo> getAllWorkouts(){
         List<WorkoutInfo> workouts = new ArrayList<>();
         String selectQuery          = "SELECT * FROM workout_info";
         Cursor cursor               = database.rawQuery(selectQuery, null);
@@ -80,7 +84,7 @@ public class WorkoutWrapper {
         return workouts;
     }
 
-    public void update_Workout(WorkoutInfo workout){
+    public void updateWorkout(WorkoutInfo workout){
         ContentValues values = new ContentValues();
 
         values.put(Workout_Contract.Workout_Entry.COLUMN_WORKOUT, workout.getWorkout());
@@ -94,8 +98,8 @@ public class WorkoutWrapper {
         database.update(Workout_Contract.Workout_Entry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    public void delete_Workout(WorkoutInfo workout){
-        delete_WorkoutHistory(workout.getId());
+    public void deleteWorkout(WorkoutInfo workout){
+        deleteWorkoutHistory(workout.getId());
 
         String selection       = Workout_Contract.Workout_Entry._ID + " = ?";
         String[] selectionArgs = { String.valueOf(workout.getId())};
@@ -103,7 +107,7 @@ public class WorkoutWrapper {
         database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, selection, selectionArgs);
     }
 
-    public void delete_AllWorkouts(){
+    public void deleteAllWorkouts(){
         database.delete(Workout_Contract.Workout_Entry.TABLE_NAME, null, null);
     }
 
@@ -121,7 +125,7 @@ public class WorkoutWrapper {
         database.insert(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, values);
     }
 
-    public List<WorkoutHistory_Info> get_HistoryForWorkout(long workoutID){
+    public List<WorkoutHistory_Info> getHistoryForWorkout(long workoutID){
         List<WorkoutHistory_Info> workouts = new ArrayList<>();
         String selectQuery                 = "SELECT * FROM workout_history WHERE id = " + workoutID;
         Cursor cursor                      = database.rawQuery(selectQuery, null);
@@ -148,14 +152,14 @@ public class WorkoutWrapper {
         return workouts;
     }
 
-    private void delete_WorkoutHistory(long id){
+    private void deleteWorkoutHistory(long id){
         String selection       = Workout_Contract.WorkoutHistory_Entry.COLUMN_WORKOUT_ID + " = ?";
         String[] selectionArgs = { String.valueOf(id)};
 
         database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, selection, selectionArgs);
     }
 
-    public void delete_AllHistoryWorkouts(){
+    public void deleteAllHistoryWorkouts(){
         database.delete(Workout_Contract.WorkoutHistory_Entry.TABLE_NAME, null, null);
     }
 }
