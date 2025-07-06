@@ -134,7 +134,7 @@ public class WorkoutSession_UI_Manager {
 
                 setVisibilityTextView(tvTimerHolder, false);
 
-                setVisibilityTextView(tvFront, true);
+                setVisibilityTextView(tvFront, false); // todo - hot fix
                 setVisibilityTextView(tvBack, true);
 
                 setVisibilityImageView(ivWorkoutImageHolder, true);
