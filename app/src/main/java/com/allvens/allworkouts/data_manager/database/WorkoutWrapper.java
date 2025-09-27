@@ -32,6 +32,7 @@ public class WorkoutWrapper {
         values.put(Workout_Contract.Workout_Entry.COLUMN_TYPE, workout.getType());
         values.put(Workout_Contract.Workout_Entry.COLUMN_PROGRESS, workout.getProgress());
         values.put(Workout_Contract.Workout_Entry.COLUMN_MAX, workout.getMax());
+        values.put(Workout_Contract.Workout_Entry.COLUMN_DIFFICULTY_RATING, workout.getDifficultyRating());
 
         List<WorkoutHistory_Info> workouts = workout.getHistory();
         long rowID                         = database.insert(
@@ -66,11 +67,19 @@ public class WorkoutWrapper {
 
         try{
             while(cursor.moveToNext()){
+                // Get difficulty rating, defaulting to 1000 if column doesn't exist (migration scenario)
+                int difficultyRating = 1000;
+                int difficultyColumnIndex = cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_DIFFICULTY_RATING);
+                if (difficultyColumnIndex != -1) {
+                    difficultyRating = cursor.getInt(difficultyColumnIndex);
+                }
+                
                 WorkoutInfo workout = new WorkoutInfo(
                         cursor.getString(cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_WORKOUT)),
                         cursor.getInt(cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_MAX)),
                         cursor.getInt(cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_TYPE)),
-                        cursor.getInt(cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_PROGRESS)));
+                        cursor.getInt(cursor.getColumnIndex(Workout_Contract.Workout_Entry.COLUMN_PROGRESS)),
+                        difficultyRating);
 
                 workout.setId(cursor.getInt(cursor.getColumnIndex(Workout_Contract.Workout_Entry._ID)));
                 workouts.add(workout);
@@ -91,6 +100,7 @@ public class WorkoutWrapper {
         values.put(Workout_Contract.Workout_Entry.COLUMN_MAX, workout.getMax());
         values.put(Workout_Contract.Workout_Entry.COLUMN_TYPE, workout.getType());
         values.put(Workout_Contract.Workout_Entry.COLUMN_PROGRESS, workout.getProgress());
+        values.put(Workout_Contract.Workout_Entry.COLUMN_DIFFICULTY_RATING, workout.getDifficultyRating());
 
         String selection       = Workout_Contract.Workout_Entry._ID + " = ?";
         String[] selectionArgs = { String.valueOf(workout.getId())};

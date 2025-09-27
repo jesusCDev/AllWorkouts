@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
@@ -22,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView           currentWorkoutText;
     private ImageView          workoutImage;
-    private ImageButton        changeWorkoutButton;
+    private LinearLayout       changeWorkoutButton;
+    private TextView           workoutSelectorText;
+    private ImageView          workoutSelectorArrow;
     private LinearLayoutCompat workoutChooser;
 
     /* ---------- state ---------- */
@@ -106,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
         currentWorkoutText = findViewById(R.id.tv_home_CurrentWorkout);
         workoutImage       = findViewById(R.id.iv_home_WorkoutShow);
         changeWorkoutButton= findViewById(R.id.btn_ChangeWorkouts);
+        workoutSelectorText= findViewById(R.id.tv_workout_selector_text);
+        workoutSelectorArrow= findViewById(R.id.iv_workout_selector_arrow);
         workoutChooser     = findViewById(R.id.ll_home_WorkoutChooser);
 
         changeWorkoutButton.setOnClickListener(this::onChangeWorkoutsClicked);
@@ -135,12 +139,8 @@ public class MainActivity extends AppCompatActivity {
     /* ====================================================================== */
 
     private void openWorkoutChooser() {
-        // Update button icon with proper compatibility
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
-        } else {
-            changeWorkoutButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
-        }
+        // Update arrow to show "expanded" state (down arrow)
+        workoutSelectorArrow.setImageResource(R.drawable.ic_expand_more_black_24dp);
 
         // Show the chooser with animation
         workoutChooser.setVisibility(android.view.View.VISIBLE);
@@ -164,12 +164,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void clearWorkoutChooser() {
-        // Update button icon with proper compatibility
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_less_black_24dp));
-        } else {
-            changeWorkoutButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
-        }
+        // Update arrow to show "collapsed" state (up arrow)
+        workoutSelectorArrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
         
         // Hide the chooser with animation
         workoutChooser.animate()
@@ -245,6 +241,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateScreen(String workout) {
         currentWorkoutText.setText(workout);
+        
+        // Update the workout selector text to show current workout
+        workoutSelectorText.setText(workout);
+        // Ensure the arrow is properly set (collapsed state)
+        workoutSelectorArrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
 
         int drawableRes;
 
@@ -256,10 +257,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Load drawable with proper compatibility
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            workoutImage.setImageDrawable(getDrawable(drawableRes));
-        } else {
-            workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
-        }
+        workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
     }
 }

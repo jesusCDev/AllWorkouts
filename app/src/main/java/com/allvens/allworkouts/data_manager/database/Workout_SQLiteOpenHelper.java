@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class Workout_SQLiteOpenHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "workouts.db";
-    private static final int VERSION_NUMBER   = 1;
+    private static final int VERSION_NUMBER   = 2;
 
     public Workout_SQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
@@ -20,10 +20,10 @@ public class Workout_SQLiteOpenHelper extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Workout_Contract.Workout_Entry.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Workout_Contract.WorkoutHistory_Entry.TABLE_NAME);
-
-        onCreate(sqLiteDatabase);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if (oldVersion < 2) {
+            // Add difficulty_rating column to existing tables
+            sqLiteDatabase.execSQL(Workout_Contract.ALTER_TABLE_ADD_DIFFICULTY_RATING);
+        }
     }
 }

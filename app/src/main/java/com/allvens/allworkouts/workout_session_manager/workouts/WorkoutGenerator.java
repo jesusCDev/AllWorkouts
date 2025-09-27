@@ -16,15 +16,23 @@ public class WorkoutGenerator {
     }
 
     public Workout get_Workout(){
+        Workout workout;
         switch (workout_info.getWorkout()){
             case Constants.PULL_UPS:
-                return new PullUps(workout_info.getType(), workout_info.getMax());
+                workout = new PullUps(workout_info.getType(), workout_info.getMax());
+                break;
             case Constants.PUSH_UPS:
-                return new PushUps(workout_info.getType(), workout_info.getMax());
+                workout = new PushUps(workout_info.getType(), workout_info.getMax());
+                break;
             case Constants.SIT_UPS:
-                return new SitUps(workout_info.getType(), workout_info.getMax());
+                workout = new SitUps(workout_info.getType(), workout_info.getMax());
+                break;
             default:
-                return new Squats(workout_info.getType(), workout_info.getMax());
+                workout = new Squats(workout_info.getType(), workout_info.getMax());
         }
+        
+        // Set the dynamic difficulty rating from database
+        workout.setDifficultyRating(workout_info.getDifficultyRating());
+        return workout;
     }
 }

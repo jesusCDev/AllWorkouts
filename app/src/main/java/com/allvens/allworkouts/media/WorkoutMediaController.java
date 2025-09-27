@@ -37,14 +37,10 @@ public class WorkoutMediaController {
     private MediaSessionManager mediaSessionManager;
     
     public WorkoutMediaController(Context context) {
-        this.context = context;
-        this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        this.handler = new Handler(Looper.getMainLooper());
-        
-        // Initialize MediaSessionManager for track info (requires API 21+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.mediaSessionManager = (MediaSessionManager) context.getSystemService(Context.MEDIA_SESSION_SERVICE);
-        }
+        this.context             = context;
+        this.audioManager        = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        this.handler             = new Handler(Looper.getMainLooper());
+        this.mediaSessionManager = (MediaSessionManager) context.getSystemService(Context.MEDIA_SESSION_SERVICE);
     }
     
     /**
@@ -89,11 +85,8 @@ public class WorkoutMediaController {
         
         // Initialize play/pause button state
         // First set default state to avoid blank button, then check actual state
-        if (audioManager != null && audioManager.isMusicActive()) {
-            isPlaying = true;
-        } else {
-            isPlaying = false;
-        }
+        isPlaying = audioManager != null && audioManager.isMusicActive();
+
         updatePlayPauseIcon();
         
         // Use a delay to double-check and refresh state

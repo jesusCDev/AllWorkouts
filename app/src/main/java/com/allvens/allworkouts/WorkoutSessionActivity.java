@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.media.WorkoutMediaController;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.workout_session_manager.WorkoutSession_Manager;
@@ -28,6 +29,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private WorkoutSession_Manager manager;
     private WorkoutMediaController mediaController;
     private View mediaControlsLayout;
+    private String sessionStartWorkout; // The workout that started this session
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,17 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         TextView tvValue5                        = findViewById(R.id.tv_workout_Value5);
         Button btn_ChangeScreens                 = findViewById(R.id.btn_workout_CompleteTask);
         manager                                  = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
+        
+        // Get session start workout from intent or fallback to SharedPreferences
+        sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
+        if (sessionStartWorkout == null) {
+            sessionStartWorkout = SessionUtils.getSessionStart(this);
+        }
+        
+        // Save to SharedPreferences as backup
+        if (sessionStartWorkout != null) {
+            SessionUtils.saveSessionStart(this, sessionStartWorkout);
+        }
 
         manager.setUp_UiManager(tv_workout_WorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
@@ -116,6 +129,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             Intent intent = new Intent(this, WorkoutSessionFinishActivity.class);
 
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, manager.get_Workout());
+            
+            // Thread the session start workout to WorkoutSessionFinishActivity
+            if (sessionStartWorkout != null) {
+                intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
+            }
+            
             this.startActivity(intent);
             finish();
         }

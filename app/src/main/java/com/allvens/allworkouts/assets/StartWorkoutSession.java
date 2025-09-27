@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.WorkoutSessionActivity;
+import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
@@ -35,6 +36,12 @@ public class StartWorkoutSession {
 
             wrapper.close();
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
+            // Track which workout started the session for circular progression
+            intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, choiceWorkout);
+            
+            // Initialize a new workout cycle counter
+            SessionUtils.initializeNewCycle(context);
+            
             context.startActivity(intent);
         }
         else{
@@ -91,8 +98,13 @@ public class StartWorkoutSession {
         Intent intent = new Intent(context, WorkoutMaximumActivity.class);
 
         intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, choiceWorkout);
+        // Track which workout started the session for circular progression
+        intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, choiceWorkout);
         intent.putExtra(Constants.WORKOUT_TYPE_KEY, workoutType);
         intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
+        
+        // Initialize a new workout cycle counter
+        SessionUtils.initializeNewCycle(context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         context.startActivity(intent);

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.DebuggingMethods;
+import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.workout_session_manager.WorkoutMaximum_Manager;
 
 public class WorkoutMaximumActivity extends AppCompatActivity {
@@ -23,7 +24,14 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         TextView tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
         String chosenWorkout        = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         int type                    = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
-        workoutMax_manager          = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type);
+        
+        // Get session start workout from intent or fallback to SharedPreferences
+        String sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
+        if (sessionStartWorkout == null) {
+            sessionStartWorkout = SessionUtils.getSessionStart(this);
+        }
+        
+        workoutMax_manager = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type, sessionStartWorkout);
 
         tv_max_WorkoutName.setText(chosenWorkout);
     }

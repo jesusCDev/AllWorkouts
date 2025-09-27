@@ -9,7 +9,9 @@ import android.widget.TextView;
 import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.WorkoutSessionActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
@@ -21,14 +23,21 @@ public class WorkoutMaximum_Manager {
     private int startingMax = 1;
     private String chosenWorkout;
     private int type;
+    private String sessionStartWorkout; // The workout that started this session
 
     private TextView tvCounterView;
 
-    public WorkoutMaximum_Manager(Context context, TextView tvCounterView, String chosenWorkout, int type) {
+    public WorkoutMaximum_Manager(Context context, TextView tvCounterView, String chosenWorkout, int type, String sessionStartWorkout) {
         this.context = context;
         this.tvCounterView = tvCounterView;
         this.chosenWorkout = chosenWorkout;
         this.type = type;
+        this.sessionStartWorkout = sessionStartWorkout;
+        
+        // Save session start to SharedPreferences as a safety net
+        if (sessionStartWorkout != null) {
+            SessionUtils.saveSessionStart(context, sessionStartWorkout);
+        }
 
         set_lastWMaxWorkoutValue();
     }
@@ -130,8 +139,20 @@ public class WorkoutMaximum_Manager {
             intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
         }else{
-            intent = new Intent(context, MainActivity.class);
-            intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
+            // Start the workout session with the configured max value
+            intent = new Intent(context, WorkoutSessionActivity.class);
+            intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
+            
+            // Thread the session start workout through to WorkoutSessionActivity
+            if (sessionStartWorkout != null) {
+                intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
+            } else {
+                // Fallback to SharedPreferences if extra was lost
+                String fallbackStart = SessionUtils.getSessionStart(context);
+                if (fallbackStart != null) {
+                    intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, fallbackStart);
+                }
+            }
         }
         context.startActivity(intent);
     }

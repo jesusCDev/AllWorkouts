@@ -14,7 +14,23 @@ final class Workout_Contract {
                     Workout_Entry.COLUMN_TYPE + " INTEGER NOT NULL, " +
                     Workout_Entry.COLUMN_PROGRESS + " INTEGER NOT NULL, " +
                     Workout_Entry.COLUMN_MAX + " INTEGER NOT NULL, " +
+                    Workout_Entry.COLUMN_DIFFICULTY_RATING + " INTEGER DEFAULT 1000, " +
                     "UNIQUE ( " + Workout_Entry._ID + ") ON CONFLICT REPLACE )";
+
+    static final String CREATE_WORKOUT_ENTRY_TABLE_V2 =
+            "CREATE TABLE " + Workout_Entry.TABLE_NAME +
+                    " ( " +
+                    Workout_Entry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    Workout_Entry.COLUMN_WORKOUT+ " TEXT NOT NULL, " +
+                    Workout_Entry.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                    Workout_Entry.COLUMN_PROGRESS + " INTEGER NOT NULL, " +
+                    Workout_Entry.COLUMN_MAX + " INTEGER NOT NULL, " +
+                    Workout_Entry.COLUMN_DIFFICULTY_RATING + " INTEGER DEFAULT 1000, " +
+                    "UNIQUE ( " + Workout_Entry._ID + ") ON CONFLICT REPLACE )";
+
+    static final String ALTER_TABLE_ADD_DIFFICULTY_RATING =
+            "ALTER TABLE " + Workout_Entry.TABLE_NAME + " ADD COLUMN " +
+                    Workout_Entry.COLUMN_DIFFICULTY_RATING + " INTEGER DEFAULT 1000";
 
     static final String CREATE_WORKOUT_HISTORY_ENTRY_TABLE =
             "CREATE TABLE " + WorkoutHistory_Entry.TABLE_NAME +
@@ -30,11 +46,12 @@ final class Workout_Contract {
                     "UNIQUE ( " + WorkoutHistory_Entry._ID + ") ON CONFLICT REPLACE )";
 
     public static class Workout_Entry implements BaseColumns{
-        public static final String TABLE_NAME      = "workout_info";
-        public static final String COLUMN_WORKOUT  = "workout";
-        public static final String COLUMN_TYPE     = "type";
-        public static final String COLUMN_PROGRESS = "progress";
-        public static final String COLUMN_MAX      = "max";
+        public static final String TABLE_NAME         = "workout_info";
+        public static final String COLUMN_WORKOUT     = "workout";
+        public static final String COLUMN_TYPE        = "type";
+        public static final String COLUMN_PROGRESS    = "progress";
+        public static final String COLUMN_MAX         = "max";
+        public static final String COLUMN_DIFFICULTY_RATING = "difficulty_rating";
     }
     
     public static class WorkoutHistory_Entry implements BaseColumns{
