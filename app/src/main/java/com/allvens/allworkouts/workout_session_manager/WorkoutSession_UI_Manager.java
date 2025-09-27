@@ -43,13 +43,14 @@ public class WorkoutSession_UI_Manager {
 
     private int progress = 0;
 
-    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView workoutNameTitle,
-                                     ConstraintLayout cTimerRepsWorkoutHolder,
-                                     ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
-                                     OutlineTextView tvFront, TextView tvBack, TextView tvValue1,
-                                     TextView tvValue2,
-                                     TextView tvValue3, TextView tvValue4, TextView tvValue5,
-                                     Button completeButton) {
+    public WorkoutSession_UI_Manager(
+            Context context, Workout workout, TextView workoutNameTitle,
+            ConstraintLayout cTimerRepsWorkoutHolder,
+            ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
+            OutlineTextView tvFront, TextView tvBack, TextView tvValue1,
+            TextView tvValue2,
+            TextView tvValue3, TextView tvValue4, TextView tvValue5,
+            Button completeButton) {
         this.context                 = context;
         this.workoutNameTitle        = workoutNameTitle;
         this.cTimerRepsWorkoutHolder = cTimerRepsWorkoutHolder;
@@ -167,7 +168,7 @@ public class WorkoutSession_UI_Manager {
 
     /********** Styling Method **********/
     private void setStyleForTextView(TextView tv, int style) {
-        if (Build.VERSION.SDK_INT < 23) {
+        if(Build.VERSION.SDK_INT < 23) {
             tv.setTextAppearance(context, style);
         } else {
             tv.setTextAppearance(style);

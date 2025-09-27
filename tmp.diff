@@ -1,0 +1,156 @@
+diff --git a/.idea/caches/deviceStreaming.xml b/.idea/caches/deviceStreaming.xml
+index 9aaec77..dc7149b 100644
+--- a/.idea/caches/deviceStreaming.xml
++++ b/.idea/caches/deviceStreaming.xml
+@@ -51,6 +51,18 @@
+           <option name="screenX" value="1080" />
+           <option name="screenY" value="2412" />
+         </PersistentDeviceSelectionData>
++        <PersistentDeviceSelectionData>
++          <option name="api" value="35" />
++          <option name="brand" value="OnePlus" />
++          <option name="codename" value="OP5552L1" />
++          <option name="id" value="OP5552L1" />
++          <option name="labId" value="google" />
++          <option name="manufacturer" value="OnePlus" />
++          <option name="name" value="CPH2415" />
++          <option name="screenDensity" value="480" />
++          <option name="screenX" value="1080" />
++          <option name="screenY" value="2412" />
++        </PersistentDeviceSelectionData>
+         <PersistentDeviceSelectionData>
+           <option name="api" value="34" />
+           <option name="brand" value="OPPO" />
+@@ -75,6 +87,19 @@
+           <option name="screenX" value="1080" />
+           <option name="screenY" value="2160" />
+         </PersistentDeviceSelectionData>
++        <PersistentDeviceSelectionData>
++          <option name="api" value="35" />
++          <option name="brand" value="Lenovo" />
++          <option name="codename" value="TB330FU" />
++          <option name="formFactor" value="Tablet" />
++          <option name="id" value="TB330FU" />
++          <option name="labId" value="google" />
++          <option name="manufacturer" value="Lenovo" />
++          <option name="name" value="Tab M11" />
++          <option name="screenDensity" value="240" />
++          <option name="screenX" value="1200" />
++          <option name="screenY" value="1920" />
++        </PersistentDeviceSelectionData>
+         <PersistentDeviceSelectionData>
+           <option name="api" value="34" />
+           <option name="brand" value="samsung" />
+@@ -354,18 +379,6 @@
+           <option name="screenX" value="384" />
+           <option name="screenY" value="384" />
+         </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="35" />
+-          <option name="brand" value="motorola" />
+-          <option name="codename" value="eqe" />
+-          <option name="id" value="eqe" />
+-          <option name="labId" value="google" />
+-          <option name="manufacturer" value="Motorola" />
+-          <option name="name" value="edge 50 pro" />
+-          <option name="screenDensity" value="450" />
+-          <option name="screenX" value="1220" />
+-          <option name="screenY" value="2712" />
+-        </PersistentDeviceSelectionData>
+         <PersistentDeviceSelectionData>
+           <option name="api" value="33" />
+           <option name="brand" value="google" />
+@@ -817,6 +830,19 @@
+           <option name="screenX" value="1080" />
+           <option name="screenY" value="2424" />
+         </PersistentDeviceSelectionData>
++        <PersistentDeviceSelectionData>
++          <option name="api" value="36" />
++          <option name="brand" value="google" />
++          <option name="codename" value="tokay" />
++          <option name="default" value="true" />
++          <option name="id" value="tokay" />
++          <option name="labId" value="google" />
++          <option name="manufacturer" value="Google" />
++          <option name="name" value="Pixel 9" />
++          <option name="screenDensity" value="420" />
++          <option name="screenX" value="1080" />
++          <option name="screenY" value="2424" />
++        </PersistentDeviceSelectionData>
+         <PersistentDeviceSelectionData>
+           <option name="api" value="34" />
+           <option name="brand" value="samsung" />
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+index ec216ec..9925960 100644
+--- a/.idea/deploymentTargetSelector.xml
++++ b/.idea/deploymentTargetSelector.xml
+@@ -7,10 +7,10 @@
+       </SelectionState>
+       <SelectionState runConfigName="MainActivity">
+         <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2025-07-06T17:40:02.697866136Z">
++        <DropdownSelection timestamp="2025-07-06T17:45:55.554387784Z">
+           <Target type="DEFAULT_BOOT">
+             <handle>
+-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/average_l/.android/avd/Pixel_8_API_35.avd" />
++              <DeviceId pluginId="PhysicalDevice" identifier="serial=R5CX613YMLZ" />
+             </handle>
+           </Target>
+         </DropdownSelection>
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+index b2c751a..74dd639 100644
+--- a/.idea/misc.xml
++++ b/.idea/misc.xml
+@@ -1,3 +1,4 @@
++<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+diff --git a/app/src/main/java/com/allvens/allworkouts/workout_session_manager/WorkoutSession_UI_Manager.java b/app/src/main/java/com/allvens/allworkouts/workout_session_manager/WorkoutSession_UI_Manager.java
+index 735de0e..12e49da 100755
+--- a/app/src/main/java/com/allvens/allworkouts/workout_session_manager/WorkoutSession_UI_Manager.java
++++ b/app/src/main/java/com/allvens/allworkouts/workout_session_manager/WorkoutSession_UI_Manager.java
+@@ -43,13 +43,14 @@ public class WorkoutSession_UI_Manager {
+ 
+     private int progress = 0;
+ 
+-    public WorkoutSession_UI_Manager(Context context, Workout workout, TextView workoutNameTitle,
+-                                     ConstraintLayout cTimerRepsWorkoutHolder,
+-                                     ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
+-                                     OutlineTextView tvFront, TextView tvBack, TextView tvValue1,
+-                                     TextView tvValue2,
+-                                     TextView tvValue3, TextView tvValue4, TextView tvValue5,
+-                                     Button completeButton) {
++    public WorkoutSession_UI_Manager(
++            Context context, Workout workout, TextView workoutNameTitle,
++            ConstraintLayout cTimerRepsWorkoutHolder,
++            ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
++            OutlineTextView tvFront, TextView tvBack, TextView tvValue1,
++            TextView tvValue2,
++            TextView tvValue3, TextView tvValue4, TextView tvValue5,
++            Button completeButton) {
+         this.context                 = context;
+         this.workoutNameTitle        = workoutNameTitle;
+         this.cTimerRepsWorkoutHolder = cTimerRepsWorkoutHolder;
+@@ -167,7 +168,7 @@ public class WorkoutSession_UI_Manager {
+ 
+     /********** Styling Method **********/
+     private void setStyleForTextView(TextView tv, int style) {
+-        if (Build.VERSION.SDK_INT < 23) {
++        if(Build.VERSION.SDK_INT < 23) {
+             tv.setTextAppearance(context, style);
+         } else {
+             tv.setTextAppearance(style);
+diff --git a/build.gradle b/build.gradle
+index fbd8afd..32aa10e 100755
+--- a/build.gradle
++++ b/build.gradle
+@@ -7,7 +7,7 @@ buildscript {
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:8.11.0'
++        classpath 'com.android.tools.build:gradle:8.13.0'
+         
+ 
+         // NOTE: Do not place your application dependencies here; they belong
