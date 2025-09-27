@@ -37,8 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/spacing_1"
             android:text="TextView"
-            android:textColor="@color/unSelectedButton" />
+            android:textColor="@color/selectedButton"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value2"
@@ -46,8 +49,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/spacing_1"
             android:text="TextView"
-            android:textColor="@color/unSelectedButton" />
+            android:textColor="@color/selectedButton"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value3"
@@ -55,8 +61,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/spacing_1"
             android:text="TextView"
-            android:textColor="@color/unSelectedButton" />
+            android:textColor="@color/selectedButton"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value4"
@@ -64,8 +73,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/spacing_1"
             android:text="TextView"
-            android:textColor="@color/unSelectedButton" />
+            android:textColor="@color/selectedButton"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_log_listset_Value5"
@@ -73,7 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/spacing_1"
             android:text="TextView"
-            android:textColor="@color/unSelectedButton" />
+            android:textColor="@color/selectedButton"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
     </LinearLayout>
 </android.widget.LinearLayout>

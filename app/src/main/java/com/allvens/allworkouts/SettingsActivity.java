@@ -28,9 +28,10 @@ public class SettingsActivity extends AppCompatActivity{
 
         LinearLayout ll_settings_WorkoutPositions = findViewById(R.id.ll_settings_WorkoutPositions);
 
-        Switch sVibrate      = findViewById(R.id.s_settings_Vibrate);
-        Switch sSound        = findViewById(R.id.s_settings_Sound);
-        Switch sNotification = findViewById(R.id.s_settings_Notification);
+        Switch sVibrate       = findViewById(R.id.s_settings_Vibrate);
+        Switch sSound         = findViewById(R.id.s_settings_Sound);
+        Switch sNotification  = findViewById(R.id.s_settings_Notification);
+        Switch sMediaControls = findViewById(R.id.s_settings_MediaControls);
 
         TextView tvTimeDisplay = findViewById(R.id.tv_settings_Time);
 
@@ -44,13 +45,14 @@ public class SettingsActivity extends AppCompatActivity{
 
         settings_manager = new Settings_Manager(this);
 
-        settings_manager.set_SettingsValues(sVibrate, sSound, sNotification);
+        settings_manager.set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls);
         settings_manager.setUp_WorkoutsAndPositions(ll_settings_WorkoutPositions);
         settings_manager.setUp_TimeDisplay(tvTimeDisplay);
         settings_manager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
 
         sVibrate.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
         sSound.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SOUND_ON));
+        sMediaControls.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.MEDIA_CONTROLS_ON));
 
         sNotification.setOnCheckedChangeListener(settings_manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
     }

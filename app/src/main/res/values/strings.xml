@@ -14,7 +14,22 @@
     <string name="mix_workouts">Different Versions Of This Workout</string>
 
     <string name="complete">Complete</string>
-
+    
+    <!-- Accessibility strings -->
+    <string name="change_workout">Change workout type</string>
+    <string name="select_workout_type">Select %1$s workout</string>
+    <string name="timer_display">Countdown timer</string>
+    <string name="rep_count_display">Repetition count</string>
+    <string name="complete_set_button">Complete current set</string>
+    
+    <!-- Media control strings -->
+    <string name="media_controls">Media Controls</string>
+    <string name="media_controls_desc">Show music controls during workouts</string>
+    <string name="media_previous">Previous track</string>
+    <string name="media_next">Next track</string>
+    <string name="media_play_pause">Play or pause music</string>
+    <string name="media_controls_enabled">Media controls enabled</string>
+    <string name="media_controls_disabled">Media controls disabled</string>
 
     <!-- Open Source -->
     <string name="open_source_title">Open Source</string>

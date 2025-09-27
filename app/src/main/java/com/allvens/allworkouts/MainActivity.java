@@ -135,45 +135,99 @@ public class MainActivity extends AppCompatActivity {
     /* ====================================================================== */
 
     private void openWorkoutChooser() {
-        changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
+        // Update button icon with proper compatibility
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_more_black_24dp));
+        } else {
+            changeWorkoutButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+        }
+
+        // Show the chooser with animation
+        workoutChooser.setVisibility(android.view.View.VISIBLE);
+        workoutChooser.setAlpha(0f);
+        workoutChooser.animate()
+            .alpha(1f)
+            .setDuration(200)
+            .start();
 
         for(String workoutName : workouts) {
-            final String name = workoutName;
-            Button button     = createWorkoutButton(name);
-
-            button.setOnClickListener(v -> setWorkout(name));
+            Button button = createWorkoutButton(workoutName);
+            button.setOnClickListener(v -> {
+                setWorkout(workoutName);
+                // Add haptic feedback for modern feel
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                    v.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+                }
+            });
             workoutChooser.addView(button);
         }
     }
 
     private void clearWorkoutChooser() {
-        changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_less_black_24dp));
-        workoutChooser.removeAllViews();
+        // Update button icon with proper compatibility
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeWorkoutButton.setImageDrawable(getDrawable(R.drawable.ic_expand_less_black_24dp));
+        } else {
+            changeWorkoutButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
+        }
+        
+        // Hide the chooser with animation
+        workoutChooser.animate()
+            .alpha(0f)
+            .setDuration(150)
+            .withEndAction(() -> {
+                workoutChooser.setVisibility(android.view.View.GONE);
+                workoutChooser.removeAllViews();
+            })
+            .start();
     }
 
     private Button createWorkoutButton(String name) {
         Button btn = new Button(this);
         btn.setText(name);
+        
+        // Apply the complete style programmatically since we're creating dynamically
         styleChooserButton(btn);
-        btn.getBackground().setAlpha(0);
-
+        
+        // Set proper layout parameters
         LinearLayoutCompat.LayoutParams lp =
                 new LinearLayoutCompat.LayoutParams(
                         LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                         LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         lp.topMargin = getResources().getDimensionPixelSize(R.dimen.spacing_2);
         btn.setLayoutParams(lp);
+        
+        // Add proper content description for accessibility
+        btn.setContentDescription(getString(R.string.select_workout_type, name));
 
         return btn;
     }
 
     private void styleChooserButton(Button button) {
-        if(Build.VERSION.SDK_INT < 23) {
-            button.setTextAppearance(this, R.style.btn_home_workoutChoice);
+        // Apply all style attributes programmatically for dynamic buttons
+        button.setTextColor(getResources().getColor(R.color.selectedButton));
+        button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_body));
+        button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
+        button.setAllCaps(false);
+        
+        // Set background drawable
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            button.setBackground(getDrawable(R.drawable.bg_chooser_item));
+        } else {
+            button.setBackground(getResources().getDrawable(R.drawable.bg_chooser_item));
         }
-        else {
-            button.setTextAppearance(R.style.btn_home_workoutChoice);
-        }
+        
+        // Set padding
+        int paddingVertical = getResources().getDimensionPixelSize(R.dimen.spacing_3);
+        int paddingHorizontal = getResources().getDimensionPixelSize(R.dimen.spacing_2);
+        button.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
+        
+        // Set proper touch target size
+        int minTouchSize = getResources().getDimensionPixelSize(R.dimen.touch_target_min);
+        button.setMinHeight(minTouchSize);
+        
+        // Remove default button appearance
+        button.setStateListAnimator(null);
     }
 
     /* ====================================================================== */
@@ -201,6 +255,11 @@ public class MainActivity extends AppCompatActivity {
             default                : drawableRes = R.drawable.ic_squat ; break;
         }
 
-        workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
+        // Load drawable with proper compatibility
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            workoutImage.setImageDrawable(getDrawable(drawableRes));
+        } else {
+            workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
+        }
     }
 }

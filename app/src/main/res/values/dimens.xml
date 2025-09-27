@@ -13,7 +13,30 @@
     <dimen name="spacing_4">24dp</dimen>
     <dimen name="spacing_5">48dp</dimen>
 
+    <!-- Modern spacing scale -->
+    <dimen name="spacing_0">0dp</dimen>
+    <dimen name="spacing_half">2dp</dimen>
+    
+    <!-- Corner radius for modern cards and buttons -->
     <dimen name="corner_radius">12dp</dimen>
-    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="corner_radius_small">8dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+    
+    <!-- Modern elevation scale -->
+    <dimen name="elevation_card">4dp</dimen>
+    <dimen name="elevation_button">2dp</dimen>
+    <dimen name="elevation_fab">6dp</dimen>
+    
+    <!-- Touch target sizes -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="touch_target_large">56dp</dimen>
+    
+    <!-- Typography scale -->
+    <dimen name="text_size_display">32sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_caption">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
 
 </resources>

@@ -22,4 +22,5 @@ public interface Preferences_Values {
     String NOTIFICATION_TIME_HOUR   = "notification_time_hour";  // int hour
     String NOTIFICATION_TIME_MINUTE = "notification_time_min";   // int minute
     String NOTIFICATION_DAYS        = "notification_days";       // String 1 and 0 for on off for days.
+    String MEDIA_CONTROLS_ON        = "media_controls_pref";     // boolean
 }

@@ -17,12 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.media.WorkoutMediaController;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.workout_session_manager.WorkoutSession_Manager;
 import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
 
     private WorkoutSession_Manager manager;
+    private WorkoutMediaController mediaController;
+    private View mediaControlsLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +54,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
         manager.set_Timer();
         manager.start_Screen();
+        
+        // Set up media controls if enabled
+        setupMediaControls();
     }
 
     @Override
@@ -60,11 +68,28 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Refresh media control state when resuming (with delay to ensure system is ready)
+        if (mediaController != null) {
+            // Use a handler to delay the refresh slightly
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                mediaController.refreshPlaybackState();
+                mediaController.updateTrackInfo();
+            }, 200);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up media controller resources
+        if (mediaController != null) {
+            mediaController.cleanup();
+        }
     }
 
     /****************************************
@@ -95,5 +120,40 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             finish();
         }
 
+    }
+    
+    /**
+     * Set up media controls based on user preference
+     */
+    private void setupMediaControls() {
+        // Check if media controls are enabled in settings
+        SettingsPrefsManager prefsManager = new SettingsPrefsManager(this);
+        boolean mediaControlsEnabled = prefsManager.getPrefSetting(Preferences_Values.MEDIA_CONTROLS_ON);
+        
+        mediaControlsLayout = findViewById(R.id.media_controls);
+        
+        if (mediaControlsEnabled && mediaControlsLayout != null) {
+            // Show media controls
+            mediaControlsLayout.setVisibility(View.VISIBLE);
+            
+            // Initialize media controller
+            mediaController = new WorkoutMediaController(this);
+            
+            // Find media control buttons and track info
+            ImageButton btnPrevious = mediaControlsLayout.findViewById(R.id.btn_media_previous);
+            ImageButton btnPlayPause = mediaControlsLayout.findViewById(R.id.btn_media_play_pause);
+            ImageButton btnNext = mediaControlsLayout.findViewById(R.id.btn_media_next);
+            TextView tvTrackInfo = mediaControlsLayout.findViewById(R.id.tv_track_info);
+            
+            // Set up media control functionality
+            if (btnPrevious != null && btnPlayPause != null && btnNext != null && tvTrackInfo != null) {
+                mediaController.setupMediaControls(btnPrevious, btnPlayPause, btnNext, tvTrackInfo);
+            }
+        } else {
+            // Hide media controls
+            if (mediaControlsLayout != null) {
+                mediaControlsLayout.setVisibility(View.GONE);
+            }
+        }
     }
 }

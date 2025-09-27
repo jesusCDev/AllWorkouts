@@ -54,6 +54,11 @@ public class Settings_Manager {
         sSound.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.SOUND_ON));
         sNotification.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON));
     }
+    
+    public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification, Switch sMediaControls) {
+        set_SettingsValues(sVibrate, sSound, sNotification);
+        sMediaControls.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.MEDIA_CONTROLS_ON));
+    }
 
     /********** Notification Settings **********/
 
