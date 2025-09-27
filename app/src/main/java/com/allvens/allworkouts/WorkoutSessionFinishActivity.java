@@ -2,6 +2,7 @@ package com.allvens.allworkouts;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -120,10 +121,15 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     public void setDifficulty(View view) {
-        lastButtonSelected.setTextColor(this.getResources().getColor(R.color.unSelectedButton));
-        ((Button)view).setTextColor(this.getResources().getColor(R.color.selectedButton));
-
-        lastButtonSelected = ((Button)view);
+        // Reset previous selection to secondary style
+        if (lastButtonSelected != null) {
+            setButtonStyle(lastButtonSelected, false);
+        }
+        
+        // Set current selection to primary style
+        Button currentButton = (Button) view;
+        setButtonStyle(currentButton, true);
+        lastButtonSelected = currentButton;
 
         switch((view).getId()){
             case R.id.btn_workoutFinish_LevelHard:
@@ -137,6 +143,24 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
             case R.id.btn_workoutFinish_LevelEasy:
                 updateWorkoutProgress(PROG_INC_EASY);
                 break;
+        }
+    }
+    
+    private void setButtonStyle(Button button, boolean isSelected) {
+        if (isSelected) {
+            // Selected state - primary style
+            button.setBackgroundResource(R.drawable.bg_button_primary);
+            button.setTextColor(this.getResources().getColor(R.color.background_dark));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                button.setElevation(8f);
+            }
+        } else {
+            // Unselected state - secondary style  
+            button.setBackgroundResource(R.drawable.bg_button_secondary);
+            button.setTextColor(this.getResources().getColor(R.color.selectedButton));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                button.setElevation(2f);
+            }
         }
     }
 

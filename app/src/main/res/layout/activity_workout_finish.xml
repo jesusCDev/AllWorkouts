@@ -1,151 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background_dark"
-    android:weightSum="3">
+    android:padding="@dimen/spacing_4">
 
-    <!-- ─────────────  HEADER  ───────────── -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+    <!-- 🎉 Celebration Header -->
+    <LinearLayout
+        android:id="@+id/header_section"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="@dimen/spacing_5"
+        android:paddingBottom="@dimen/spacing_4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Celebration Icon -->
         <TextView
-            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:text="🏆"
+            android:textSize="64sp"
+            android:layout_marginBottom="@dimen/spacing_3" />
+
+        <!-- Congratulations Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/archivo_black"
             android:text="Congratulations!"
-            android:textColor="@color/selectedButton"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorAccent"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/spacing_2" />
 
+        <!-- Workout Name -->
         <TextView
             android:id="@+id/tv_workoutFinish_WorkoutName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
             android:fontFamily="@font/archivo_black"
             android:text="Workout"
             android:textColor="@color/selectedButton"
-            android:textSize="@dimen/priority_1"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            android:textSize="@dimen/text_size_headline"
+            android:textStyle="bold"
+            android:alpha="0.8" />
+    </LinearLayout>
 
-    <!-- ─────────────  DIFFICULTY PICKER & ACTIONS  ───────────── -->
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
+    <!-- 🎨 How was your workout? Section -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/difficulty_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        app:cardBackgroundColor="@color/background_elevated"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintTop_toBottomOf="@id/header_section"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Difficulty selection -->
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="8dp"
-                android:text="Workout Difficulty"
-                android:textAlignment="center"
-                android:textColor="@color/selectedButton"
-                android:textSize="24sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_workoutFinish_LevelEasy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="setDifficulty"
-                    android:text="Easy"
-                    android:textColor="@color/unSelectedButton"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_workoutFinish_LevelNeutral"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="setDifficulty"
-                    android:text="Normal"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_workoutFinish_LevelHard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="setDifficulty"
-                    android:text="Hard"
-                    android:textColor="@color/unSelectedButton"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Action buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_4">
 
-            <Button
-                android:id="@+id/button2"
+            <!-- Section Title -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="goHome"
-                android:text="Done"
+                android:text="How was your workout?"
+                android:textAlignment="center"
                 android:textColor="@color/selectedButton"
-                android:textSize="@dimen/btn_textSize"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_size_title"
+                android:fontFamily="@font/archivo_black"
+                android:layout_marginBottom="@dimen/spacing_3" />
 
-            <Button
-                android:id="@+id/btn_WorkoutFinish_NextWorkout"
+            <!-- Subtitle -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="startNextWorkout"
-                android:text="Next"
-                android:textColor="@color/importantButton"
-                android:textSize="@dimen/btn_textSize"
-                android:textStyle="bold" />
+                android:text="This helps us adjust future workouts"
+                android:textAlignment="center"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_body"
+                android:alpha="0.7"
+                android:layout_marginBottom="@dimen/spacing_4" />
+
+            <!-- Difficulty Options with Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <!-- Easy Option -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/spacing_1"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_workoutFinish_LevelEasy"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:onClick="setDifficulty"
+                        android:text="😅\nToo Easy"
+                        android:textColor="@color/unSelectedButton"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Normal Option -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/spacing_1"
+                    android:layout_marginEnd="@dimen/spacing_1"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_workoutFinish_LevelNeutral"
+                        style="@style/Widget.App.Button.Primary"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:onClick="setDifficulty"
+                        android:text="👍\nJust Right"
+                        android:textColor="@color/background_dark"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Hard Option -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/spacing_1"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_workoutFinish_LevelHard"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:onClick="setDifficulty"
+                        android:text="💪\nToo Hard"
+                        android:textColor="@color/unSelectedButton"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- 🚀 Action Buttons -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginBottom="@dimen/spacing_4"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        app:layout_constraintTop_toBottomOf="@id/difficulty_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Done Button -->
+        <Button
+            android:id="@+id/button2"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/spacing_2"
+            android:onClick="goHome"
+            android:text="Done"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
+
+        <!-- Next Workout Button -->
+        <Button
+            android:id="@+id/btn_WorkoutFinish_NextWorkout"
+            style="@style/Widget.App.Button.Primary.Large"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_2"
+            android:onClick="startNextWorkout"
+            android:text="Next Workout"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
 
 </android.widget.LinearLayout>
