@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -39,7 +40,9 @@
         <activity android:name=".Settings_AppInfo_PresenterActivity" />
         <activity android:name=".Settings_AppInfo_SelectorActivity" />
 
-        <receiver android:name=".settings_manager.Notification_Manager.Notification_Receiver" android:enabled="false">
+        <receiver android:name=".settings_manager.Notification_Manager.Notification_Receiver" 
+            android:enabled="false"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
