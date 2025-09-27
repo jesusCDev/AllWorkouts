@@ -14,6 +14,8 @@ import com.allvens.allworkouts.workout_session_manager.WorkoutMaximum_Manager;
 public class WorkoutMaximumActivity extends AppCompatActivity {
 
     private WorkoutMaximum_Manager workoutMax_manager;
+    private TextView changeIndicator;
+    private int originalMaxValue;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,6 +24,7 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
 
         TextView tv_max_MaxValue    = findViewById(R.id.tv_max_MaxValue);
         TextView tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
+        changeIndicator             = findViewById(R.id.tv_change_indicator);
         String chosenWorkout        = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         int type                    = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
         
@@ -32,8 +35,12 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         }
         
         workoutMax_manager = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type, sessionStartWorkout);
+        
+        // Store the original max value for change tracking
+        originalMaxValue = workoutMax_manager.getCurrentMaxValue();
 
         tv_max_WorkoutName.setText(chosenWorkout);
+        updateChangeIndicator();
     }
 
     /****************************************
@@ -47,13 +54,47 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
 
     public void btnAction_max_AddFive(View view) {
         workoutMax_manager.add_FiveToMax();
+        updateChangeIndicator();
     }
 
     public void btnAction_max_AddOne(View view) {
         workoutMax_manager.add_OneToMax();
+        updateChangeIndicator();
     }
 
     public void btnAction_max_SubtractOne(View view) {
         workoutMax_manager.subtract_OneFromMax();
+        updateChangeIndicator();
+    }
+    
+    /**
+     * Updates the change indicator to show how much the value has changed from the original
+     */
+    private void updateChangeIndicator() {
+        if (changeIndicator == null) return;
+        
+        int currentValue = workoutMax_manager.getCurrentMaxValue();
+        int difference = currentValue - originalMaxValue;
+        
+        if (difference == 0) {
+            // No change, hide indicator
+            changeIndicator.setVisibility(View.GONE);
+        } else {
+            // Show change
+            changeIndicator.setVisibility(View.VISIBLE);
+            
+            String changeText;
+            if (difference > 0) {
+                changeText = "+" + difference + " from original";
+                // Use bright green for positive changes
+                changeIndicator.setTextColor(0xFF4CAF50); // Material green
+            } else {
+                changeText = difference + " from original";
+                // Use bright coral red for negative changes
+                changeIndicator.setTextColor(0xFFFF6B6B); // Bright coral red
+            }
+            
+            changeIndicator.setText(changeText);
+        }
     }
 }

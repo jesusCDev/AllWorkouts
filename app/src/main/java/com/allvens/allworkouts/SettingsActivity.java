@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.allvens.allworkouts.data_manager.Preferences_Values;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
@@ -76,20 +78,23 @@ public class SettingsActivity extends AppCompatActivity{
                         wrapper.deleteAllWorkouts();
                         wrapper.deleteAllHistoryWorkouts();
                         wrapper.close();
-                        new Toast(SettingsActivity.this).makeText(SettingsActivity.this, "Workout Data Deleted", Toast.LENGTH_SHORT).show();
+                        showDarkToast("Workout Data Deleted");
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        new Toast(SettingsActivity.this).makeText(SettingsActivity.this, "Nothing was deleted", Toast.LENGTH_SHORT).show();
+                        showDarkToast("Nothing was deleted");
                         break;
                 }
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DarkAlertDialog);
 
-        builder.setMessage("All Workouts Will Be Deleted?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage("All Workouts Will Be Deleted?")
+                .setTitle("Reset to Defaults")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener)
+                .show();
     }
 
     public void btnAction_SetNotificationTime(View view){
@@ -98,5 +103,24 @@ public class SettingsActivity extends AppCompatActivity{
 
     public void btnAction_setDayNotifications(View view){
         settings_manager.update_DayOfNotification(((Button)view));
+    }
+    
+    /**
+     * Show a toast message with proper dark theme styling
+     */
+    private void showDarkToast(String message) {
+        // Try to use Snackbar for better theming support
+        View rootView = findViewById(android.R.id.content);
+        if (rootView != null) {
+            Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT);
+            // Style the snackbar with dark colors
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            View snackbarView = snackbar.getView();
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.background_elevated));
+            snackbar.show();
+        } else {
+            // Fallback to regular toast if snackbar fails
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -61,7 +61,7 @@ public class WorkoutMaximum_Manager {
 
     private void update_Counter(){
         tvCounterView.setText(Integer.toString(maxValue));
-        updateStyle();
+        // Removed updateStyle() to keep consistent color
     }
 
     private void updateStyle(){
@@ -103,6 +103,22 @@ public class WorkoutMaximum_Manager {
     public void add_FiveToMax() {
         maxValue += 5;
         update_Counter();
+    }
+    
+    /**
+     * Gets the current max value
+     * @return current max value
+     */
+    public int getCurrentMaxValue() {
+        return maxValue;
+    }
+    
+    /**
+     * Gets the starting max value (for comparison)
+     * @return starting max value
+     */
+    public int getStartingMaxValue() {
+        return startingMax;
     }
 
     /********** Value Savor **********/

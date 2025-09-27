@@ -21,6 +21,7 @@
     <color name="selectedButton">#FFFFFF</color>
     <color name="unSelectedButton">#8B93A3</color>    <!-- 38 % white -->
     <color name="importantButton">#FF7844</color>     <!-- same as accent -->
+    <color name="dangerButton">#E53E3E</color>        <!-- red for destructive actions -->
 
     <color name="background_elevated">#20252E</color>
 

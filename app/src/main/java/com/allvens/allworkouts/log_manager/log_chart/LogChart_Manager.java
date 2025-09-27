@@ -36,21 +36,34 @@ public class LogChart_Manager {
 
     public void create_Chart(ArrayList<LineChartData_Entry> totalSets){
 
-        lc.getXAxis().setDrawLabels(false);
-        lc.getXAxis().setTextColor(ContextCompat.getColor(context, R.color.objects));
-        lc.getAxisLeft().setTextColor(ContextCompat.getColor(context, R.color.objects));
-
-        lc.getLegend().setTextColor(ContextCompat.getColor(context, R.color.objects));
+        // Configure chart styling for dark theme
+        lc.getXAxis().setDrawLabels(true);
+        lc.getXAxis().setTextColor(ContextCompat.getColor(context, R.color.selectedButton));
+        lc.getXAxis().setGridColor(ContextCompat.getColor(context, R.color.unSelectedButton));
+        
+        lc.getAxisLeft().setTextColor(ContextCompat.getColor(context, R.color.selectedButton));
+        lc.getAxisLeft().setGridColor(ContextCompat.getColor(context, R.color.unSelectedButton));
+        
+        lc.getLegend().setTextColor(ContextCompat.getColor(context, R.color.selectedButton));
         lc.getDescription().setEnabled(false);
-
+        
+        // Set dark background for the chart
+        lc.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
+        
         ArrayList<Entry> yValues = create_Entries(totalSets);
-        LineDataSet set = new LineDataSet(yValues, "Last 21 Max");
-        set.setCircleColor(ContextCompat.getColor(context, R.color.objects));
-        set.setValueTextColor(ContextCompat.getColor(context, R.color.objects));
-        set.setFillAlpha(110);
+        LineDataSet set = new LineDataSet(yValues, "Progress (Last 21)");
+        
+        // Style the data points and line for better visibility
+        set.setCircleColor(ContextCompat.getColor(context, R.color.colorAccent));
+        set.setCircleHoleColor(ContextCompat.getColor(context, R.color.background_elevated));
+        set.setValueTextColor(ContextCompat.getColor(context, R.color.selectedButton));
         set.setColor(ContextCompat.getColor(context, R.color.colorAccent));
         set.setLineWidth(3f);
+        set.setCircleRadius(4f);
         set.setValueTextSize(10f);
+        set.setDrawFilled(true);
+        set.setFillAlpha(30);
+        set.setFillColor(ContextCompat.getColor(context, R.color.colorAccent));
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);

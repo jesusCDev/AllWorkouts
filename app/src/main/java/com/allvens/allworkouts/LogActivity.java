@@ -24,7 +24,12 @@ public class LogActivity extends AppCompatActivity {
         LineChart lcShowWorkoutProgress   = findViewById(R.id.lc_log_ShowWorkoutProgression);
         TextView tvCurrentMax             = findViewById(R.id.tv_log_CurrentMaxContainer);
         TextView tvType                   = findViewById(R.id.tv_log_type);
+        TextView tvWorkoutName            = findViewById(R.id.tv_log_workout_name);
         String chosenWorkout              = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        
+        // Set the workout name in the header
+        tvWorkoutName.setText(chosenWorkout + " Log");
+        
         log_manager                       = new Log_Manager(this, chosenWorkout);
 
         log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);

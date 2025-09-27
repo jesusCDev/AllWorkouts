@@ -37,7 +37,7 @@ public class Log_UI_Manager {
     /********** Max - Methods **********/
 
     public void update_CurrentMax(int max) {
-        tvCurrentMax.setText("Current Max: " + max);
+        tvCurrentMax.setText(max + " reps");
     }
 
     public void update_CurrentType(int type) {
@@ -47,7 +47,7 @@ public class Log_UI_Manager {
             sType = "Mix";
         }
 
-        tvType.setText("Type: " + sType);
+        tvType.setText(sType);
     }
 
     public void update_Graph(ArrayList<LineChartData_Entry> totalSets) {

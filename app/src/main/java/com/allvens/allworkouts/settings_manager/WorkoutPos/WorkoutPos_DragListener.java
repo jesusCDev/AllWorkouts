@@ -2,6 +2,7 @@ package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,24 +26,47 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        View view       = (View) event.getLocalState();
-        ViewGroup owner = (ViewGroup) view.getParent();
+        View draggedView = (View) event.getLocalState();
+        ViewGroup owner = (ViewGroup) draggedView.getParent();
 
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
+                // Start drag animation on the dragged view
+                draggedView.animate().alpha(0.5f).scaleX(0.95f).scaleY(0.95f).setDuration(150);
                 break;
+                
             case DragEvent.ACTION_DRAG_ENTERED:
-                v.setBackgroundColor(context.getResources().getColor(R.color.focusAccent));
+                // Highlight the drop target with a subtle background
+                v.animate().alpha(0.7f).setDuration(100);
+                // Use the modern elevated background color for better visibility
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.focusAccent));
                 update_View(owner, owner.indexOfChild(v));
                 break;
+                
             case DragEvent.ACTION_DRAG_EXITED:
-                v.setBackgroundColor(Color.TRANSPARENT);
+                // Remove highlight from drop target
+                v.animate().alpha(1.0f).setDuration(100);
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
                 break;
+                
             case DragEvent.ACTION_DROP:
+                // Provide feedback that drop was successful
+                v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(100)
+                  .withEndAction(() -> v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100));
                 break;
+                
             case DragEvent.ACTION_DRAG_ENDED:
-                v.setBackgroundColor(Color.TRANSPARENT);
+                // Restore all views to normal state
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
+                v.setAlpha(1.0f);
+                
+                // Restore the dragged view to normal state
+                draggedView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(200);
+                
+                // Update preferences with new order
                 workout_basicsPrefs.update_WorkoutsWithViews(owner);
+                break;
+                
             default:
                 break;
         }
@@ -51,12 +75,19 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
     }
 
     /**
-     * Moves View To New View Position
+     * Moves View To New View Position with animation
      * @param owner
      * @param index
      */
     private void update_View(ViewGroup owner, int index){
-        owner.removeView(touchListener.getView());
-        owner.addView(touchListener.getView(), index);
+        View draggedView = touchListener.getView();
+        if (draggedView != null && draggedView.getParent() == owner) {
+            owner.removeView(draggedView);
+            owner.addView(draggedView, index);
+            
+            // Add a subtle animation to show the move
+            draggedView.setAlpha(0.8f);
+            draggedView.animate().alpha(1.0f).setDuration(150);
+        }
     }
 }

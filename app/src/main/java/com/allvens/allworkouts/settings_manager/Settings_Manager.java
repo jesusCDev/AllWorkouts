@@ -98,23 +98,42 @@ public class Settings_Manager {
         container.setId(workout.getResourceID());
         container.setOnTouchListener(touchListener);
         container.setOnDragListener(new WorkoutPos_DragListener(context, touchListener, prefsChecker));
+        
+        // Add modern styling with padding and background
+        int padding = new Helper(context).get_dpFromPixels(16);
+        int paddingVertical = new Helper(context).get_dpFromPixels(12);
+        container.setPadding(padding, paddingVertical, padding, paddingVertical);
+        
+        // Add subtle background for each item
+        container.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
+        
+        // Add margin between items
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, new Helper(context).get_dpFromPixels(8));
+        container.setLayoutParams(layoutParams);
 
-        /* Drag handle */
+        /* Drag handle with better styling */
         ImageView ivDrag = new ImageView(context);
         ivDrag.setId(R.id.btn_Pos_id);
         ivDrag.setImageResource(R.drawable.ic_drag_handle_black_24dp);
-        ivDrag.setPadding(0, 0, new Helper(context).get_dpFromPixels(8), 0);
-        // Tint icon white for dark theme
+        ivDrag.setPadding(0, 0, new Helper(context).get_dpFromPixels(12), 0);
+        // Tint icon for dark theme with proper opacity
         DrawableCompat.setTint(ivDrag.getDrawable(),
-                ContextCompat.getColor(context, R.color.selectedButton));
+                ContextCompat.getColor(context, R.color.unSelectedButton));
+        ivDrag.setAlpha(0.6f);
 
-        /* Title */
+        /* Title with modern typography */
         TextView tvTitle = new TextView(context);
         tvTitle.setId(R.id.tv_Pos_Id);
         tvTitle.setText(workout.getName());
         tvTitle.setTextColor(ContextCompat.getColor(context, R.color.selectedButton));
+        tvTitle.setTextSize(16); // Use body text size
+        tvTitle.setTypeface(tvTitle.getTypeface(), android.graphics.Typeface.NORMAL);
 
-        /* Toggle switch */
+        /* Toggle switch with better spacing */
         SwitchCompat swToggle = new SwitchCompat(context);
         swToggle.setId(R.id.s_Pos_Id);
         swToggle.setChecked(workout.get_TurnOnStatus());
@@ -123,10 +142,10 @@ public class Settings_Manager {
             insure_OneWorkoutIsOn();
         });
 
-        /* Keep reference for the “at least one on” rule */
+        /* Keep reference for the "at least one on" rule */
         posSwitches[switchPosTracker++] = swToggle;
 
-        /* Add & constrain */
+        /* Add & constrain with better spacing */
         container.addView(ivDrag);
         container.addView(tvTitle);
         container.addView(swToggle);
@@ -134,12 +153,24 @@ public class Settings_Manager {
         ConstraintSet set = new ConstraintSet();
         set.clone(container);
 
+        // Position drag handle with proper margins
         set.connect(ivDrag.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        set.connect(ivDrag.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        set.connect(ivDrag.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        
+        // Position title with proper spacing from drag handle
         set.connect(tvTitle.getId(), ConstraintSet.START, ivDrag.getId(), ConstraintSet.END);
-        set.centerVertically(ivDrag.getId(), tvTitle.getId());
+        set.connect(tvTitle.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        set.connect(tvTitle.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        set.constrainWidth(tvTitle.getId(), 0); // Use 0dp width with constraints
+        set.connect(tvTitle.getId(), ConstraintSet.END, swToggle.getId(), ConstraintSet.START);
+        set.setMargin(tvTitle.getId(), ConstraintSet.START, new Helper(context).get_dpFromPixels(4));
+        set.setMargin(tvTitle.getId(), ConstraintSet.END, new Helper(context).get_dpFromPixels(16));
 
+        // Position toggle switch
         set.connect(swToggle.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        set.centerVertically(tvTitle.getId(), swToggle.getId());
+        set.connect(swToggle.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        set.connect(swToggle.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
 
         set.applyTo(container);
 

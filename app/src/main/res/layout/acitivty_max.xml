@@ -5,148 +5,188 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark">
+    android:background="@color/background_dark"
+    android:padding="@dimen/spacing_3">
 
-    <!-- ─────────────  HEADER  ───────────── -->
-    <LinearLayout
-        android:id="@+id/linearLayout6"
-        android:layout_width="match_parent"
+    <!-- Floating Back Button -->
+    <Button
+        android:id="@+id/btn_back"
+        style="@style/Widget.App.Button.Secondary"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/spacing_2"
+        android:layout_marginStart="@dimen/spacing_2"
+        android:onClick="onBackPressed"
+        android:text="←"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Clean Header Card -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/header_card"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/spacing_5"
+        app:cardBackgroundColor="@color/background_elevated"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintTop_toBottomOf="@id/btn_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/tv_max_WorkoutName"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_4"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_max_WorkoutName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/archivo_black"
+                android:text="Workout"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set your maximum consecutive reps"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_body"
+                android:alpha="0.7" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- Main Value Card -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/value_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_3"
+        android:layout_marginBottom="@dimen/spacing_3"
+        app:cardBackgroundColor="@color/background_elevated"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintBottom_toTopOf="@id/controls_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/archivo_black"
-            android:text="Workout"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/selectedButton"
-            android:textSize="@dimen/priority_1" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_4">
 
-    <!-- ─────────────  BIG VALUE  ───────────── -->
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4">
-
-        <TextView
-            android:id="@+id/tv_max_MaxValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textAlignment="center"
-            android:textColor="@color/importantButton"
-            android:textSize="200sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </android.support.constraint.ConstraintLayout>
-
-    <!-- ─────────────  CONTROLS & FOOTER  ───────────── -->
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="24dp"
-            android:text="Max Number Of Consecutive Reps"
-            android:textAlignment="center"
-            android:textColor="@color/selectedButton"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <!-- increment / decrement buttons -->
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_max_SubtractOne"
-                android:tint="@color/selectedButton"
-                app:srcCompat="@drawable/ic_remove_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_max_AddOne"
-                android:tint="@color/selectedButton"
-                app:srcCompat="@drawable/ic_add_black_24dp" />
-
-            <!-- +5 Button with Text Label -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tv_max_MaxValue"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-                
-                <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_max_AddFive"
-                    android:tint="@color/selectedButton"
-                    app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="+5"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </LinearLayout>
+                android:text="0"
+                android:textColor="@color/colorAccent"
+                android:textSize="120sp"
+                android:fontFamily="@font/archivo_black"
+                android:textStyle="bold" />
 
-        <!-- complete button -->
-        <Button
-            android:id="@+id/button5"
+            <!-- Change Indicator -->
+            <TextView
+                android:id="@+id/tv_change_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_2"
+                android:text=""
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_body"
+                android:textStyle="bold"
+                android:alpha="0.8"
+                android:visibility="gone"
+                tools:text="+3 from original" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- Controls Card -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/controls_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_3"
+        app:cardBackgroundColor="@color/background_elevated"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintBottom_toTopOf="@id/complete_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="24dp"
-            android:background="@android:color/transparent"
-            android:onClick="btnAction_max_CompleteMax"
-            android:text="Complete"
-            android:textColor="@color/importantButton"
-            android:textSize="@dimen/btn_textSize"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_4"
+            android:gravity="center">
+
+            <!-- -1 Button -->
+            <Button
+                android:id="@+id/btn_subtract_one"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/spacing_2"
+                android:onClick="btnAction_max_SubtractOne"
+                android:text="-1"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold" />
+
+            <!-- +1 Button -->
+            <Button
+                android:id="@+id/btn_add_one"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_1"
+                android:layout_marginEnd="@dimen/spacing_1"
+                android:onClick="btnAction_max_AddOne"
+                android:text="+1"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold" />
+
+            <!-- +5 Button -->
+            <Button
+                android:id="@+id/btn_add_five"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_2"
+                android:onClick="btnAction_max_AddFive"
+                android:text="+5"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- Complete Button -->
+    <Button
+        android:id="@+id/complete_button"
+        style="@style/Widget.App.Button.Primary.Large"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/touch_target_large"
+        android:layout_marginBottom="@dimen/spacing_4"
+        android:onClick="btnAction_max_CompleteMax"
+        android:text="Complete"
+        android:textSize="@dimen/text_size_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

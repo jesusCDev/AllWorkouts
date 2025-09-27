@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
@@ -15,6 +16,8 @@ import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.log_manager.log_chart.LineChartData_Entry;
 import com.github.mikephil.charting.charts.LineChart;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,22 +69,25 @@ public class Log_Manager {
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
-                            new Toast(context).makeText(context, "Workout Data Deleted", Toast.LENGTH_SHORT).show();
+                            showDarkToast("Workout Data Deleted");
                             delete_Workout();
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
-                            new Toast(context).makeText(context, "Nothing was deleted", Toast.LENGTH_SHORT).show();
+                            showDarkToast("Nothing was deleted");
                             break;
                     }
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Are you sure you want to reset workout to zero?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DarkAlertDialog);
+            builder.setMessage("Are you sure you want to reset workout to zero?")
+                    .setTitle("Reset Workout")
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener)
+                    .show();
         }else{
-            new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
+            showDarkToast("First Start Workout");
         }
     }
 
@@ -134,12 +140,15 @@ public class Log_Manager {
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Change Workout Type").setPositiveButton("Simple", dialogClickListener)
-                    .setNegativeButton("Mix", dialogClickListener).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DarkAlertDialog);
+            builder.setMessage("Choose workout type")
+                    .setTitle("Change Workout Type")
+                    .setPositiveButton("Simple", dialogClickListener)
+                    .setNegativeButton("Mix", dialogClickListener)
+                    .show();
         }
         else{
-            new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
+            showDarkToast("First Start Workout");
         }
     }
 
@@ -154,7 +163,28 @@ public class Log_Manager {
             context.startActivity(intent);
         }
         else{
-            new Toast(context).makeText(context, "First Start Workout", Toast.LENGTH_SHORT).show();
+            showDarkToast("First Start Workout");
         }
+    }
+    
+    /**
+     * Show a toast message with proper dark theme styling
+     */
+    private void showDarkToast(String message) {
+        // Try to use Snackbar for better theming support
+        if (context instanceof android.app.Activity) {
+            View rootView = ((android.app.Activity) context).findViewById(android.R.id.content);
+            if (rootView != null) {
+                Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT);
+                // Style the snackbar with dark colors
+                snackbar.setActionTextColor(context.getResources().getColor(R.color.colorAccent));
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(context.getResources().getColor(R.color.background_elevated));
+                snackbar.show();
+                return;
+            }
+        }
+        // Fallback to regular toast if snackbar fails
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }

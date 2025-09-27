@@ -25,15 +25,17 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
 
             this.view = view;
 
-            view.setVisibility(View.INVISIBLE);
+            // Add visual feedback for drag start
+            view.setAlpha(0.7f);
+            view.setScaleX(1.05f);
+            view.setScaleY(1.05f);
 
             ClipData data = ClipData.newPlainText("", "");
 
-            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
-                    new ConstraintLayout(context));
+            // Use the actual view for the drag shadow instead of empty layout
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 
             view.startDrag(data, shadowBuilder, view, 0);
-            view.setVisibility(View.VISIBLE);
 
             return true;
         }

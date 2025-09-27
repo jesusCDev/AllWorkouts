@@ -5,313 +5,496 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark">
+    android:background="@color/background_dark"
+    android:padding="@dimen/spacing_3">
+
+    <!-- Settings Header -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/header_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_3"
+        app:cardBackgroundColor="@color/background_elevated"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_4"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/archivo_black"
+                android:text="Settings"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customize your workout experience"
+                android:textColor="@color/selectedButton"
+                android:textSize="@dimen/text_size_body"
+                android:alpha="0.7" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- ScrollView for main content -->
+    <ScrollView
+        android:id="@+id/settings_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_3"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/button13">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <!-- ─────────────  SECTION: WORKOUT FEEDBACK  ───────────── -->
-        <TextView
-            android:id="@+id/textView6"
+        <!-- Workout Feedback Card -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/feedback_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Workout Feedback"
-            android:textColor="@color/selectedButton"
-            android:textSize="@dimen/priority_2"
-            android:textStyle="bold" />
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
 
-        <LinearLayout
-            android:id="@+id/ll1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="vertical">
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tv3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="Vibrate"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/priority_3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <Switch
-                    android:id="@+id/s_settings_Vibrate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tv2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="Sound"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/priority_3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <Switch
-                    android:id="@+id/s_settings_Sound"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/s_settings_MediaControls"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/media_controls"
-                        android:textColor="@color/selectedButton"
-                        android:textSize="@dimen/priority_3" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/media_controls_desc"
-                        android:textColor="@color/unSelectedButton"
-                        android:textSize="@dimen/text_size_caption" />
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/s_settings_MediaControls"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:onClick="btnAction_ShowDocumentation"
-                android:text="App Info"
-                android:textAlignment="viewStart"
-                android:textColor="@color/importantButton"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- ─────────────  SECTION: NOTIFICATION  ───────────── -->
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Notification"
-            android:textColor="@color/selectedButton"
-            android:textSize="@dimen/priority_2"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/ll2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical">
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tv_settings_Time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:onClick="btnAction_SetNotificationTime"
-                    android:text="2:04 am"
-                    android:textColor="@color/importantButton"
-                    android:textSize="@dimen/priority_1"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <Switch
-                    android:id="@+id/s_settings_Notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    tools:checked="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <!-- Day-picker buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDaySU"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="SU"
-                    android:textSize="@dimen/btn_textSize"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Workout Feedback"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDayM"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
+                <!-- Vibrate Setting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="M"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_2">
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDayTU"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="TU"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Vibrate"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_body" />
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDayW"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="W"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
+                    <Switch
+                        android:id="@+id/s_settings_Vibrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDayTH"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="TH"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_1"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDayF"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
+                <!-- Sound Setting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="F"
-                    android:textSize="@dimen/btn_textSize"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_2">
 
-                <Button
-                    android:id="@+id/btn_settings_notificationDaySA"
-                    style="@style/btn_settings_DayUnSelected"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sound"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_body" />
+
+                    <Switch
+                        android:id="@+id/s_settings_Sound"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_1"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
+
+                <!-- Media Controls Setting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:onClick="btnAction_setDayNotifications"
-                    android:text="SA"
-                    android:textSize="@dimen/btn_textSize"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_controls"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="@string/media_controls_desc"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_settings_MediaControls"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_1"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
+
+                <!-- App Info Button -->
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/Widget.App.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_1"
+                    android:onClick="btnAction_ShowDocumentation"
+                    android:text="App Info"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold" />
             </LinearLayout>
-        </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-        <!-- ─────────────  SECTION: WORKOUT POSITION  ───────────── -->
-        <TextView
-            android:id="@+id/textView2"
+        <!-- Notification Card -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/notification_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Workouts: Position And Status"
-            android:textColor="@color/selectedButton"
-            android:textSize="@dimen/priority_2"
-            android:textStyle="bold" />
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
 
-        <LinearLayout
-            android:id="@+id/ll_settings_WorkoutPositions"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Notification"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold" />
+
+                <!-- Notification Toggle and Time Setting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Daily Reminder"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:id="@+id/tv_settings_Time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:onClick="btnAction_SetNotificationTime"
+                            android:text="2:04 am"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/text_size_title"
+                            android:textStyle="bold"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:padding="@dimen/spacing_1" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_settings_Notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        tools:checked="false" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_2"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
+
+                <!-- Day selection label -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_2"
+                    android:text="Days"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_body"
+                    android:textStyle="bold" />
+
+                <!-- Day-picker buttons with modern styling -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDaySU"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="SU"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDayM"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="M"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDayTU"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="TU"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDayW"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="W"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDayTH"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="TH"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDayF"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="F"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_settings_notificationDaySA"
+                        style="@style/Widget.App.Button.Secondary"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="1dp"
+                        android:onClick="btnAction_setDayNotifications"
+                        android:text="SA"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Workout Position Card -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/workout_position_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:orientation="vertical" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
 
-    <!-- Reset button -->
-    <Button
-        android:id="@+id/button13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@android:color/transparent"
-        android:onClick="btnAction_ResetToDefaults"
-        android:text="Reset To Defaults"
-        android:textColor="@color/importantButton"
-        android:textSize="@dimen/btn_textSize"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Workout Order &amp; Status"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Drag to reorder workouts and toggle which ones to include"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption"
+                    android:alpha="0.8" />
+
+                <!-- Container for dynamically added workout position items -->
+                <LinearLayout
+                    android:id="@+id/ll_settings_WorkoutPositions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Danger Reset Button -->
+        <Button
+            android:id="@+id/button13"
+            style="@style/Widget.App.Button.Danger"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_target_large"
+            android:layout_marginTop="@dimen/spacing_4"
+            android:layout_marginBottom="@dimen/spacing_3"
+            android:onClick="btnAction_ResetToDefaults"
+            android:text="Reset To Defaults"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
+    </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
