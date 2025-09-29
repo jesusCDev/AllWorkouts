@@ -128,7 +128,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         else{
             Intent intent = new Intent(this, WorkoutSessionFinishActivity.class);
 
-            intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, manager.get_Workout());
+            intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, manager.getWorkout());
             
             // Thread the session start workout to WorkoutSessionFinishActivity
             if (sessionStartWorkout != null) {

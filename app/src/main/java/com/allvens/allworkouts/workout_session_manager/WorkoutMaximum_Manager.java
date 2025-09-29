@@ -50,13 +50,13 @@ public class WorkoutMaximum_Manager {
         WorkoutWrapper wrapper = new WorkoutWrapper(context);
 
         wrapper.open();
-        WorkoutInfo workout_info = wrapper.getWorkout(chosenWorkout);
+        WorkoutInfo workoutInfo = wrapper.getWorkout(chosenWorkout);
         wrapper.close();
 
-        if(workout_info != null){
-            maxValue = workout_info.getMax();
+        if(workoutInfo != null){
+            maxValue = workoutInfo.getMax();
             startingMax = maxValue;
-            tvCounterView.setText(Integer.toString(workout_info.getMax()));
+            tvCounterView.setText(Integer.toString(workoutInfo.getMax()));
         }
     }
 

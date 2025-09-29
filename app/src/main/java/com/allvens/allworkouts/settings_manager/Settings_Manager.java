@@ -81,7 +81,7 @@ public class Settings_Manager {
         WorkoutBasicsPrefs_Checker prefsChecker = new WorkoutBasicsPrefs_Checker(context);
         WorkoutPos_TouchListener touchListener  = new WorkoutPos_TouchListener(context);
 
-        for(WorkoutPosAndStatus w : prefsChecker.get_WorkoutsPos(true)) {
+        for(WorkoutPosAndStatus w : prefsChecker.getWorkoutPositions(true)) {
             llWorkoutsAndPositions.addView(
                     create_WorkoutPosContainer(w, touchListener, prefsChecker));
         }
@@ -138,7 +138,7 @@ public class Settings_Manager {
         swToggle.setId(R.id.s_Pos_Id);
         swToggle.setChecked(workout.get_TurnOnStatus());
         swToggle.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
-            prefsChecker.update_WorkoutStatusPref(workout.getStatPrefKey(), isChecked);
+            prefsChecker.updateWorkoutStatusPreference(workout.getStatPrefKey(), isChecked);
             insure_OneWorkoutIsOn();
         });
 

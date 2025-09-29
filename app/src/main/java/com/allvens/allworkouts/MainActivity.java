@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshWorkouts() {
         WorkoutBasicsPrefs_Checker prefs = new WorkoutBasicsPrefs_Checker(this);
-        WorkoutPosAndStatus[] pos       = prefs.get_WorkoutsPos(false);
+        WorkoutPosAndStatus[] pos       = prefs.getWorkoutPositions(false);
 
         workouts = new String[pos.length];
         

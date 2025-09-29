@@ -5,37 +5,37 @@ import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 
 public class WorkoutGenerator {
 
-    private WorkoutInfo workout_info;
+    private WorkoutInfo workoutInfo;
 
-    public WorkoutGenerator(WorkoutInfo workout_info){
-        this.workout_info = workout_info;
+    public WorkoutGenerator(WorkoutInfo workoutInfo){
+        this.workoutInfo = workoutInfo;
     }
 
-    public WorkoutInfo get_WorkoutInfo() {
-        return workout_info;
+    public WorkoutInfo getWorkoutInfo() {
+        return workoutInfo;
     }
 
-    public Workout get_Workout(){
+    public Workout getWorkout(){
         Workout workout;
-        switch (workout_info.getWorkout()){
+        switch (workoutInfo.getWorkout()){
             case Constants.PULL_UPS:
-                workout = new PullUps(workout_info.getType(), workout_info.getMax());
+                workout = new PullUps(workoutInfo.getType(), workoutInfo.getMax());
                 break;
             case Constants.PUSH_UPS:
-                workout = new PushUps(workout_info.getType(), workout_info.getMax());
+                workout = new PushUps(workoutInfo.getType(), workoutInfo.getMax());
                 break;
             case Constants.SIT_UPS:
-                workout = new SitUps(workout_info.getType(), workout_info.getMax());
+                workout = new SitUps(workoutInfo.getType(), workoutInfo.getMax());
                 break;
             case Constants.BACK_STRENGTHENING:
-                workout = new BackStrengthening(workout_info.getType(), workout_info.getMax());
+                workout = new BackStrengthening(workoutInfo.getType(), workoutInfo.getMax());
                 break;
             default:
-                workout = new Squats(workout_info.getType(), workout_info.getMax());
+                workout = new Squats(workoutInfo.getType(), workoutInfo.getMax());
         }
         
         // Set the dynamic difficulty rating from database
-        workout.setDifficultyRating(workout_info.getDifficultyRating());
+        workout.setDifficultyRating(workoutInfo.getDifficultyRating());
         return workout;
     }
 }

@@ -16,7 +16,7 @@ public class WorkoutSession_Manager {
 
     private Context context;
     private Workout workout;
-    private WorkoutInfo workout_info;
+    private WorkoutInfo workoutInfo;
     private WorkoutSession_UI_Manager workoutSessionUi_manager;
     private Timer timer;
 
@@ -27,8 +27,8 @@ public class WorkoutSession_Manager {
         wrapper.open();
 
         WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(choice));
-        workout_info = workoutGenerator.get_WorkoutInfo();
-        workout = workoutGenerator.get_Workout();
+        workoutInfo = workoutGenerator.getWorkoutInfo();
+        workout = workoutGenerator.getWorkout();
 
         wrapper.close();
     }
@@ -49,8 +49,8 @@ public class WorkoutSession_Manager {
                 btn_ChangeScreens);
     }
 
-    public String get_Workout(){
-        return workout_info.getWorkout();
+    public String getWorkout(){
+        return workoutInfo.getWorkout();
     }
 
     public boolean check_IfFinished() {

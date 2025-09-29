@@ -94,8 +94,8 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         updateProgressIndicator();
 
         WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(currentChoiceWorkout));
-        Workout workout                   = workoutGenerator.get_Workout();
-        WorkoutInfo workoutInfo           = workoutGenerator.get_WorkoutInfo();
+        Workout workout                   = workoutGenerator.getWorkout();
+        WorkoutInfo workoutInfo           = workoutGenerator.getWorkoutInfo();
         maxValue                          = workoutInfo.getMax();
 
         wrapper.createWorkoutHistory(
@@ -116,7 +116,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     private void setNextWorkout(Button nextWorkoutButton) {
-        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).get_WorkoutsPos(false);
+        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).getWorkoutPositions(false);
         
         // Convert to list of workout names for easier linear logic
         java.util.List<String> enabledWorkouts = new java.util.ArrayList<>();
@@ -206,7 +206,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // If we're just setting max values, we won't have workout set data
         try {
             WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(currentChoiceWorkout));
-            Workout workout = workoutGenerator.get_Workout();
+            Workout workout = workoutGenerator.getWorkout();
             
             // Check if we have valid workout values (would be 0 if just setting max)
             int totalReps = 0;
@@ -240,7 +240,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         }
         
         // Get list of enabled workouts
-        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).get_WorkoutsPos(false);
+        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).getWorkoutPositions(false);
         int totalWorkouts = workouts.length;
         
         // For linear progression, calculate position based on current workout index

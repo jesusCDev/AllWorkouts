@@ -59,7 +59,7 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
                 // Dragged view stays normal - no restoration needed since we don't change it
                 
                 // Update preferences with new order
-                workout_basicsPrefs.update_WorkoutsWithViews(owner);
+                workout_basicsPrefs.updateWorkoutsWithViews(owner);
                 break;
                 
             default:
