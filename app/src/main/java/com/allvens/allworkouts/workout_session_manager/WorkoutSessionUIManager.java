@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 import com.iambedant.text.OutlineTextView;
 
-public class WorkoutSession_UI_Manager {
+public class WorkoutSessionUIManager {
 
     private Context context;
     private TextView workoutNameTitle;
@@ -43,7 +43,7 @@ public class WorkoutSession_UI_Manager {
 
     private int progress = 0;
 
-    public WorkoutSession_UI_Manager(
+    public WorkoutSessionUIManager(
             Context context, Workout workout, TextView workoutNameTitle,
             ConstraintLayout cTimerRepsWorkoutHolder,
             ImageView ivWorkoutImageHolder, TextView tvTimerHolder,
@@ -70,8 +70,8 @@ public class WorkoutSession_UI_Manager {
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         SettingsPrefsManager prefs_manager = new SettingsPrefsManager(context);
-        soundOn                            = prefs_manager.getPrefSetting(Preferences_Values.SOUND_ON);
-        vibrateOn                          = prefs_manager.getPrefSetting(Preferences_Values.VIBRATE_ON);
+        soundOn                            = prefs_manager.getPrefSetting(PreferencesValues.SOUND_ON);
+        vibrateOn                          = prefs_manager.getPrefSetting(PreferencesValues.VIBRATE_ON);
 
         this.workout = workout;
 

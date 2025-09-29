@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.allvens.allworkouts.R;
 
-public class textDocumentation_OpenSource extends textDocumentationManager {
-    public textDocumentation_OpenSource(Context context) {
+public class TextDocumentationOpenSource extends textDocumentationManager {
+    public TextDocumentationOpenSource(Context context) {
         super(context);
 
         createTitle(R.string.open_source_title);

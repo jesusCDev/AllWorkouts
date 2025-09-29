@@ -9,11 +9,11 @@ import android.widget.TextView;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.SessionUtils;
-import com.allvens.allworkouts.workout_session_manager.WorkoutMaximum_Manager;
+import com.allvens.allworkouts.workout_session_manager.WorkoutMaximumManager;
 
 public class WorkoutMaximumActivity extends AppCompatActivity {
 
-    private WorkoutMaximum_Manager workoutMax_manager;
+    private WorkoutMaximumManager workoutMax_manager;
     private TextView changeIndicator;
     private int originalMaxValue;
 
@@ -34,7 +34,7 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
             sessionStartWorkout = SessionUtils.getSessionStart(this);
         }
         
-        workoutMax_manager = new WorkoutMaximum_Manager(this, tv_max_MaxValue, chosenWorkout, type, sessionStartWorkout);
+        workoutMax_manager = new WorkoutMaximumManager(this, tv_max_MaxValue, chosenWorkout, type, sessionStartWorkout);
         
         // Store the original max value for change tracking
         originalMaxValue = workoutMax_manager.getCurrentMaxValue();

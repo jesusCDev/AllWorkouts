@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.allvens.allworkouts.assets.Constants;
 
-public class Settings_AppInfo_SelectorActivity extends AppCompatActivity{
+public class SettingsAppInfoSelectorActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class Settings_AppInfo_SelectorActivity extends AppCompatActivity{
                 break;
         }
 
-        Intent intent = new Intent(this, Settings_AppInfo_PresenterActivity.class);
+        Intent intent = new Intent(this, SettingsAppInfoPresenterActivity.class);
 
         intent.putExtra(Constants.CHOSEN_DOCUMENTATION, value);
         startActivity(intent);

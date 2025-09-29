@@ -84,7 +84,7 @@ public class BackStrengthening extends Workout{
 
     public BackStrengthening(int type, int max){
         if(type == 0){
-            set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
+            set_DifficultyValues(WorkoutsSimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.bridges,
                     R.drawable.bridges, R.drawable.bridges,

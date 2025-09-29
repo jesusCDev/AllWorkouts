@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- DARK THEME SPECIFIC COLORS FOR NOTIFICATIONS AND UI ELEMENTS       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Enhanced primary color for dark theme notifications -->
+    <color name="primary">#E85A52</color>               <!-- Brighter crimson for dark theme -->
+    <color name="primary_bright">#FF6B62</color>        <!-- Even brighter for notifications -->
+    
+    <!-- Notification specific colors for dark theme -->
+    <color name="notification_primary">#E85A52</color>  <!-- Bright crimson for dark notifications -->
+    <color name="notification_accent">#FF6B62</color>   <!-- Accent for notification elements -->
+    
+    <!-- Surface colors optimized for dark theme -->
+    <color name="surface">#0B1118</color>               <!-- Main dark surface -->
+    <color name="surface_variant">#121A23</color>       <!-- Elevated dark surface -->
+    <color name="background_dark">#0B1118</color>       <!-- Dark background -->
+    <color name="background_elevated">#121A23</color>   <!-- Elevated dark background -->
+    
+    <!-- Text colors for dark theme -->
+    <color name="selectedButton">#FFFFFF</color>        <!-- Primary text on dark -->
+    <color name="unSelectedButton">#8B93A3</color>      <!-- Secondary text on dark -->
+    
+    <!-- Keep legacy mappings -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorAccent">@color/primary</color>
+    <color name="importantButton">@color/primary</color>
+</resources>

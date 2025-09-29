@@ -17,16 +17,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.media.WorkoutMediaController;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
-import com.allvens.allworkouts.workout_session_manager.WorkoutSession_Manager;
+import com.allvens.allworkouts.workout_session_manager.WorkoutSessionManager;
 import com.iambedant.text.OutlineTextView;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
 
-    private WorkoutSession_Manager manager;
+    private WorkoutSessionManager manager;
     private WorkoutMediaController mediaController;
     private View mediaControlsLayout;
     private String sessionStartWorkout; // The workout that started this session
@@ -36,7 +36,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_session);
 
-        TextView tv_workout_WorkoutName          = findViewById(R.id.tv_workout_WorkoutName);
+        TextView tvWorkoutName          = findViewById(R.id.tv_workout_WorkoutName);
         ConstraintLayout cTimerRepsWorkoutHolder = findViewById(R.id.c_workoutSession_TimerRepsWorkoutHolder);
         ImageView ivWorkoutImageHolder           = findViewById(R.id.iv_workout_workoutImage);
         TextView tvTimerHolder                   = findViewById(R.id.tv_workout_timer);
@@ -47,8 +47,8 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         TextView tvValue3                        = findViewById(R.id.tv_workout_Value3);
         TextView tvValue4                        = findViewById(R.id.tv_workout_Value4);
         TextView tvValue5                        = findViewById(R.id.tv_workout_Value5);
-        Button btn_ChangeScreens                 = findViewById(R.id.btn_workout_CompleteTask);
-        manager                                  = new WorkoutSession_Manager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
+        Button btnChangeScreens                 = findViewById(R.id.btn_workout_CompleteTask);
+        manager                                  = new WorkoutSessionManager(this, getIntent().getExtras().get(Constants.CHOSEN_WORKOUT_EXTRA_KEY).toString());
         
         // Get session start workout from intent or fallback to SharedPreferences
         sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
@@ -61,9 +61,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             SessionUtils.saveSessionStart(this, sessionStartWorkout);
         }
 
-        manager.setUp_UiManager(tv_workout_WorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder,
+        manager.setUp_UiManager(tvWorkoutName, cTimerRepsWorkoutHolder, ivWorkoutImageHolder, tvTimerHolder,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
-                btn_ChangeScreens);
+                btnChangeScreens);
 
         manager.set_Timer();
         manager.start_Screen();
@@ -121,7 +121,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
      * Switches Screen between - Workout and Timer
      * @param view
      */
-    public void btnAction_ChangeActivities(View view){
+    public void btnActionChangeActivities(View view){
         if(manager.check_IfFinished()){
             manager.update_Screen();
         }
@@ -147,7 +147,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private void setupMediaControls() {
         // Check if media controls are enabled in settings
         SettingsPrefsManager prefsManager = new SettingsPrefsManager(this);
-        boolean mediaControlsEnabled = prefsManager.getPrefSetting(Preferences_Values.MEDIA_CONTROLS_ON);
+        boolean mediaControlsEnabled = prefsManager.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON);
         
         mediaControlsLayout = findViewById(R.id.media_controls);
         

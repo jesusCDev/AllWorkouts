@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 /**
  * Sets up Touch Listener for when an item is being moved
  */
-public class WorkoutPos_TouchListener implements View.OnTouchListener {
+public class WorkoutPosTouchListener implements View.OnTouchListener {
     private View view;
     private Context context;
 
-    public WorkoutPos_TouchListener(Context context){
+    public WorkoutPosTouchListener(Context context){
         this.context = context;
     }
 

@@ -11,10 +11,10 @@ import android.widget.Toast;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
-import com.allvens.allworkouts.log_manager.log_chart.LineChartData_Entry;
+import com.allvens.allworkouts.log_manager.log_chart.LineChartDataEntry;
 import com.github.mikephil.charting.charts.LineChart;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -22,15 +22,15 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Log_Manager {
+public class LogManager {
 
     private String chosenWorkout;
     private Context context;
     private WorkoutWrapper wrapper;
     private WorkoutInfo workout;
-    private Log_UI_Manager log_ui_manager;
+    private LogUIManager log_ui_manager;
 
-    public Log_Manager(Context context, String chosenWorkout) {
+    public LogManager(Context context, String chosenWorkout) {
         this.context       = context;
         this.chosenWorkout = chosenWorkout;
         wrapper            = new WorkoutWrapper(context);
@@ -43,7 +43,7 @@ public class Log_Manager {
     }
 
     public void setUp_UIManager(RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType){
-        log_ui_manager = new Log_UI_Manager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
+        log_ui_manager = new LogUIManager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
     }
 
     public void update_Screen(){
@@ -103,9 +103,9 @@ public class Log_Manager {
         }
     }
 
-    private ArrayList<LineChartData_Entry> get_GraphData_TotalReps(List<WorkoutHistory_Info> history_infoList){
+    private ArrayList<LineChartDataEntry> get_GraphData_TotalReps(List<WorkoutHistoryInfo> history_infoList){
 
-        ArrayList<LineChartData_Entry> entries = new ArrayList<>();
+        ArrayList<LineChartDataEntry> entries = new ArrayList<>();
 
         if(history_infoList != null) {
             int iter = 0;
@@ -115,7 +115,7 @@ public class Log_Manager {
             }
 
             for(int i = iter; i < history_infoList.size(); i++){
-                entries.add(new LineChartData_Entry(i, history_infoList.get(i).get_TotalReps()));
+                entries.add(new LineChartDataEntry(i, history_infoList.get(i).get_TotalReps()));
             }
         }
 

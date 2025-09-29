@@ -8,15 +8,15 @@ import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
-public class WorkoutBasicsPrefs_Checker {
+public class WorkoutBasicsPrefsChecker {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
     private WorkoutPosAndStatus[] allWorkouts;
     private WorkoutPosAndStatus[] enabledWorkouts;
 
-    public WorkoutBasicsPrefs_Checker(Context context){
-        prefs              = context.getSharedPreferences(Preferences_Values.PREFS_NAMES, Context.MODE_PRIVATE);
+    public WorkoutBasicsPrefsChecker(Context context) {
+        prefs              = context.getSharedPreferences(PreferencesValues.PREFS_NAMES, Context.MODE_PRIVATE);
         edit               = prefs.edit();
         allWorkouts = getAllWorkoutsPositionsAndStatus();
         enabledWorkouts    = getWorkoutsWithOnStatusOnly();
@@ -57,11 +57,11 @@ public class WorkoutBasicsPrefs_Checker {
 
     private WorkoutPosAndStatus[] getAllWorkoutsPositionsAndStatus(){
         WorkoutPosAndStatus[] workouts = new WorkoutPosAndStatus[5];
-        workouts[0]                    = getWorkoutData(Constants.PULL_UPS, Preferences_Values.PULL_POS, Preferences_Values.PULL_STAT, R.id.pullUpsPosContainer);
-        workouts[1]                    = getWorkoutData(Constants.PUSH_UPS, Preferences_Values.PUSH_POS, Preferences_Values.PUSH_STAT, R.id.pushUpsPosContainer);
-        workouts[2]                    = getWorkoutData(Constants.SIT_UPS , Preferences_Values.SIT_POS , Preferences_Values.SIT_STAT , R.id.sitUpsPosContainer);
-        workouts[3]                    = getWorkoutData(Constants.SQUATS  , Preferences_Values.SQT_POS , Preferences_Values.SQT_STAT , R.id.squatUpsPosContainer);
-        workouts[4]                    = getWorkoutData(Constants.BACK_STRENGTHENING, Preferences_Values.BACK_POS, Preferences_Values.BACK_STAT, R.id.backStrengtheningPosContainer);
+        workouts[0]                    = getWorkoutData(Constants.PULL_UPS, PreferencesValues.PULL_POS, PreferencesValues.PULL_STAT, R.id.pullUpsPosContainer);
+        workouts[1]                    = getWorkoutData(Constants.PUSH_UPS, PreferencesValues.PUSH_POS, PreferencesValues.PUSH_STAT, R.id.pushUpsPosContainer);
+        workouts[2]                    = getWorkoutData(Constants.SIT_UPS , PreferencesValues.SIT_POS , PreferencesValues.SIT_STAT , R.id.sitUpsPosContainer);
+        workouts[3]                    = getWorkoutData(Constants.SQUATS  , PreferencesValues.SQT_POS , PreferencesValues.SQT_STAT , R.id.squatUpsPosContainer);
+        workouts[4]                    = getWorkoutData(Constants.BACK_STRENGTHENING, PreferencesValues.BACK_POS, PreferencesValues.BACK_STAT, R.id.backStrengtheningPosContainer);
 
         return organizeDataSetByOrder(workouts);
     }

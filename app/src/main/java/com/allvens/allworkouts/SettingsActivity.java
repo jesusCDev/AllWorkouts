@@ -20,14 +20,14 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import com.allvens.allworkouts.data_manager.Preferences_Values;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.data_manager.backup.BackupManager;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
-import com.allvens.allworkouts.settings_manager.Settings_Manager;
+import com.allvens.allworkouts.settings_manager.SettingsManager;
 
 public class SettingsActivity extends AppCompatActivity{
 
-    private Settings_Manager settings_manager;
+    private SettingsManager settings_manager;
     private BackupManager backupManager;
     
     // Backup UI elements
@@ -60,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity{
         switchAutoBackup = findViewById(R.id.s_auto_backup);
         tvBackupStatus = findViewById(R.id.tv_backup_status);
 
-        settings_manager = new Settings_Manager(this);
+        settings_manager = new SettingsManager(this);
         backupManager = new BackupManager(this);
 
         settings_manager.set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls);
@@ -68,11 +68,11 @@ public class SettingsActivity extends AppCompatActivity{
         settings_manager.setUp_TimeDisplay(tvTimeDisplay);
         settings_manager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
 
-        sVibrate.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.VIBRATE_ON));
-        sSound.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.SOUND_ON));
-        sMediaControls.setOnCheckedChangeListener(settings_manager.update_PrefSettings(Preferences_Values.MEDIA_CONTROLS_ON));
+        sVibrate.setOnCheckedChangeListener(settings_manager.update_PrefSettings(PreferencesValues.VIBRATE_ON));
+        sSound.setOnCheckedChangeListener(settings_manager.update_PrefSettings(PreferencesValues.SOUND_ON));
+        sMediaControls.setOnCheckedChangeListener(settings_manager.update_PrefSettings(PreferencesValues.MEDIA_CONTROLS_ON));
 
-        sNotification.setOnCheckedChangeListener(settings_manager.update_NotfiSettings(Preferences_Values.NOTIFICATION_ON));
+        sNotification.setOnCheckedChangeListener(settings_manager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON));
         
         // Setup backup functionality
         setupBackupUI();
@@ -82,7 +82,7 @@ public class SettingsActivity extends AppCompatActivity{
      /**** BUTTON ACTIONS
      ****************************************/
     public void btnAction_ShowDocumentation(View view){
-        startActivity(new Intent(this, Settings_AppInfo_SelectorActivity.class));
+        startActivity(new Intent(this, SettingsAppInfoSelectorActivity.class));
     }
 
     /********** Settings Switch Value Changes **********/

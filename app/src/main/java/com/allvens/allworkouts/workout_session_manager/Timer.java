@@ -4,14 +4,14 @@ import android.os.Handler;
 
 public class Timer {
 
-    private WorkoutSession_UI_Manager workoutSessionUi_manager;
+    private WorkoutSessionUIManager workoutSessionUi_manager;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
     private long startTime = 0;
     private boolean timerRunning = false;
 
-    public Timer(WorkoutSession_UI_Manager workoutSessionUi_manager){
+    public Timer(WorkoutSessionUIManager workoutSessionUi_manager){
         this.workoutSessionUi_manager = workoutSessionUi_manager;
     }
 

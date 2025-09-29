@@ -72,7 +72,7 @@ public class PullUps extends Workout{
 
     public PullUps(int type, int max){
         if(type == 0){
-            set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
+            set_DifficultyValues(WorkoutsSimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.pull_up_android,
                     R.drawable.pull_up_android,R.drawable.pull_up_android,

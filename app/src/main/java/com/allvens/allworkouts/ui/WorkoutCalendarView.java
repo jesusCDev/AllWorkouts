@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
 import java.util.Calendar;

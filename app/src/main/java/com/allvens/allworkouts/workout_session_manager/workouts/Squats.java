@@ -95,7 +95,7 @@ public class Squats extends Workout{
 
     public Squats(int type, int max){
         if(type == 0){
-            set_DifficultyValues(Workouts_SimpleValues.DIFFICULTY_VALUES);
+            set_DifficultyValues(WorkoutsSimpleValues.DIFFICULTY_VALUES);
 
             set_ImageResources(new int[] {R.drawable.ic_squat,
                     R.drawable.ic_squat,R.drawable.ic_squat,

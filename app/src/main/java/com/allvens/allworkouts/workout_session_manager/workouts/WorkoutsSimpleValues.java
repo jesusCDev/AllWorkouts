@@ -1,6 +1,6 @@
 package com.allvens.allworkouts.workout_session_manager.workouts;
 
-public class Workouts_SimpleValues {
+public class WorkoutsSimpleValues {
 
     private final static double FIRST_VALUE_DIFFICULTY = 0.7;
     private final static double SECOND_VALUE_DIFFICULTY = 0.6;

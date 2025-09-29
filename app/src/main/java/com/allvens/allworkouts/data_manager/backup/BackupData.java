@@ -1,6 +1,6 @@
 package com.allvens.allworkouts.data_manager.backup;
 
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class BackupData {
     
     // Workout Data
     private List<WorkoutInfo> workouts;
-    private Map<Long, List<WorkoutHistory_Info>> workoutHistories;
+    private Map<Long, List<WorkoutHistoryInfo>> workoutHistories;
     
     // Settings/Preferences
     private Map<String, Object> preferences;
@@ -53,8 +53,8 @@ public class BackupData {
     public List<WorkoutInfo> getWorkouts() { return workouts; }
     public void setWorkouts(List<WorkoutInfo> workouts) { this.workouts = workouts; }
     
-    public Map<Long, List<WorkoutHistory_Info>> getWorkoutHistories() { return workoutHistories; }
-    public void setWorkoutHistories(Map<Long, List<WorkoutHistory_Info>> workoutHistories) { 
+    public Map<Long, List<WorkoutHistoryInfo>> getWorkoutHistories() { return workoutHistories; }
+    public void setWorkoutHistories(Map<Long, List<WorkoutHistoryInfo>> workoutHistories) { 
         this.workoutHistories = workoutHistories; 
     }
     

@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
 
-public class Settings_UI_Manager {
+public class SettingsUIManager {
 
     private Button btnSu;
     private Button btnM;
@@ -19,7 +19,7 @@ public class Settings_UI_Manager {
     private Button btnSa;
     private Context context;
 
-    public Settings_UI_Manager(Context context){
+    public SettingsUIManager(Context context){
         this.context = context;
     }
 

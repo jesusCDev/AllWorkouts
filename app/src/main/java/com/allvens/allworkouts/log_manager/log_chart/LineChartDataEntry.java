@@ -1,11 +1,11 @@
 package com.allvens.allworkouts.log_manager.log_chart;
 
-public class LineChartData_Entry {
+public class LineChartDataEntry {
 
     private int position;
     private int value;
 
-    public LineChartData_Entry(int position, int value){
+    public LineChartDataEntry(int position, int value){
         this.position = position;
         this.value = value;
     }

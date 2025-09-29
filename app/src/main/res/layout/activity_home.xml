@@ -115,7 +115,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/touch_target_min"
             android:layout_marginBottom="@dimen/spacing_3"
-            android:onClick="onChangeWorkoutsClicked"
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@drawable/bg_button_secondary"

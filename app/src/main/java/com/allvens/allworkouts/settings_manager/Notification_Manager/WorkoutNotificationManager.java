@@ -13,16 +13,18 @@ import android.graphics.Color;
 import android.os.Build;
 import java.util.Calendar;
 
+import com.allvens.allworkouts.R;
+
 import static android.content.Context.ALARM_SERVICE;
 
-public class Notification_Manager {
+public class WorkoutNotificationManager {
 
     private int hour;
     private int minute;
     private boolean notificationOn;
     private Context context;
 
-    public Notification_Manager(Context context, boolean notificationOn, int hour, int minute){
+    public WorkoutNotificationManager(Context context, boolean notificationOn, int hour, int minute){
         this.context        = context;
         this.notificationOn = notificationOn;
         this.hour           = hour;
@@ -60,15 +62,15 @@ public class Notification_Manager {
         }
     }
 
-    private NotificationManager getManager() {
+    private android.app.NotificationManager getManager() {
         if(mManager == null) {
-            mManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mManager = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
         return mManager;
     }
 
-    private NotificationManager mManager;
+    private android.app.NotificationManager mManager;
     private String ANDROID_CHANNEL_ID   = "com.android.AllWorkouts";
     private String ANDROID_CHANNEL_NAME = "All Workouts";
     private int MID                     = 100;
@@ -79,12 +81,15 @@ public class Notification_Manager {
 
             if(Build.VERSION.SDK_INT >= 26) {
                 NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
-                        ANDROID_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                        ANDROID_CHANNEL_NAME, android.app.NotificationManager.IMPORTANCE_DEFAULT);
 
+                androidChannel.setDescription("Workout reminder notifications");
                 androidChannel.enableLights(true);
                 androidChannel.enableVibration(true);
-                androidChannel.setLightColor(Color.GREEN);
+                // Use app's notification color for LED light
+                androidChannel.setLightColor(context.getResources().getColor(R.color.notification_primary));
                 androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                androidChannel.setShowBadge(true);
                 getManager().createNotificationChannel(androidChannel);
             }
 
@@ -94,7 +99,7 @@ public class Notification_Manager {
             calendar.set(Calendar.MINUTE, minute);
             calendar.set(Calendar.SECOND, 0);
 
-            Intent intent1              = new Intent(context, Notification_Receiver.class);
+            Intent intent1              = new Intent(context, NotificationReceiver.class);
             int flags = PendingIntent.FLAG_UPDATE_CURRENT;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 flags |= PendingIntent.FLAG_IMMUTABLE;
@@ -104,7 +109,7 @@ public class Notification_Manager {
 
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
-            ComponentName receiver = new ComponentName(context   , Notification_Receiver.class);
+            ComponentName receiver = new ComponentName(context   , NotificationReceiver.class);
             PackageManager pm      = context.getPackageManager();
 
             pm.setComponentEnabledSetting(receiver,
@@ -118,13 +123,13 @@ public class Notification_Manager {
 
     public void cancel_Notification(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            android.app.NotificationManager mNotificationManager =
+                (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             mNotificationManager.deleteNotificationChannel(ANDROID_CHANNEL_ID);
         }
         else{
-            Intent intent             = new Intent(context, Notification_Receiver.class);
+            Intent intent             = new Intent(context, NotificationReceiver.class);
             int flags = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 flags |= PendingIntent.FLAG_IMMUTABLE;
@@ -135,7 +140,7 @@ public class Notification_Manager {
             alarmManager.cancel(sender);
         }
 
-        ComponentName receiver = new ComponentName(context   , Notification_Receiver.class);
+        ComponentName receiver = new ComponentName(context   , NotificationReceiver.class);
         PackageManager pm      = context.getPackageManager();
 
         pm.setComponentEnabledSetting(receiver,

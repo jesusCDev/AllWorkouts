@@ -8,17 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
 
 /**
  * Manages Drag functions for Workout Pos Change
  */
-public class WorkoutPos_DragListener implements View.OnDragListener {
-    private WorkoutPos_TouchListener touchListener;
-    private WorkoutBasicsPrefs_Checker workout_basicsPrefs;
+public class WorkoutPosDragListener implements View.OnDragListener {
+    private WorkoutPosTouchListener touchListener;
+    private WorkoutBasicsPrefsChecker workout_basicsPrefs;
     private Context context;
 
-    public WorkoutPos_DragListener(Context context, WorkoutPos_TouchListener touchListener, WorkoutBasicsPrefs_Checker workout_basicsPrefs){
+    public WorkoutPosDragListener(Context context, WorkoutPosTouchListener touchListener, WorkoutBasicsPrefsChecker workout_basicsPrefs){
         this.context             = context;
         this.workout_basicsPrefs = workout_basicsPrefs;
         this.touchListener       = touchListener;

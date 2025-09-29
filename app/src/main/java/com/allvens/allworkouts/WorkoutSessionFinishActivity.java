@@ -15,8 +15,8 @@ import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
 import com.allvens.allworkouts.data_manager.DifficultyRatingManager;
 import com.allvens.allworkouts.data_manager.SessionUtils;
-import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
@@ -99,7 +99,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         maxValue                          = workoutInfo.getMax();
 
         wrapper.createWorkoutHistory(
-                new WorkoutHistory_Info(
+                new WorkoutHistoryInfo(
                         workout.getWorkoutValue(0),
                         workout.getWorkoutValue(1),
                         workout.getWorkoutValue(2),
@@ -116,7 +116,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
 
     private void setNextWorkout(Button nextWorkoutButton) {
-        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).getWorkoutPositions(false);
+        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefsChecker(this).getWorkoutPositions(false);
         
         // Convert to list of workout names for easier linear logic
         java.util.List<String> enabledWorkouts = new java.util.ArrayList<>();
@@ -240,7 +240,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         }
         
         // Get list of enabled workouts
-        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefs_Checker(this).getWorkoutPositions(false);
+        WorkoutPosAndStatus[] workouts = new WorkoutBasicsPrefsChecker(this).getWorkoutPositions(false);
         int totalWorkouts = workouts.length;
         
         // For linear progression, calculate position based on current workout index

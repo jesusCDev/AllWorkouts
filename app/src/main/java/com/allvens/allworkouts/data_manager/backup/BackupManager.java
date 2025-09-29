@@ -6,8 +6,8 @@ import android.os.Environment;
 import android.util.Log;
 
 // BuildConfig will be generated at build time, remove this import
-import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
@@ -85,10 +85,10 @@ public class BackupManager {
             Log.d(TAG, "Backing up " + (workouts != null ? workouts.size() : 0) + " workouts");
             
             // Backup workout histories
-            Map<Long, List<WorkoutHistory_Info>> histories = new HashMap<>();
+            Map<Long, List<WorkoutHistoryInfo>> histories = new HashMap<>();
             if (workouts != null) {
                 for (WorkoutInfo workout : workouts) {
-                    List<WorkoutHistory_Info> history = workoutWrapper.getHistoryForWorkout(workout.getId());
+                    List<WorkoutHistoryInfo> history = workoutWrapper.getHistoryForWorkout(workout.getId());
                     if (history != null && !history.isEmpty()) {
                         histories.put(workout.getId(), history);
                         Log.d(TAG, "Workout '" + workout.getWorkout() + "' has " + history.size() + " history entries");
@@ -263,10 +263,10 @@ public class BackupManager {
                         Log.d(TAG, "Workout created with new ID: " + newWorkoutId);
                         
                         // Restore workout history with the new workout ID
-                        List<WorkoutHistory_Info> history = backup.getWorkoutHistories().get(originalId);
+                        List<WorkoutHistoryInfo> history = backup.getWorkoutHistories().get(originalId);
                         if (history != null && !history.isEmpty()) {
                             Log.d(TAG, "Restoring " + history.size() + " history entries for workout " + workout.getWorkout());
-                            for (WorkoutHistory_Info historyItem : history) {
+                            for (WorkoutHistoryInfo historyItem : history) {
                                 workoutWrapper.createWorkoutHistory(historyItem, newWorkoutId);
                             }
                         } else {
@@ -355,9 +355,9 @@ public class BackupManager {
         // Save workout history
         if (backup.getWorkoutHistories() != null) {
             JSONObject historiesJson = new JSONObject();
-            for (Map.Entry<Long, List<WorkoutHistory_Info>> entry : backup.getWorkoutHistories().entrySet()) {
+            for (Map.Entry<Long, List<WorkoutHistoryInfo>> entry : backup.getWorkoutHistories().entrySet()) {
                 JSONArray historyArray = new JSONArray();
-                for (WorkoutHistory_Info historyItem : entry.getValue()) {
+                for (WorkoutHistoryInfo historyItem : entry.getValue()) {
                     JSONObject historyJson = new JSONObject();
                     historyJson.put("id", historyItem.getId());
                     historyJson.put("first", historyItem.getFirst_value());
@@ -422,7 +422,7 @@ public class BackupManager {
         // Restore workout history
         if (json.has("workoutHistories")) {
             JSONObject historiesJson = json.getJSONObject("workoutHistories");
-            Map<Long, List<WorkoutHistory_Info>> histories = new HashMap<>();
+            Map<Long, List<WorkoutHistoryInfo>> histories = new HashMap<>();
             
             java.util.Iterator<String> workoutIds = historiesJson.keys();
             while (workoutIds.hasNext()) {
@@ -430,11 +430,11 @@ public class BackupManager {
                 Long workoutId = Long.parseLong(workoutIdStr);
                 
                 JSONArray historyArray = historiesJson.getJSONArray(workoutIdStr);
-                List<WorkoutHistory_Info> historyList = new ArrayList<>();
+                List<WorkoutHistoryInfo> historyList = new ArrayList<>();
                 
                 for (int i = 0; i < historyArray.length(); i++) {
                     JSONObject historyJson = historyArray.getJSONObject(i);
-                    WorkoutHistory_Info historyItem = new WorkoutHistory_Info(
+                    WorkoutHistoryInfo historyItem = new WorkoutHistoryInfo(
                         historyJson.getInt("first"),
                         historyJson.getInt("second"),
                         historyJson.getInt("third"),
@@ -508,10 +508,10 @@ public class BackupManager {
     private Map<String, Object> getAllPreferences() {
         Map<String, Object> prefs = new HashMap<>();
         
-        prefs.put(Preferences_Values.VIBRATE_ON, prefsManager.getPrefSetting(Preferences_Values.VIBRATE_ON));
-        prefs.put(Preferences_Values.SOUND_ON, prefsManager.getPrefSetting(Preferences_Values.SOUND_ON));
-        prefs.put(Preferences_Values.MEDIA_CONTROLS_ON, prefsManager.getPrefSetting(Preferences_Values.MEDIA_CONTROLS_ON));
-        prefs.put(Preferences_Values.NOTIFICATION_ON, prefsManager.getPrefSetting(Preferences_Values.NOTIFICATION_ON));
+        prefs.put(PreferencesValues.VIBRATE_ON, prefsManager.getPrefSetting(PreferencesValues.VIBRATE_ON));
+        prefs.put(PreferencesValues.SOUND_ON, prefsManager.getPrefSetting(PreferencesValues.SOUND_ON));
+        prefs.put(PreferencesValues.MEDIA_CONTROLS_ON, prefsManager.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
+        prefs.put(PreferencesValues.NOTIFICATION_ON, prefsManager.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
         
         return prefs;
     }
@@ -526,7 +526,7 @@ public class BackupManager {
     
     private BackupData.NotificationSettings getNotificationSettings() {
         BackupData.NotificationSettings settings = new BackupData.NotificationSettings();
-        settings.setEnabled(prefsManager.getPrefSetting(Preferences_Values.NOTIFICATION_ON));
+        settings.setEnabled(prefsManager.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
         settings.setHour(prefsManager.get_NotifiHour());
         settings.setMinute(prefsManager.get_NotifiMinute());
         
@@ -541,7 +541,7 @@ public class BackupManager {
     
     private void restoreNotificationSettings(BackupData.NotificationSettings settings) {
         if (settings != null) {
-            prefsManager.update_PrefSetting(Preferences_Values.NOTIFICATION_ON, settings.isEnabled());
+            prefsManager.update_PrefSetting(PreferencesValues.NOTIFICATION_ON, settings.isEnabled());
             prefsManager.update_NotificationTime(settings.getHour(), settings.getMinute());
             
             boolean[] days = settings.getDaysOfWeek();

@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Open Source Project - https://github.com/PhilJay/MPAndroidChart
  * Used to create chart to represent data
  */
-public class LogChart_Manager {
+public class LogChartManager {
 
     private LineChart lc;
     private Context context;
 
-    public LogChart_Manager(Context context, LineChart lc) {
+    public LogChartManager(Context context, LineChart lc) {
         this.context = context;
         this.lc = lc;
     }
@@ -34,7 +34,7 @@ public class LogChart_Manager {
 
     /********** Line Chart Methods **********/
 
-    public void create_Chart(ArrayList<LineChartData_Entry> totalSets){
+    public void create_Chart(ArrayList<LineChartDataEntry> totalSets){
 
         // Configure chart styling for dark theme
         lc.getXAxis().setDrawLabels(true);
@@ -73,9 +73,9 @@ public class LogChart_Manager {
         lc.setData(data);
     }
 
-    private ArrayList<Entry> create_Entries(ArrayList<LineChartData_Entry> currentWeekData){
+    private ArrayList<Entry> create_Entries(ArrayList<LineChartDataEntry> currentWeekData){
         ArrayList<Entry> yValues = new ArrayList<>();
-        for(LineChartData_Entry entry: currentWeekData){
+        for(LineChartDataEntry entry: currentWeekData){
             yValues.add(new Entry(entry.getPosition(), entry.getValue()));
         }
         return yValues;

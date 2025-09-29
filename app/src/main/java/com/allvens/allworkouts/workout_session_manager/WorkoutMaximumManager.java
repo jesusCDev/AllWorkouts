@@ -16,7 +16,7 @@ import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
-public class WorkoutMaximum_Manager {
+public class WorkoutMaximumManager {
 
     private Context context;
 
@@ -28,7 +28,7 @@ public class WorkoutMaximum_Manager {
 
     private TextView tvCounterView;
 
-    public WorkoutMaximum_Manager(Context context, TextView tvCounterView, String chosenWorkout, int type, String sessionStartWorkout) {
+    public WorkoutMaximumManager(Context context, TextView tvCounterView, String chosenWorkout, int type, String sessionStartWorkout) {
         this.context = context;
         this.tvCounterView = tvCounterView;
         this.chosenWorkout = chosenWorkout;

@@ -15,12 +15,12 @@ import android.widget.TimePicker;
 
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.assets.Helper;
-import com.allvens.allworkouts.data_manager.Preferences_Values;
-import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
-import com.allvens.allworkouts.settings_manager.Notification_Manager.Notification_Manager;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
+import com.allvens.allworkouts.settings_manager.Notification_Manager.WorkoutNotificationManager;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
-import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPos_DragListener;
-import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPos_TouchListener;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosDragListener;
+import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosTouchListener;
 
 import java.util.Calendar;
 
@@ -28,20 +28,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
 
-public class Settings_Manager {
+public class SettingsManager {
 
     private Context context;
-    private Settings_UI_Manager ui_manager;
+    private SettingsUIManager ui_manager;
     private SettingsPrefsManager settingsPrefs;
-    private Notification_Manager notiManager;
+    private WorkoutNotificationManager notiManager;
     private SwitchCompat[] posSwitches = new SwitchCompat[5];
     private int switchPosTracker = 0;
 
-    public Settings_Manager(Context context){
+    public SettingsManager(Context context){
         this.context  = context;
-        ui_manager    = new Settings_UI_Manager(context);
+        ui_manager    = new SettingsUIManager(context);
         settingsPrefs = new SettingsPrefsManager(context);
-        notiManager   = new Notification_Manager(context   , settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON),
+        notiManager   = new WorkoutNotificationManager(context   , settingsPrefs.getPrefSetting(PreferencesValues.NOTIFICATION_ON),
                 settingsPrefs.get_NotifiHour(), settingsPrefs.get_NotifiMinute());
     }
 
@@ -50,14 +50,14 @@ public class Settings_Manager {
      ****************************************/
 
     public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification) {
-        sVibrate.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.VIBRATE_ON));
-        sSound.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.SOUND_ON));
-        sNotification.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.NOTIFICATION_ON));
+        sVibrate.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.VIBRATE_ON));
+        sSound.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SOUND_ON));
+        sNotification.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
     }
     
     public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification, Switch sMediaControls) {
         set_SettingsValues(sVibrate, sSound, sNotification);
-        sMediaControls.setChecked(settingsPrefs.getPrefSetting(Preferences_Values.MEDIA_CONTROLS_ON));
+        sMediaControls.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
     }
 
     /********** Notification Settings **********/
@@ -78,8 +78,8 @@ public class Settings_Manager {
     /* ---------- Workout Position & Status ---------- */
 
     public void setUp_WorkoutsAndPositions(LinearLayout llWorkoutsAndPositions) {
-        WorkoutBasicsPrefs_Checker prefsChecker = new WorkoutBasicsPrefs_Checker(context);
-        WorkoutPos_TouchListener touchListener  = new WorkoutPos_TouchListener(context);
+        WorkoutBasicsPrefsChecker prefsChecker = new WorkoutBasicsPrefsChecker(context);
+        WorkoutPosTouchListener touchListener  = new WorkoutPosTouchListener(context);
 
         for(WorkoutPosAndStatus w : prefsChecker.getWorkoutPositions(true)) {
             llWorkoutsAndPositions.addView(
@@ -91,13 +91,13 @@ public class Settings_Manager {
     /* ---------- Helper to build each row ---------- */
 
     private ConstraintLayout create_WorkoutPosContainer(final WorkoutPosAndStatus workout,
-                                                        WorkoutPos_TouchListener touchListener,
-                                                        final WorkoutBasicsPrefs_Checker prefsChecker){
+                                                        WorkoutPosTouchListener touchListener,
+                                                        final WorkoutBasicsPrefsChecker prefsChecker){
 
         ConstraintLayout container = new ConstraintLayout(context);
         container.setId(workout.getResourceID());
         container.setOnTouchListener(touchListener);
-        container.setOnDragListener(new WorkoutPos_DragListener(context, touchListener, prefsChecker));
+        container.setOnDragListener(new WorkoutPosDragListener(context, touchListener, prefsChecker));
         
         // Add modern styling with padding and background
         int padding = new Helper(context).get_dpFromPixels(16);

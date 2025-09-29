@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.log_manager.Log_Manager;
+import com.allvens.allworkouts.log_manager.LogManager;
 import com.github.mikephil.charting.charts.LineChart;
 
 public class LogActivity extends AppCompatActivity {
 
-    private Log_Manager log_manager;
+    private LogManager log_manager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class LogActivity extends AppCompatActivity {
         // Set the workout name in the header
         tvWorkoutName.setText(chosenWorkout + " Log");
         
-        log_manager                       = new Log_Manager(this, chosenWorkout);
+        log_manager                       = new LogManager(this, chosenWorkout);
 
         log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
         log_manager.update_Screen();

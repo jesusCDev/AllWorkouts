@@ -30,6 +30,10 @@
     <color name="warning">#E4A11B</color>               <!-- Warning amber -->
     <color name="error">#E64A4A</color>                 <!-- Error red -->
     
+    <!-- Notification Colors -->
+    <color name="notification_primary">#D2423A</color>  <!-- Crimson for light theme notifications -->
+    <color name="notification_accent">#E85A52</color>   <!-- Brighter accent for notifications -->
+    
     <!-- Outline & Stroke -->
     <color name="outline">#577C8DA3</color>             <!-- 34% alpha on dark -->
     <color name="outline_variant">#3D7C8DA3</color>     <!-- 24% alpha variant -->

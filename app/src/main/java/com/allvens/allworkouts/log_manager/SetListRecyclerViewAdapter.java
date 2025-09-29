@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 
 import java.util.ArrayList;
 
-public class SetListRecyclerView_Adapter extends RecyclerView.Adapter<SetListRecyclerView_Adapter.ViewHolder>{
+public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecyclerViewAdapter.ViewHolder>{
 
-    private ArrayList<WorkoutHistory_Info> history_info;
+    private ArrayList<WorkoutHistoryInfo> history_info;
     private Context context;
 
-    public SetListRecyclerView_Adapter(Context context, ArrayList<WorkoutHistory_Info> history_info){
+    public SetListRecyclerViewAdapter(Context context, ArrayList<WorkoutHistoryInfo> history_info){
         this.context      = context;
         this.history_info = history_info;
     }

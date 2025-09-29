@@ -7,31 +7,31 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.DebuggingMethods;
-import com.allvens.allworkouts.data_manager.database.WorkoutHistory_Info;
-import com.allvens.allworkouts.log_manager.log_chart.LogChart_Manager;
-import com.allvens.allworkouts.log_manager.log_chart.LineChartData_Entry;
+import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
+import com.allvens.allworkouts.log_manager.log_chart.LogChartManager;
+import com.allvens.allworkouts.log_manager.log_chart.LineChartDataEntry;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Log_UI_Manager {
+public class LogUIManager {
 
     private Context context;
     private String chosenWorkout;
     private RecyclerView rvShowAllWorkoutSets;
     private TextView tvCurrentMax;
     private TextView tvType;
-    private LogChart_Manager logChart_manager;
+    private LogChartManager logChart_manager;
 
-    public Log_UI_Manager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
+    public LogUIManager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
         this.context              = context;
         this.chosenWorkout        = chosenWorkout;
         this.rvShowAllWorkoutSets = rvShowAllWorkoutSets;
         this.tvCurrentMax         = tvCurrentMax;
         this.tvType               = tvType;
-        logChart_manager          = new LogChart_Manager(context, lcShowWorkoutProgress);
+        logChart_manager          = new LogChartManager(context, lcShowWorkoutProgress);
     }
 
     /********** Max - Methods **********/
@@ -50,7 +50,7 @@ public class Log_UI_Manager {
         tvType.setText(sType);
     }
 
-    public void update_Graph(ArrayList<LineChartData_Entry> totalSets) {
+    public void update_Graph(ArrayList<LineChartDataEntry> totalSets) {
         logChart_manager.reset_Chart();
         logChart_manager.setUp_ChartValues();
         logChart_manager.create_Chart(totalSets);
@@ -60,14 +60,14 @@ public class Log_UI_Manager {
         logChart_manager.reset_Chart();
     }
 
-    public void update_SetList(List<WorkoutHistory_Info> historyForWorkout) {
+    public void update_SetList(List<WorkoutHistoryInfo> historyForWorkout) {
         Collections.reverse(historyForWorkout);
 
-        ArrayList<WorkoutHistory_Info> list = new ArrayList<>();
+        ArrayList<WorkoutHistoryInfo> list = new ArrayList<>();
 
         list.addAll(historyForWorkout);
 
-        SetListRecyclerView_Adapter adapter = new SetListRecyclerView_Adapter(context, list);
+        SetListRecyclerViewAdapter adapter = new SetListRecyclerViewAdapter(context, list);
 
         rvShowAllWorkoutSets.setAdapter(adapter);
         rvShowAllWorkoutSets.setLayoutManager(new LinearLayoutManager(context));

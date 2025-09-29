@@ -14,7 +14,7 @@ public class WorkoutInfo {
     private int max;
     private int difficultyRating; // Elo-like rating for dynamic difficulty adjustment (default: 1000)
 
-    private List<WorkoutHistory_Info> history;
+    private List<WorkoutHistoryInfo> history;
 
     public WorkoutInfo(String workout, int max, int type, int progress){
         this.workout         = workout;
@@ -24,7 +24,7 @@ public class WorkoutInfo {
         this.difficultyRating = 1000; // Default Elo-like rating
     }
 
-    public WorkoutInfo(String workout, int max, int type, int progress, List<WorkoutHistory_Info> history){
+    public WorkoutInfo(String workout, int max, int type, int progress, List<WorkoutHistoryInfo> history){
         this.workout         = workout;
         this.type            = type;
         this.progress        = progress;
@@ -41,7 +41,7 @@ public class WorkoutInfo {
         this.difficultyRating = difficultyRating;
     }
 
-    public WorkoutInfo(String workout, int max, int type, int progress, int difficultyRating, List<WorkoutHistory_Info> history){
+    public WorkoutInfo(String workout, int max, int type, int progress, int difficultyRating, List<WorkoutHistoryInfo> history){
         this.workout         = workout;
         this.type            = type;
         this.progress        = progress;
@@ -50,17 +50,17 @@ public class WorkoutInfo {
         this.history         = history;
     }
 
-    public List<WorkoutHistory_Info> getHistory()
+    public List<WorkoutHistoryInfo> getHistory()
     {
         return history;
     }
 
-    public void setHistory(List<WorkoutHistory_Info> history)
+    public void setHistory(List<WorkoutHistoryInfo> history)
     {
         this.history = history;
     }
 
-    public void add_History(WorkoutHistory_Info history_info){
+    public void add_History(WorkoutHistoryInfo history_info){
         history.add(history_info);
     }
 

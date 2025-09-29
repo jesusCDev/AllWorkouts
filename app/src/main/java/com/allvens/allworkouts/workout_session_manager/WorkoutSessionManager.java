@@ -12,15 +12,15 @@ import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 import com.allvens.allworkouts.workout_session_manager.workouts.WorkoutGenerator;
 import com.iambedant.text.OutlineTextView;
 
-public class WorkoutSession_Manager {
+public class WorkoutSessionManager {
 
     private Context context;
     private Workout workout;
     private WorkoutInfo workoutInfo;
-    private WorkoutSession_UI_Manager workoutSessionUi_manager;
+    private WorkoutSessionUIManager workoutSessionUi_manager;
     private Timer timer;
 
-    public WorkoutSession_Manager(Context context, String choice){
+    public WorkoutSessionManager(Context context, String choice){
         this.context = context;
 
         WorkoutWrapper wrapper = new WorkoutWrapper(context);
@@ -43,7 +43,7 @@ public class WorkoutSession_Manager {
                                 TextView tvValue4, TextView tvValue5,
                                 Button btn_ChangeScreens) {
 
-        workoutSessionUi_manager = new WorkoutSession_UI_Manager(context, workout, tv_workout_workoutName,
+        workoutSessionUi_manager = new WorkoutSessionUIManager(context, workout, tv_workout_workoutName,
                 cTimerRepsWorkoutHolder,ivWorkoutImageHolder, tvTimerHolder,
                 tvFront, tvBack, tvValue1, tvValue2, tvValue3, tvValue4, tvValue5,
                 btn_ChangeScreens);

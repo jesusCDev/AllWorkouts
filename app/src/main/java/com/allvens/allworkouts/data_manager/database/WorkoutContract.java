@@ -2,9 +2,9 @@ package com.allvens.allworkouts.data_manager.database;
 
 import android.provider.BaseColumns;
 
-final class Workout_Contract {
+final class WorkoutContract {
 
-    public Workout_Contract(){}
+    public WorkoutContract(){}
 
     static final String CREATE_WORKOUT_ENTRY_TABLE =
             "CREATE TABLE " + Workout_Entry.TABLE_NAME +

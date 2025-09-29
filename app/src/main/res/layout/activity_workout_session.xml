@@ -248,7 +248,7 @@
             android:layout_height="80dp"
             android:textSize="@dimen/text_size_title"
             android:text="@string/complete"
-            android:onClick="btnAction_ChangeActivities"
+            android:onClick="btnActionChangeActivities"
             android:contentDescription="@string/complete_set_button"
             android:elevation="@dimen/elevation_button"/>
     </LinearLayout>

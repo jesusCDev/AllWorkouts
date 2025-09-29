@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.allvens.allworkouts.R;
 
-public class TextDocumentation_TermsOfService extends textDocumentationManager {
+public class TextDocumentationTermsOfService extends textDocumentationManager {
 
-    public TextDocumentation_TermsOfService(Context context) {
+    public TextDocumentationTermsOfService(Context context) {
         super(context);
 
         createTitle(R.string.terms_of_use_title);
