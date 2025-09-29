@@ -1,54 +1,157 @@
 package com.allvens.allworkouts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.log_manager.LogManager;
-import com.github.mikephil.charting.charts.LineChart;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.managers.LogBusinessController;
+import com.allvens.allworkouts.managers.LogDataManager;
+import com.allvens.allworkouts.ui.LogActivityUIManager;
 
-public class LogActivity extends AppCompatActivity {
+public class LogActivity extends AppCompatActivity
+    implements LogActivityUIManager.LogUICallback,
+               LogDataManager.LogDataCallback,
+               LogBusinessController.LogControllerCallback {
 
-    private LogManager log_manager;
+    // Managers
+    private LogActivityUIManager uiManager;
+    private LogDataManager dataManager;
+    private LogBusinessController businessController;
+    private String chosenWorkout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
 
-        RecyclerView rvShowAllWorkoutSets = findViewById(R.id.rv_log_ShowAllWorkoutSets);
-        LineChart lcShowWorkoutProgress   = findViewById(R.id.lc_log_ShowWorkoutProgression);
-        TextView tvCurrentMax             = findViewById(R.id.tv_log_CurrentMaxContainer);
-        TextView tvType                   = findViewById(R.id.tv_log_type);
-        TextView tvWorkoutName            = findViewById(R.id.tv_log_workout_name);
-        String chosenWorkout              = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        // Get workout name from intent
+        chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         
-        // Set the workout name in the header
-        tvWorkoutName.setText(chosenWorkout + " Log");
+        // Initialize managers
+        uiManager = new LogActivityUIManager(this, this);
+        dataManager = new LogDataManager(this, this);
+        businessController = new LogBusinessController(this, this);
         
-        log_manager                       = new LogManager(this, chosenWorkout);
+        // Setup UI
+        uiManager.initializeViews(chosenWorkout);
+        
+        // Initialize data and business logic
+        dataManager.initialize(chosenWorkout);
+        businessController.initialize(dataManager, uiManager.getLogUIManager());
+    }
 
-        log_manager.setUp_UIManager(rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
-        log_manager.update_Screen();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (businessController != null) {
+            businessController.cleanup();
+        }
+        if (dataManager != null) {
+            dataManager.cleanup();
+        }
     }
 
     /****************************************
-     /**** BUTTON ACTIONS
+     /**** BUTTON ACTIONS (Activity Methods)
      ****************************************/
 
     public void btnAction_ResetWorkoutToZero(View view) {
-        log_manager.reset_Workout();
+        if (businessController.hasWorkout()) {
+            uiManager.handleResetWorkoutClick();
+        } else {
+            uiManager.showWorkoutNotStartedError();
+        }
     }
 
     public void btnAction_EditCurrentMaxValue(View view) {
-        log_manager.update_MaxValue();
+        if (businessController.hasWorkout()) {
+            uiManager.handleEditMaxValueClick();
+        } else {
+            uiManager.showWorkoutNotStartedError();
+        }
     }
 
     public void btnAction_EditType(View view) {
-        log_manager.update_Type();
+        if (businessController.hasWorkout()) {
+            uiManager.handleEditTypeClick();
+        } else {
+            uiManager.showWorkoutNotStartedError();
+        }
+    }
+    
+    /****************************************
+     /**** INTERFACE IMPLEMENTATIONS
+     ****************************************/
+    
+    // LogUICallback implementations
+    @Override
+    public void onResetWorkout() {
+        businessController.handleResetWorkout();
+    }
+    
+    @Override
+    public void onEditMaxValue() {
+        businessController.handleEditMaxValue();
+    }
+    
+    @Override
+    public void onEditType(int selectedType) {
+        businessController.handleEditType(selectedType);
+    }
+    
+    @Override
+    public void onWorkoutOperationResult(String message) {
+        // Could be used for additional feedback if needed
+    }
+    
+    // LogDataCallback implementations
+    @Override
+    public void onWorkoutLoaded(WorkoutInfo workout) {
+        businessController.onWorkoutLoaded(workout);
+    }
+    
+    @Override
+    public void onWorkoutNotFound() {
+        businessController.onWorkoutNotFound();
+    }
+    
+    @Override
+    public void onDataUpdated() {
+        businessController.onDataUpdated();
+    }
+    
+    @Override
+    public void onDataError(String error) {
+        uiManager.showErrorMessage(error);
+    }
+    
+    @Override
+    public void onNavigationRequested(Intent intent) {
+        startActivity(intent);
+    }
+    
+    // LogControllerCallback implementations
+    @Override
+    public void onUIUpdateRequested() {
+        uiManager.refreshUI();
+    }
+    
+    @Override
+    public void onErrorOccurred(String error) {
+        uiManager.showErrorMessage(error);
+    }
+    
+    @Override
+    public void onInfoMessage(String message) {
+        uiManager.showInfoMessage(message);
+    }
+    
+    @Override
+    public void onWorkoutNotStarted() {
+        uiManager.showWorkoutNotStartedError();
     }
 }
