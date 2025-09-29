@@ -43,19 +43,19 @@ This document tracks our systematic refactoring of the AllWorkouts Android app t
   - UI manager coordination
   - Intent handling
 
-#### **Task 2: Refactor SettingsActivity** 🔴 **PRIORITY HIGH**
-- [ ] Extract `SettingsUIManager` class (different from current SettingsManager)
+#### **Task 2: Refactor SettingsActivity** ✅ **COMPLETED**
+- [x] Extract `SettingsActivityUIManager` class
   - Handle all view binding and setup
   - Manage switch/button state updates
-  - Handle animations and visual feedback
-- [ ] Extract `SettingsDataManager` class  
-  - Handle preferences reading/writing
-  - Manage backup operations
-  - Coordinate with WorkoutBasicsPrefsChecker
-- [ ] Create `SettingsValidator` class
-  - Validate user input
-  - Handle business rules (like "at least one workout enabled")
-- [ ] Slim SettingsActivity to coordination only
+  - Handle dialog creation and UI state management
+- [x] Extract `SettingsDataManager` class  
+  - Handle database operations (reset to defaults)
+  - Manage backup/restore operations
+  - Handle file system interactions
+- [x] Slim SettingsActivity to coordination only
+  - Reduced from 342 lines to ~188 lines
+  - Clean separation between UI, data, and coordination concerns
+  - Interface-based communication between managers
 
 #### **Task 3: Refactor WorkoutSessionActivity** 🔴 **PRIORITY HIGH**
 - [ ] Extract `WorkoutSessionUIManager` (separate from current one)
@@ -149,12 +149,13 @@ This document tracks our systematic refactoring of the AllWorkouts Android app t
 - [x] **Notification System Fix** - Fixed crash and improved theming
 - [x] **Mixed Variable Naming** - Fixed camelCase/underscore inconsistencies in WorkoutSessionActivity
 - [x] **Phase 1, Task 1: MainActivity Refactoring** - Extracted UI and data managers, reduced MainActivity from 250+ lines to ~140 lines
+- [x] **Phase 1, Task 2: SettingsActivity Refactoring** - Extracted SettingsActivityUIManager and SettingsDataManager, reduced SettingsActivity from 342 lines to ~188 lines
 
 ### **Currently Working On** 🔄
-- [ ] **Phase 1, Task 2**: SettingsActivity Refactoring
+- [ ] **Phase 1, Task 3**: WorkoutSessionActivity Refactoring
 
 ### **Next Up** ⏭️
-- [ ] **Phase 1, Task 3**: WorkoutSessionActivity Refactoring
+- [ ] **Phase 1, Task 4**: LogActivity Refactoring
 
 ---
 
