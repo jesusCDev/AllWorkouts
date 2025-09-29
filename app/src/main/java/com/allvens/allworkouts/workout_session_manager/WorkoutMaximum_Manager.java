@@ -10,6 +10,7 @@ import com.allvens.allworkouts.LogActivity;
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.WorkoutSessionActivity;
+import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
@@ -155,11 +156,11 @@ public class WorkoutMaximum_Manager {
             intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, false);
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
         }else{
-            // Start the workout session with the configured max value
-            intent = new Intent(context, WorkoutSessionActivity.class);
+            // Max out counts as completing the workout - go directly to finish screen
+            intent = new Intent(context, WorkoutSessionFinishActivity.class);
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
             
-            // Thread the session start workout through to WorkoutSessionActivity
+            // Thread the session start workout through to WorkoutSessionFinishActivity
             if (sessionStartWorkout != null) {
                 intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
             } else {

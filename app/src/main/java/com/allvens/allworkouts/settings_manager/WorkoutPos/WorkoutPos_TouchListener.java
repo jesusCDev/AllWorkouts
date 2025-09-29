@@ -25,8 +25,7 @@ public class WorkoutPos_TouchListener implements View.OnTouchListener {
 
             this.view = view;
 
-            // Add visual feedback for drag start
-            view.setAlpha(0.7f);
+            // Add visual feedback for drag start - only scaling, no transparency
             view.setScaleX(1.05f);
             view.setScaleY(1.05f);
 

@@ -15,17 +15,17 @@ import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefs_Checker;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
+import com.allvens.allworkouts.ui.WorkoutCalendarView;
 
 public class MainActivity extends AppCompatActivity {
 
     /* ---------- view refs ---------- */
 
-    private TextView           currentWorkoutText;
-    private ImageView          workoutImage;
     private LinearLayout       changeWorkoutButton;
     private TextView           workoutSelectorText;
     private ImageView          workoutSelectorArrow;
     private LinearLayoutCompat workoutChooser;
+    private WorkoutCalendarView workoutCalendar;
 
     /* ---------- state ---------- */
 
@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(chosenWorkout == null || !workoutExists(chosenWorkout)) {
             setWorkout(workouts.length > 0 ? workouts[0] : null);
+        }
+        
+        // Refresh calendar to show latest workout data
+        if(workoutCalendar != null) {
+            workoutCalendar.refreshCalendar();
         }
     }
 
@@ -105,12 +110,11 @@ public class MainActivity extends AppCompatActivity {
     /* ====================================================================== */
 
     private void bindViews() {
-        currentWorkoutText = findViewById(R.id.tv_home_CurrentWorkout);
-        workoutImage       = findViewById(R.id.iv_home_WorkoutShow);
         changeWorkoutButton= findViewById(R.id.btn_ChangeWorkouts);
         workoutSelectorText= findViewById(R.id.tv_workout_selector_text);
         workoutSelectorArrow= findViewById(R.id.iv_workout_selector_arrow);
         workoutChooser     = findViewById(R.id.ll_home_WorkoutChooser);
+        workoutCalendar    = findViewById(R.id.calendar_workout_activity);
 
         changeWorkoutButton.setOnClickListener(this::onChangeWorkoutsClicked);
     }
@@ -240,23 +244,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateScreen(String workout) {
-        currentWorkoutText.setText(workout);
-        
         // Update the workout selector text to show current workout
         workoutSelectorText.setText(workout);
         // Ensure the arrow is properly set (collapsed state)
         workoutSelectorArrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
-
-        int drawableRes;
-
-        switch (workout) {
-            case Constants.PULL_UPS: drawableRes = R.drawable.ic_pullup; break;
-            case Constants.SIT_UPS : drawableRes = R.drawable.ic_situp ; break;
-            case Constants.PUSH_UPS: drawableRes = R.drawable.ic_pushup; break;
-            default                : drawableRes = R.drawable.ic_squat ; break;
-        }
-
-        // Load drawable with proper compatibility
-        workoutImage.setImageDrawable(getResources().getDrawable(drawableRes));
     }
 }

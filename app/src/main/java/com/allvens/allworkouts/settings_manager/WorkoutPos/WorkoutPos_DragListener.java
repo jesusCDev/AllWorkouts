@@ -31,22 +31,19 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
 
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                // Start drag animation on the dragged view
-                draggedView.animate().alpha(0.5f).scaleX(0.95f).scaleY(0.95f).setDuration(150);
+                // Start drag animation on the dragged view - no transparency or scaling
+                // Keep the dragged element fully visible and normal size
                 break;
                 
             case DragEvent.ACTION_DRAG_ENTERED:
-                // Highlight the drop target with a subtle background
-                v.animate().alpha(0.7f).setDuration(100);
-                // Use the modern elevated background color for better visibility
-                v.setBackgroundColor(ContextCompat.getColor(context, R.color.focusAccent));
+                // Highlight the drop target with darker background - keep bottom item normal
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.surface_ink));
                 update_View(owner, owner.indexOfChild(v));
                 break;
                 
             case DragEvent.ACTION_DRAG_EXITED:
-                // Remove highlight from drop target
-                v.animate().alpha(1.0f).setDuration(100);
-                v.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
+                // Remove highlight from drop target - restore to component color
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.surface_variant));
                 break;
                 
             case DragEvent.ACTION_DROP:
@@ -56,12 +53,10 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
                 break;
                 
             case DragEvent.ACTION_DRAG_ENDED:
-                // Restore all views to normal state
-                v.setBackgroundColor(ContextCompat.getColor(context, R.color.background_elevated));
-                v.setAlpha(1.0f);
+                // Restore all views to normal state - same as component color
+                v.setBackgroundColor(ContextCompat.getColor(context, R.color.surface_variant));
                 
-                // Restore the dragged view to normal state
-                draggedView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(200);
+                // Dragged view stays normal - no restoration needed since we don't change it
                 
                 // Update preferences with new order
                 workout_basicsPrefs.update_WorkoutsWithViews(owner);
@@ -85,9 +80,9 @@ public class WorkoutPos_DragListener implements View.OnDragListener {
             owner.removeView(draggedView);
             owner.addView(draggedView, index);
             
-            // Add a subtle animation to show the move
-            draggedView.setAlpha(0.8f);
-            draggedView.animate().alpha(1.0f).setDuration(150);
+            // Add a subtle animation to show the move (no transparency)
+            draggedView.animate().scaleX(1.02f).scaleY(1.02f).setDuration(75)
+                .withEndAction(() -> draggedView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(75));
         }
     }
 }

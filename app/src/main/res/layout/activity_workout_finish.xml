@@ -14,11 +14,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="@dimen/spacing_5"
-        android:paddingBottom="@dimen/spacing_4"
+        android:paddingTop="@dimen/spacing_2"
+        android:paddingBottom="@dimen/spacing_2"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/difficulty_card"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
 
         <!-- Celebration Icon -->
         <TextView
@@ -57,11 +59,12 @@
         android:id="@+id/difficulty_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_3"
         app:cardBackgroundColor="@color/background_elevated"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
         app:layout_constraintTop_toBottomOf="@id/header_section"
+        app:layout_constraintBottom_toTopOf="@id/progress_section"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -193,6 +196,7 @@
         android:padding="@dimen/spacing_3"
         android:background="@drawable/bg_button_secondary"
         app:layout_constraintTop_toBottomOf="@id/difficulty_card"
+        app:layout_constraintBottom_toTopOf="@id/btn_WorkoutFinish_NextWorkout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -228,16 +232,16 @@
             android:alpha="0.8" />
     </LinearLayout>
     
-    <!-- 🚀 Next Workout Button - Centered at Bottom -->
+    <!-- 🚀 Complete Session Button -->
     <Button
         android:id="@+id/btn_WorkoutFinish_NextWorkout"
         style="@style/Widget.App.Button.Primary.Large"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:layout_marginTop="@dimen/spacing_5"
+        android:layout_marginTop="@dimen/spacing_3"
         android:layout_marginBottom="@dimen/spacing_4"
         android:onClick="startNextWorkout"
-        android:text="Next Workout"
+        android:text="Complete Session"
         android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/progress_section"

@@ -31,6 +31,8 @@ public class SettingsPrefsManager {
     }
 
     public boolean get_NotificationDayValue(int i) {
+        // Refresh the array to ensure we have the latest values
+        notification_days = prefs.getString(Preferences_Values.NOTIFICATION_DAYS, "-1,-1,-1,-1,-1,-1,-1").split(",");
         return (Integer.parseInt(notification_days[i]) == 1);
     }
 

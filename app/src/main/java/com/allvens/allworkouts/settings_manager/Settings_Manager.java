@@ -34,7 +34,7 @@ public class Settings_Manager {
     private Settings_UI_Manager ui_manager;
     private SettingsPrefsManager settingsPrefs;
     private Notification_Manager notiManager;
-    private SwitchCompat[] posSwitches = new SwitchCompat[4];
+    private SwitchCompat[] posSwitches = new SwitchCompat[5];
     private int switchPosTracker = 0;
 
     public Settings_Manager(Context context){
@@ -218,7 +218,10 @@ public class Settings_Manager {
         }
 
         settingsPrefs.update_NotificationDay(dayChanged);
-        ui_manager.updateDailyNotificationBtnStyle(btn, settingsPrefs.get_NotificationDayValue(dayChanged));
+        // Refresh all day button states to show current configuration
+        ui_manager.updateDailyNotificationColors(settingsPrefs.get_NotificationDayValue(0), settingsPrefs.get_NotificationDayValue(1),
+                settingsPrefs.get_NotificationDayValue(2), settingsPrefs.get_NotificationDayValue(3), settingsPrefs.get_NotificationDayValue(4),
+                settingsPrefs.get_NotificationDayValue(5), settingsPrefs.get_NotificationDayValue(6));
     }
 
     public CompoundButton.OnCheckedChangeListener update_PrefSettings(final String prefKey){

@@ -9,4 +9,5 @@
     <item name="pushUpsPosContainer" type="id"/>
     <item name="sitUpsPosContainer" type="id"/>
     <item name="squatUpsPosContainer" type="id"/>
+    <item name="backStrengtheningPosContainer" type="id"/>
 </resources>

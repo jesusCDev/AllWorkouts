@@ -2,6 +2,7 @@ package com.allvens.allworkouts.settings_manager;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -89,19 +90,16 @@ public class Settings_UI_Manager {
 
     public void updateDailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
         if(notiOnDay){
-            setBtnStyle(btn, R.style.btn_settings_DaySelected);
+            // Selected state: white text on accent background
+            btn.setTextColor(ContextCompat.getColor(context, R.color.on_primary));
+            btn.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+            btn.setTypeface(btn.getTypeface(), android.graphics.Typeface.BOLD);
         }
         else {
-            setBtnStyle(btn, R.style.btn_settings_DayUnSelected);
-        }
-    }
-
-    private void setBtnStyle(Button btn, int style){
-        if (Build.VERSION.SDK_INT < 23) {
-            btn.setTextAppearance(context, style);
-        }
-        else {
-            btn.setTextAppearance(style);
+            // Unselected state: white text on transparent background
+            btn.setTextColor(ContextCompat.getColor(context, R.color.on_primary));
+            btn.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            btn.setTypeface(btn.getTypeface(), android.graphics.Typeface.NORMAL);
         }
     }
 }

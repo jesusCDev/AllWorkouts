@@ -74,38 +74,46 @@ public class Notification_Manager {
     private int MID                     = 100;
 
     public void create_Notification(){
+        try {
+            cancel_Notification();
 
-        cancel_Notification();
+            if(Build.VERSION.SDK_INT >= 26) {
+                NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
+                        ANDROID_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
 
-        if(Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
-                    ANDROID_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                androidChannel.enableLights(true);
+                androidChannel.enableVibration(true);
+                androidChannel.setLightColor(Color.GREEN);
+                androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                getManager().createNotificationChannel(androidChannel);
+            }
 
-            androidChannel.enableLights(true);
-            androidChannel.enableVibration(true);
-            androidChannel.setLightColor(Color.GREEN);
-            androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            getManager().createNotificationChannel(androidChannel);
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+
+            Intent intent1              = new Intent(context, Notification_Receiver.class);
+            int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                flags |= PendingIntent.FLAG_IMMUTABLE;
+            }
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, MID, intent1, flags);
+            AlarmManager am             = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            ComponentName receiver = new ComponentName(context   , Notification_Receiver.class);
+            PackageManager pm      = context.getPackageManager();
+
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        } catch (Exception e) {
+            // Log error or handle gracefully - don't crash the app
+            e.printStackTrace();
         }
-
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        Intent intent1              = new Intent(context, Notification_Receiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, MID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager am             = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        ComponentName receiver = new ComponentName(context   , Notification_Receiver.class);
-        PackageManager pm      = context.getPackageManager();
-
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);
     }
 
     public void cancel_Notification(){
@@ -116,8 +124,12 @@ public class Notification_Manager {
             mNotificationManager.deleteNotificationChannel(ANDROID_CHANNEL_ID);
         }
         else{
-            Intent intent             = new Intent(context                                     , Notification_Receiver.class);
-            PendingIntent sender      = PendingIntent.getBroadcast(context                     , MID                          , intent, 0);
+            Intent intent             = new Intent(context, Notification_Receiver.class);
+            int flags = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                flags |= PendingIntent.FLAG_IMMUTABLE;
+            }
+            PendingIntent sender      = PendingIntent.getBroadcast(context, MID, intent, flags);
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
             alarmManager.cancel(sender);

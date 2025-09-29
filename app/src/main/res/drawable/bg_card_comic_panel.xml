@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Card background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_variant" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Panel outline -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke 
+                android:width="1dp" 
+                android:color="@color/outline" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Subtle micro-notches (comic panel corners) -->
+    <!-- Top-right notch -->
+    <item android:top="8dp" android:right="8dp" android:left="8dp" android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+</layer-list>

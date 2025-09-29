@@ -8,3 +8,6 @@
 /build
 /captures
 .externalNativeBuild
+
+# Back Strengthening original image backups (large files)
+app/src/main/res/drawable/original_images_backup/

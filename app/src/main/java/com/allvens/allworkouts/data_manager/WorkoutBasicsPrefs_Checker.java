@@ -56,11 +56,12 @@ public class WorkoutBasicsPrefs_Checker {
     }
 
     private WorkoutPosAndStatus[] get_AllWorkoutsPositionsAndStatus(){
-        WorkoutPosAndStatus[] workouts = new WorkoutPosAndStatus[4];
+        WorkoutPosAndStatus[] workouts = new WorkoutPosAndStatus[5];
         workouts[0]                    = get_WorkoutData(Constants.PULL_UPS, Preferences_Values.PULL_POS, Preferences_Values.PULL_STAT, R.id.pullUpsPosContainer);
         workouts[1]                    = get_WorkoutData(Constants.PUSH_UPS, Preferences_Values.PUSH_POS, Preferences_Values.PUSH_STAT, R.id.pushUpsPosContainer);
         workouts[2]                    = get_WorkoutData(Constants.SIT_UPS , Preferences_Values.SIT_POS , Preferences_Values.SIT_STAT , R.id.sitUpsPosContainer);
         workouts[3]                    = get_WorkoutData(Constants.SQUATS  , Preferences_Values.SQT_POS , Preferences_Values.SQT_STAT , R.id.squatUpsPosContainer);
+        workouts[4]                    = get_WorkoutData(Constants.BACK_STRENGTHENING, Preferences_Values.BACK_POS, Preferences_Values.BACK_STAT, R.id.backStrengtheningPosContainer);
 
         return organize_DataSetByOrder(workouts);
     }
@@ -121,7 +122,7 @@ public class WorkoutBasicsPrefs_Checker {
      */
     public void update_WorkoutsWithViews(ViewGroup parent) {
         for(WorkoutPosAndStatus workout: turnOffOn_workouts){
-            for(int i = 0; i < 4; i++){
+            for(int i = 0; i < 5; i++){
                 if(parent.getChildAt(i).getId() == workout.getResourceID()){
                     update_WorkoutPositionPref(workout.getPosPrefKey(), parent.indexOfChild(parent.getChildAt(i)));
                 }

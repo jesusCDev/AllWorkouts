@@ -88,11 +88,15 @@
     </style>
 
     <style name="btn_settings_DaySelected">
-        <item name="android:textColor">@color/importantButton</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="btn_settings_DayUnSelected">
-        <item name="android:textColor">@color/unSelectedButton</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 
@@ -152,10 +156,10 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <!-- Primary CTA button with elevated appearance -->
+    <!-- Primary CTA button with elevated appearance (Crimson) -->
     <style name="Widget.App.Button.Primary" parent="Widget.App.Button">
         <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:textColor">@color/background_dark</item>
+        <item name="android:textColor">@color/on_primary</item>
         <item name="android:elevation">@dimen/elevation_button</item>
         <item name="android:translationZ">0dp</item>
     </style>
@@ -169,10 +173,10 @@
         <item name="android:elevation">@dimen/elevation_card</item>
     </style>
     
-    <!-- Secondary outline button -->
+    <!-- Secondary outline button (Teal) -->
     <style name="Widget.App.Button.Secondary" parent="Widget.App.Button">
-        <item name="android:background">@drawable/bg_button_secondary</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:background">@drawable/bg_button_secondary_modern</item>
+        <item name="android:textColor">@color/secondary</item>
     </style>
     
     <!-- Danger button for destructive actions -->
@@ -192,8 +196,36 @@
     
     <!-- Dialog button styling -->
     <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- WORKOUT-SPECIFIC ACCENT STYLES                    -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    
+    <!-- Sit-ups: Primary (Crimson) accents -->
+    <style name="WorkoutAccent_SitUps">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:background">@color/primary_container</item>
+    </style>
+    
+    <!-- Push-ups: Secondary (Teal) accents -->
+    <style name="WorkoutAccent_PushUps">
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:background">@color/secondary_container</item>
+    </style>
+    
+    <!-- Pull-ups: Tertiary (Gold) accents -->
+    <style name="WorkoutAccent_PullUps">
+        <item name="android:textColor">@color/tertiary</item>
+        <item name="android:background">@color/on_tertiary</item>
+    </style>
+    
+    <!-- Squats: Crimson + Gold combination -->
+    <style name="WorkoutAccent_Squats">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:background">@color/primary_container</item>
     </style>
 
 

@@ -10,6 +10,7 @@ public interface Constants {
     String PUSH_UPS                 = "Push Ups";
     String SIT_UPS                  = "Sit Ups";
     String SQUATS                   = "Squats";
+    String BACK_STRENGTHENING       = "Back Strengthening";
 
     String CHOSEN_WORKOUT_EXTRA_KEY = "chosen_workout";
     String SESSION_START_WORKOUT_KEY = "session_start_workout"; // Tracks which workout started the session for circular progression

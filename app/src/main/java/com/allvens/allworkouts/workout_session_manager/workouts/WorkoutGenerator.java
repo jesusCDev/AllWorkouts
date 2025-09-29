@@ -27,6 +27,9 @@ public class WorkoutGenerator {
             case Constants.SIT_UPS:
                 workout = new SitUps(workout_info.getType(), workout_info.getMax());
                 break;
+            case Constants.BACK_STRENGTHENING:
+                workout = new BackStrengthening(workout_info.getType(), workout_info.getMax());
+                break;
             default:
                 workout = new Squats(workout_info.getType(), workout_info.getMax());
         }

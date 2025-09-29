@@ -1,28 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark background & its slightly lighter status-bar shade -->
-    <color name="colorPrimary">#1B1F27</color>        <!-- app background -->
-    <color name="colorPrimaryDark">#20252E</color>    <!-- status / toolbar -->
-
-    <!-- Accent (CTA, sliders, active icons) -->
-    <color name="colorAccent">#FF7844</color>
-
-    <!-- Brand blues for icons, outlines, “objects” -->
-    <color name="objects">#46566E</color>
-    <color name="focusAccent">#5F7491</color>         <!-- hover / focused state -->
-
-    <!-- Back-compat alias for the background -->
-    <color name="background_dark">#1B1F27</color>
-
-    <!-- Translucent accent (56 % opacity) for ripples / pressed states -->
-    <color name="colorAccentLess">#90FF7844</color>
-
-    <!-- Buttons & text states -->
-    <color name="selectedButton">#FFFFFF</color>
-    <color name="unSelectedButton">#8B93A3</color>    <!-- 38 % white -->
-    <color name="importantButton">#FF7844</color>     <!-- same as accent -->
-    <color name="dangerButton">#E53E3E</color>        <!-- red for destructive actions -->
-
-    <color name="background_elevated">#20252E</color>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- MODERN COMIC-INSPIRED DESIGN SYSTEM                                -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    
+    <!-- ─── DARK THEME (PRIMARY) ─────────────────────────────────────────── -->
+    
+    <!-- Surface Colors -->
+    <color name="surface_ink">#0F1216</color>           <!-- Highest contrast -->
+    <color name="surface">#0B1118</color>               <!-- Main surface -->
+    <color name="surface_variant">#121A23</color>       <!-- Elevated surface -->
+    
+    <!-- Primary (Crimson) -->
+    <color name="primary">#D2423A</color>               <!-- Crimson red -->
+    <color name="on_primary">#FFFFFF</color>            <!-- White on crimson -->
+    <color name="primary_container">#571C1A</color>     <!-- Dark crimson container -->
+    
+    <!-- Secondary (Teal) -->
+    <color name="secondary">#2F7C8A</color>             <!-- Teal blue -->
+    <color name="on_secondary">#FFFFFF</color>          <!-- White on teal -->
+    <color name="secondary_container">#103842</color>   <!-- Dark teal container -->
+    
+    <!-- Tertiary (Gold) -->
+    <color name="tertiary">#E9B84A</color>              <!-- Gold accent -->
+    <color name="on_tertiary">#2A2008</color>           <!-- Dark on gold -->
+    
+    <!-- Status Colors -->
+    <color name="success">#3BB273</color>               <!-- Success green -->
+    <color name="warning">#E4A11B</color>               <!-- Warning amber -->
+    <color name="error">#E64A4A</color>                 <!-- Error red -->
+    
+    <!-- Outline & Stroke -->
+    <color name="outline">#577C8DA3</color>             <!-- 34% alpha on dark -->
+    <color name="outline_variant">#3D7C8DA3</color>     <!-- 24% alpha variant -->
+    
+    <!-- ─── LIGHT THEME ──────────────────────────────────────────────────── -->
+    
+    <!-- Light Surface Colors -->
+    <color name="surface_light">#F7F8FA</color>         <!-- Light surface -->
+    <color name="surface_variant_light">#E9EDF2</color> <!-- Light elevated -->
+    
+    <!-- Light Primary (Crimson 600) -->
+    <color name="primary_light">#C73A3A</color>         <!-- Crimson 600 -->
+    <color name="primary_container_light">#FFE2DE</color> <!-- Light crimson container -->
+    
+    <!-- Light Secondary (Teal 500) -->
+    <color name="secondary_light">#3A8796</color>       <!-- Teal 500 -->
+    <color name="secondary_container_light">#D6EEF3</color> <!-- Light teal container -->
+    
+    <!-- Light Tertiary -->
+    <color name="tertiary_light">#D7A73A</color>        <!-- Gold for light theme -->
+    
+    <!-- Light Outline -->
+    <color name="outline_light">#293B4654</color>       <!-- 16% alpha on light -->
+    
+    <!-- ─── LEGACY COMPATIBILITY ─────────────────────────────────────────── -->
+    <!-- Keep existing names for backward compatibility -->
+    
+    <color name="colorPrimary">@color/primary</color>           <!-- Maps to new crimson -->
+    <color name="colorPrimaryDark">@color/surface_variant</color> <!-- Maps to elevated surface -->
+    <color name="colorAccent">@color/primary</color>            <!-- Maps to new crimson -->
+    
+    <color name="background_dark">@color/surface</color>        <!-- Maps to new surface -->
+    <color name="background_elevated">@color/surface_variant</color> <!-- Maps to elevated -->
+    
+    <!-- Text Colors -->
+    <color name="selectedButton">#FFFFFF</color>         <!-- Primary text -->
+    <color name="unSelectedButton">#8B93A3</color>       <!-- Secondary text -->
+    
+    <!-- Legacy Button Colors -->
+    <color name="importantButton">@color/primary</color> <!-- Maps to crimson -->
+    <color name="dangerButton">@color/error</color>     <!-- Maps to error red -->
+    
+    <!-- Legacy Objects -->
+    <color name="objects">#46566E</color>               <!-- Keep for gradual migration -->
+    <color name="focusAccent">@color/secondary</color>  <!-- Maps to teal -->
+    
+    <!-- Translucent Colors -->
+    <color name="colorAccentLess">#57D2423A</color>      <!-- 34% crimson for ripples -->
+    <color name="primary_ripple">#57D2423A</color>       <!-- Crimson ripple -->
+    <color name="secondary_ripple">#572F7C8A</color>     <!-- Teal ripple -->
+    <color name="tertiary_ripple">#57E9B84A</color>      <!-- Gold ripple -->
 
 </resources>

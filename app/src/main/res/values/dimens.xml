@@ -18,9 +18,18 @@
     <dimen name="spacing_half">2dp</dimen>
     
     <!-- Corner radius for modern cards and buttons -->
-    <dimen name="corner_radius">12dp</dimen>
-    <dimen name="corner_radius_small">8dp</dimen>
-    <dimen name="corner_radius_large">16dp</dimen>
+    <dimen name="corner_radius">12dp</dimen>           <!-- Standard cards -->
+    <dimen name="corner_radius_small">8dp</dimen>      <!-- Inputs, chips -->
+    <dimen name="corner_radius_large">16dp</dimen>     <!-- Workout image frames -->
+    <dimen name="corner_radius_fab">24dp</dimen>       <!-- FABs, rounded buttons -->
+    
+    <!-- Comic-inspired stroke widths -->
+    <dimen name="stroke_width_thin">1dp</dimen>        <!-- Hairline dividers -->
+    <dimen name="stroke_width_standard">2dp</dimen>    <!-- Card borders, button outlines -->
+    
+    <!-- Contact shadow for workout images -->
+    <dimen name="contact_shadow_blur">20dp</dimen>
+    <dimen name="contact_shadow_offset">6dp</dimen>
     
     <!-- Modern elevation scale -->
     <dimen name="elevation_card">4dp</dimen>

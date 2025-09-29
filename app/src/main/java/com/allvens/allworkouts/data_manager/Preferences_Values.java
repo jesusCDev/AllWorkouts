@@ -13,6 +13,8 @@ public interface Preferences_Values {
     String SQT_STAT                 = "sqt_status";
     String SIT_POS                  = "sit_pos";
     String SIT_STAT                 = "sit_status";
+    String BACK_POS                 = "back_pos";
+    String BACK_STAT                = "back_status";
 
     /********** Settings Keys **********/
     String SOUND_ON                 = "sound_pref";              // boolean

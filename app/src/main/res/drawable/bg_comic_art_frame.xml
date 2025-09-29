@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Contact shadow ellipse (larger, more prominent) -->
+    <item android:top="16dp" android:left="32dp" android:right="32dp" android:bottom="4dp">
+        <shape android:shape="oval">
+            <solid android:color="#29000000" /> <!-- 16% black shadow -->
+        </shape>
+    </item>
+    
+    <!-- Art backplate (slightly lighter for contrast) -->
+    <item android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#242A34" /> <!-- Neutral backplate -->
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Comic panel outline -->
+    <item android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke 
+                android:width="2dp" 
+                android:color="#46566E" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Inner highlight (comic rim-light effect) -->
+    <item android:bottom="8dp" android:top="2dp" android:left="2dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke 
+                android:width="1dp" 
+                android:color="#14FFFFFF" /> <!-- 8% white highlight -->
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+    
+</layer-list>
