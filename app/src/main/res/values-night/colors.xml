@@ -5,12 +5,12 @@
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
     <!-- Enhanced primary color for dark theme notifications -->
-    <color name="primary">#E85A52</color>               <!-- Brighter crimson for dark theme -->
-    <color name="primary_bright">#FF6B62</color>        <!-- Even brighter for notifications -->
+    <color name="primary">#D3FF3E</color>               <!-- Lime accent for dark theme -->
+    <color name="primary_bright">#E1FF5C</color>        <!-- Even brighter lime for notifications -->
     
     <!-- Notification specific colors for dark theme -->
-    <color name="notification_primary">#E85A52</color>  <!-- Bright crimson for dark notifications -->
-    <color name="notification_accent">#FF6B62</color>   <!-- Accent for notification elements -->
+    <color name="notification_primary">#D3FF3E</color>  <!-- Lime accent for dark notifications -->
+    <color name="notification_accent">#E1FF5C</color>   <!-- Brighter lime for notification elements -->
     
     <!-- Surface colors optimized for dark theme -->
     <color name="surface">#0B1118</color>               <!-- Main dark surface -->
