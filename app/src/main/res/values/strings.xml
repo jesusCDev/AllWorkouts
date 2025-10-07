@@ -29,6 +29,12 @@
     <string name="workout_exercise_image">Current exercise illustration</string>
     <string name="music_icon">Music note</string>
     <string name="drag_handle">Drag to reorder</string>
+    <string name="set_maximum_reps">Set your maximum consecutive reps</string>
+    <string name="workout_label">Workout</string>
+    <string name="minus_one">-1</string>
+    <string name="plus_one">+1</string>
+    <string name="plus_five">+5</string>
+    <string name="zero">0</string>
     
     <!-- Media control strings -->
     <string name="media_controls">Media Controls</string>

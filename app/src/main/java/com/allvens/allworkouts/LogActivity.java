@@ -29,7 +29,12 @@ public class LogActivity extends AppCompatActivity
         setContentView(R.layout.activity_log);
 
         // Get workout name from intent
-        chosenWorkout = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            finish(); // Close activity if no required data provided
+            return;
+        }
+        chosenWorkout = extras.getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
         
         // Initialize managers
         uiManager = new LogActivityUIManager(this, this);

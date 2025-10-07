@@ -18,13 +18,23 @@ public class SettingsAppInfoPresenterActivity extends AppCompatActivity {
 
         LinearLayout llContainer = findViewById(R.id.ll_settings_appInfo_Container);
 
-        switch(getIntent().getStringExtra(Constants.CHOSEN_DOCUMENTATION)) {
+        String chosenDocumentation = getIntent().getStringExtra(Constants.CHOSEN_DOCUMENTATION);
+        if (chosenDocumentation == null) {
+            finish(); // Close activity if no documentation type specified
+            return;
+        }
+
+        switch(chosenDocumentation) {
             case Constants.OPEN_SOURCE:
                 new TextDocumentationOpenSource(this).showViews(llContainer);
                 break;
 
             case Constants.TERMS_OF_USE:
                 new TextDocumentationTermsOfService(this).showViews(llContainer);
+                break;
+                
+            default:
+                finish(); // Close activity if unknown documentation type
                 break;
         }
     }
