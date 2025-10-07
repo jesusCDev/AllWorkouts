@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import com.allvens.allworkouts.WorkoutMaximumActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.base.BaseDataManager;
+import com.allvens.allworkouts.base.BaseInterfaces;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
@@ -18,26 +20,38 @@ import java.util.List;
  * Handles all data-related operations including database access,
  * workout data retrieval, data processing for charts, and workout persistence
  */
-public class LogDataManager {
+public class LogDataManager extends BaseDataManager {
     
-    public interface LogDataCallback {
+    public interface LogDataCallback extends BaseInterfaces.BaseDataCallback {
         void onWorkoutLoaded(WorkoutInfo workout);
         void onWorkoutNotFound();
         void onDataUpdated();
-        void onDataError(String error);
-        void onNavigationRequested(Intent intent);
     }
     
-    private Context context;
-    private LogDataCallback callback;
     private String chosenWorkout;
     private WorkoutWrapper wrapper;
     private WorkoutInfo workout;
     
     public LogDataManager(Context context, LogDataCallback callback) {
-        this.context = context;
-        this.callback = callback;
+        super(context, callback);
         this.wrapper = new WorkoutWrapper(context);
+    }
+    
+    @Override
+    protected void initializeDataSources() throws Exception {
+        // Wrapper is initialized in constructor
+    }
+    
+    @Override
+    protected void loadInitialData() throws Exception {
+        // Data loading is handled in initialize() method
+    }
+    
+    @Override
+    protected void cleanupDataSources() throws Exception {
+        if (wrapper != null) {
+            wrapper.close();
+        }
     }
     
     /**
@@ -58,13 +72,13 @@ public class LogDataManager {
             wrapper.close();
             
             if (workout != null) {
-                callback.onWorkoutLoaded(workout);
+                notifyWorkoutLoaded(workout);
             } else {
-                callback.onWorkoutNotFound();
+                notifyWorkoutNotFound();
             }
         } catch (Exception e) {
             wrapper.close();
-            callback.onDataError("Failed to load workout data: " + e.getMessage());
+            notifyDataError("Failed to load workout data: " + e.getMessage());
         }
     }
     
@@ -83,7 +97,7 @@ public class LogDataManager {
             return history != null ? history : new ArrayList<>();
         } catch (Exception e) {
             wrapper.close();
-            callback.onDataError("Failed to load workout history: " + e.getMessage());
+            notifyDataError("Failed to load workout history: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -115,7 +129,7 @@ public class LogDataManager {
      */
     public void resetWorkout() {
         if (workout == null) {
-            callback.onDataError("No workout to reset");
+            notifyDataError("No workout to reset");
             return;
         }
         
@@ -125,10 +139,10 @@ public class LogDataManager {
             wrapper.close();
             
             workout = null;
-            callback.onDataUpdated();
+            notifyCustomDataUpdated();
         } catch (Exception e) {
             wrapper.close();
-            callback.onDataError("Failed to reset workout: " + e.getMessage());
+            notifyDataError("Failed to reset workout: " + e.getMessage());
         }
     }
     
@@ -137,7 +151,7 @@ public class LogDataManager {
      */
     public void updateWorkoutType(int type) {
         if (workout == null) {
-            callback.onDataError("No workout to update");
+            notifyDataError("No workout to update");
             return;
         }
         
@@ -148,10 +162,10 @@ public class LogDataManager {
             wrapper.updateWorkout(workout);
             wrapper.close();
             
-            callback.onDataUpdated();
+            notifyCustomDataUpdated();
         } catch (Exception e) {
             wrapper.close();
-            callback.onDataError("Failed to update workout type: " + e.getMessage());
+            notifyDataError("Failed to update workout type: " + e.getMessage());
         }
     }
     
@@ -160,19 +174,22 @@ public class LogDataManager {
      */
     public void launchMaxValueEdit() {
         if (workout == null) {
-            callback.onDataError("No workout to edit");
+            notifyDataError("No workout to edit");
             return;
         }
         
         try {
-            Intent intent = new Intent(context, WorkoutMaximumActivity.class);
+            Intent intent = new Intent(getContext(), WorkoutMaximumActivity.class);
             intent.putExtra(Constants.WORKOUT_TYPE_KEY, workout.getType());
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, chosenWorkout);
             intent.putExtra(Constants.UPDATING_MAX_IN_SETTINGS, true);
             
-            callback.onNavigationRequested(intent);
+            // Use activity callback for navigation - cast to BaseUICallback
+            if (getCallback() instanceof com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) {
+                ((com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) getCallback()).onNavigationRequested(intent, false);
+            }
         } catch (Exception e) {
-            callback.onDataError("Failed to launch max value editor: " + e.getMessage());
+            notifyDataError("Failed to launch max value editor: " + e.getMessage());
         }
     }
     
@@ -216,6 +233,33 @@ public class LogDataManager {
      */
     public void refreshData() {
         loadWorkoutData();
+    }
+    
+    /**
+     * Notify callback of workout loaded
+     */
+    private void notifyWorkoutLoaded(WorkoutInfo workout) {
+        if (getCallback() instanceof LogDataCallback) {
+            ((LogDataCallback) getCallback()).onWorkoutLoaded(workout);
+        }
+    }
+    
+    /**
+     * Notify callback that workout was not found
+     */
+    private void notifyWorkoutNotFound() {
+        if (getCallback() instanceof LogDataCallback) {
+            ((LogDataCallback) getCallback()).onWorkoutNotFound();
+        }
+    }
+    
+    /**
+     * Notify callback that data was updated
+     */
+    private void notifyCustomDataUpdated() {
+        if (getCallback() instanceof LogDataCallback) {
+            ((LogDataCallback) getCallback()).onDataUpdated();
+        }
     }
     
     /**

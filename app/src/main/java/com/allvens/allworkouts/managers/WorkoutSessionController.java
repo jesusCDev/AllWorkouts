@@ -50,6 +50,9 @@ public class WorkoutSessionController {
         this.sessionActive = true;
         this.currentProgress = 0;
         
+        android.util.Log.d("WorkoutSession", "Session initialized with workout: " + workoutInfo.getWorkout());
+        android.util.Log.d("WorkoutSession", "Starting progress: " + currentProgress + "/5");
+        
         // Create the workout session UI manager
         workoutSessionUIManager = new WorkoutSessionUIManager(
             context, workout,
@@ -63,6 +66,9 @@ public class WorkoutSessionController {
             uiElements.tvValue4, uiElements.tvValue5,
             uiElements.btnChangeScreens
         );
+        
+        // Synchronize progress between controller and UI manager
+        workoutSessionUIManager.setProgress(currentProgress);
         
         // Set up timer
         timer = new Timer(workoutSessionUIManager);
@@ -89,14 +95,30 @@ public class WorkoutSessionController {
         }
         
         try {
+            android.util.Log.d("WorkoutSession", "handleScreenChange called. Current progress: " + currentProgress + "/5");
+            
+            // Check if we're at the 5th set and timer is not running (completing final set)
+            if (currentProgress == 4 && (timer == null || !timer.get_TimerRunning())) {
+                android.util.Log.d("WorkoutSession", "Completing final set (5/5)");
+                // This is the final set completion - go directly to session complete
+                currentProgress = 5;
+                callback.onSessionComplete();
+                return;
+            }
+            
             if (isSessionComplete()) {
                 // Session is complete, notify callback
+                android.util.Log.d("WorkoutSession", "Session marked as complete by isSessionComplete()");
+                android.util.Log.d("WorkoutSession", "Calling callback.onSessionComplete()");
                 callback.onSessionComplete();
+                android.util.Log.d("WorkoutSession", "callback.onSessionComplete() called successfully");
             } else {
                 // Continue with screen update
+                android.util.Log.d("WorkoutSession", "Continuing with screen update");
                 updateScreen();
             }
         } catch (Exception e) {
+            android.util.Log.e("WorkoutSession", "Error handling screen change: " + e.getMessage());
             callback.onError("Error handling screen change: " + e.getMessage());
         }
     }
@@ -105,15 +127,27 @@ public class WorkoutSessionController {
      * Check if the current workout set is finished and session can continue
      */
     private boolean isSessionComplete() {
-        // If timer is not running, increment progress
+        // If timer is not running, we're completing a set
         if (timer != null && !timer.get_TimerRunning()) {
-            workoutSessionUIManager.setProgress(workoutSessionUIManager.getProgress() + 1);
-            currentProgress = workoutSessionUIManager.getProgress();
-            callback.onProgressChanged(currentProgress);
+            // Only increment progress if we haven't already counted this completion
+            // Progress should be 0-4, and we increment to 1-5
+            if (currentProgress < 5) {
+                currentProgress++;
+                // Update the UI manager to match our progress
+                workoutSessionUIManager.setProgress(currentProgress);
+                callback.onProgressChanged(currentProgress);
+                
+                // Debug logging to help track progress
+                android.util.Log.d("WorkoutSession", "Set completed. Progress: " + currentProgress + "/5");
+            }
         }
         
-        // Session continues if we haven't completed all 5 sets
-        return currentProgress >= 5;
+        // Check if we've completed all 5 sets
+        boolean sessionComplete = currentProgress >= 5;
+        if (sessionComplete) {
+            android.util.Log.d("WorkoutSession", "Session complete! Progress: " + currentProgress + "/5");
+        }
+        return sessionComplete;
     }
     
     /**

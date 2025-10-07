@@ -1,7 +1,6 @@
 package com.allvens.allworkouts.settings_manager.WorkoutPos;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.DragEvent;
 import android.view.View;

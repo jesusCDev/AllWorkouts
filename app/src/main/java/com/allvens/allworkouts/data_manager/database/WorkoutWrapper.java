@@ -75,13 +75,13 @@ public class WorkoutWrapper {
                 }
                 
                 WorkoutInfo workout = new WorkoutInfo(
-                        cursor.getString(cursor.getColumnIndex(WorkoutContract.Workout_Entry.COLUMN_WORKOUT)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.Workout_Entry.COLUMN_MAX)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.Workout_Entry.COLUMN_TYPE)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.Workout_Entry.COLUMN_PROGRESS)),
+                        getStringSafely(cursor, WorkoutContract.Workout_Entry.COLUMN_WORKOUT),
+                        getIntSafely(cursor, WorkoutContract.Workout_Entry.COLUMN_MAX),
+                        getIntSafely(cursor, WorkoutContract.Workout_Entry.COLUMN_TYPE),
+                        getIntSafely(cursor, WorkoutContract.Workout_Entry.COLUMN_PROGRESS),
                         difficultyRating);
 
-                workout.setId(cursor.getInt(cursor.getColumnIndex(WorkoutContract.Workout_Entry._ID)));
+                workout.setId(getIntSafely(cursor, WorkoutContract.Workout_Entry._ID));
                 workouts.add(workout);
             }
         } finally {
@@ -143,14 +143,14 @@ public class WorkoutWrapper {
         try{
             while(cursor.moveToNext()){
                 WorkoutHistoryInfo workoutHistory_info = new WorkoutHistoryInfo(
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_THIRD)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH)),
-                        cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX)));
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_THIRD),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX));
 
-                workoutHistory_info.setId(cursor.getInt(cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry._ID)));
+                workoutHistory_info.setId(getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry._ID));
                 workouts.add(workoutHistory_info);
             }
         } finally {
@@ -171,5 +171,27 @@ public class WorkoutWrapper {
 
     public void deleteAllHistoryWorkouts(){
         database.delete(WorkoutContract.WorkoutHistory_Entry.TABLE_NAME, null, null);
+    }
+    
+    /**
+     * Safely get string value from cursor, checking if column exists
+     */
+    private String getStringSafely(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if (columnIndex != -1) {
+            return cursor.getString(columnIndex);
+        }
+        return ""; // or appropriate default value
+    }
+    
+    /**
+     * Safely get int value from cursor, checking if column exists
+     */
+    private int getIntSafely(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if (columnIndex != -1) {
+            return cursor.getInt(columnIndex);
+        }
+        return 0; // or appropriate default value
     }
 }

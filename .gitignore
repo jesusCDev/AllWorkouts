@@ -62,6 +62,15 @@ fastlane/readme.md
 # Version control
 vcs.xml
 
+# IDE inspection output files
+AndroidLint*.xml
+.descriptions.xml
+.xml
+*.inspectionResults.xml
+**/*InspectionProfiles*
+**/*inspectionResults*
+_lint-backup/
+
 # lint
 lint/intermediates/
 lint/generated/

@@ -3,33 +3,34 @@ package com.allvens.allworkouts.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.base.BaseUIManager;
+import com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback;
 import com.allvens.allworkouts.log_manager.LogUIManager;
 import com.github.mikephil.charting.charts.LineChart;
 
+import java.io.File;
+
 /**
  * UI Manager for LogActivity
+ * Extends BaseUIManager to follow consistent UI management patterns
  * Handles all UI coordination, view binding, and dialog management
  * Works with the existing LogUIManager for specific UI updates
  */
-public class LogActivityUIManager {
+public class LogActivityUIManager extends BaseUIManager {
     
-    public interface LogUICallback {
+    public interface LogUICallback extends BaseUICallback {
         void onResetWorkout();
         void onEditMaxValue();
         void onEditType(int selectedType);
         void onWorkoutOperationResult(String message);
     }
     
-    private Context context;
-    private LogUICallback callback;
+    private LogUICallback logCallback;
     private LogUIManager logUIManager;
     
     // UI Elements
@@ -38,16 +39,24 @@ public class LogActivityUIManager {
     private TextView tvCurrentMax;
     private TextView tvType;
     private TextView tvWorkoutName;
+    private String chosenWorkout;
     
     public LogActivityUIManager(Context context, LogUICallback callback) {
-        this.context = context;
-        this.callback = callback;
+        super(context, callback);
+        this.logCallback = callback;
     }
     
     /**
      * Initialize all views and bind them to the UI manager
+     * Called from BaseUIManager.initialize() lifecycle
      */
     public void initializeViews(String chosenWorkout) {
+        this.chosenWorkout = chosenWorkout;
+        initialize(); // This calls the BaseUIManager lifecycle
+    }
+    
+    @Override
+    protected void initializeViews() {
         Activity activity = (Activity) context;
         
         // Find all UI elements
@@ -56,14 +65,36 @@ public class LogActivityUIManager {
         tvCurrentMax = activity.findViewById(R.id.tv_log_CurrentMaxContainer);
         tvType = activity.findViewById(R.id.tv_log_type);
         tvWorkoutName = activity.findViewById(R.id.tv_log_workout_name);
-        
+    }
+    
+    @Override
+    protected void setupViews() {
         // Set the workout name in the header
-        tvWorkoutName.setText(chosenWorkout + " Log");
+        if (chosenWorkout != null && tvWorkoutName != null) {
+            tvWorkoutName.setText(chosenWorkout + " Log");
+        }
         
         // Initialize the LogUIManager with the UI elements
-        logUIManager = new LogUIManager(context, chosenWorkout, 
-                                       rvShowAllWorkoutSets, lcShowWorkoutProgress, 
-                                       tvCurrentMax, tvType);
+        if (chosenWorkout != null) {
+            logUIManager = new LogUIManager(context, chosenWorkout, 
+                                           rvShowAllWorkoutSets, lcShowWorkoutProgress, 
+                                           tvCurrentMax, tvType);
+        }
+    }
+    
+    @Override
+    protected void setupListeners() {
+        // Listeners are handled through dialog methods and callbacks
+    }
+    
+    @Override
+    protected void cleanupViews() {
+        logUIManager = null;
+        rvShowAllWorkoutSets = null;
+        lcShowWorkoutProgress = null;
+        tvCurrentMax = null;
+        tvType = null;
+        tvWorkoutName = null;
     }
     
     /**
@@ -82,7 +113,7 @@ public class LogActivityUIManager {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        callback.onResetWorkout();
+                        logCallback.onResetWorkout();
                         showSuccessMessage("Workout Data Deleted");
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -109,7 +140,7 @@ public class LogActivityUIManager {
             public void onClick(DialogInterface dialog, int which) {
                 int type = 0;
                 if (which == DialogInterface.BUTTON_NEGATIVE) type = 1;
-                callback.onEditType(type);
+                logCallback.onEditType(type);
             }
         };
 
@@ -125,7 +156,7 @@ public class LogActivityUIManager {
      * Handle edit max value action
      */
     public void handleEditMaxValue() {
-        callback.onEditMaxValue();
+        logCallback.onEditMaxValue();
     }
     
     /**
@@ -135,47 +166,7 @@ public class LogActivityUIManager {
         showInfoMessage("First Start Workout");
     }
     
-    /**
-     * Show success message with proper dark theme styling
-     */
-    public void showSuccessMessage(String message) {
-        showDarkToast(message);
-    }
-    
-    /**
-     * Show info message with proper dark theme styling
-     */
-    public void showInfoMessage(String message) {
-        showDarkToast(message);
-    }
-    
-    /**
-     * Show error message with proper dark theme styling
-     */
-    public void showErrorMessage(String message) {
-        showDarkToast(message);
-    }
-    
-    /**
-     * Show toast message with proper dark theme styling
-     */
-    private void showDarkToast(String message) {
-        // Try to use Snackbar for better theming support
-        if (context instanceof Activity) {
-            View rootView = ((Activity) context).findViewById(android.R.id.content);
-            if (rootView != null) {
-                Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT);
-                // Style the snackbar with dark colors
-                snackbar.setActionTextColor(context.getResources().getColor(R.color.colorAccent));
-                View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(context.getResources().getColor(R.color.background_elevated));
-                snackbar.show();
-                return;
-            }
-        }
-        // Fallback to regular toast if snackbar fails
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
+    // Message display methods are inherited from BaseUIManager
     
     /**
      * Handle reset workout button click
@@ -200,9 +191,19 @@ public class LogActivityUIManager {
     
     /**
      * Update the UI after data changes
+     * Overrides BaseUIManager.updateViewState() for specific log UI updates
      */
-    public void refreshUI() {
+    @Override
+    public void updateViewState() {
         // This will be called by the controller when data changes
         // The actual UI updates will be handled by LogUIManager through the controller
+        super.updateViewState();
+    }
+    
+    /**
+     * Public method to refresh UI - delegates to base class refreshView()
+     */
+    public void refreshUI() {
+        refreshView();
     }
 }

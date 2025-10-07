@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
-import com.allvens.allworkouts.assets.DebuggingMethods;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.workout_session_manager.WorkoutMaximumManager;
 
@@ -25,8 +24,15 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
         TextView tv_max_MaxValue    = findViewById(R.id.tv_max_MaxValue);
         TextView tv_max_WorkoutName = findViewById(R.id.tv_max_WorkoutName);
         changeIndicator             = findViewById(R.id.tv_change_indicator);
-        String chosenWorkout        = getIntent().getExtras().getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
-        int type                    = getIntent().getExtras().getInt(Constants.WORKOUT_TYPE_KEY);
+        
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            finish(); // Close activity if no required data provided
+            return;
+        }
+        
+        String chosenWorkout        = extras.getString(Constants.CHOSEN_WORKOUT_EXTRA_KEY);
+        int type                    = extras.getInt(Constants.WORKOUT_TYPE_KEY);
         
         // Get session start workout from intent or fallback to SharedPreferences
         String sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
@@ -46,10 +52,16 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
     /****************************************
      /**** BUTTON ACTIONS
      ****************************************/
+    
+    public void onBackPressed(View view) {
+        super.onBackPressed();
+    }
 
     public void btnAction_max_CompleteMax(View view) {
         workoutMax_manager.update_WorkoutProgress();
-        workoutMax_manager.goTo_NewScreen(getIntent().getExtras().getBoolean(Constants.UPDATING_MAX_IN_SETTINGS));
+        Bundle extras = getIntent().getExtras();
+        boolean updatingMaxInSettings = extras != null && extras.getBoolean(Constants.UPDATING_MAX_IN_SETTINGS);
+        workoutMax_manager.goTo_NewScreen(updatingMaxInSettings);
     }
 
     public void btnAction_max_AddFive(View view) {

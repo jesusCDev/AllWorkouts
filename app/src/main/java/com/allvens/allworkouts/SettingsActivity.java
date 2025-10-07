@@ -29,9 +29,7 @@ public class SettingsActivity extends AppCompatActivity
         dataManager = new SettingsDataManager(this, this);
         
         // Setup UI
-        uiManager.initializeViews();
-        uiManager.setupViews();
-        uiManager.setupListeners();
+        uiManager.initialize(); // This calls initializeViews, setupViews, and setupListeners internally
         
         // Initialize data and backup status
         dataManager.initialize();
@@ -102,7 +100,6 @@ public class SettingsActivity extends AppCompatActivity
     }
     
     // SettingsDataCallback implementations
-    @Override
     public void onOperationSuccess(String message) {
         // Handle specific backup operations with additional UI flows
         if (message.startsWith("Backup created:")) {
@@ -115,7 +112,6 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
     
-    @Override
     public void onOperationError(String message) {
         uiManager.showErrorMessage(message);
     }
@@ -123,6 +119,41 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public void onBackupStatusChanged(File[] backupFiles) {
         uiManager.updateBackupStatus(backupFiles);
+    }
+    
+    // BaseUICallback implementations
+    @Override
+    public void onShowMessage(String message) {
+        uiManager.showInfoMessage(message);
+    }
+    
+    @Override
+    public void onShowError(String error) {
+        uiManager.showErrorMessage(error);
+    }
+    
+    @Override
+    public void onNavigationRequested(Intent intent, boolean finishCurrent) {
+        startActivity(intent);
+        if (finishCurrent) {
+            finish();
+        }
+    }
+    
+    // BaseDataCallback implementations
+    @Override
+    public void onDataLoaded() {
+        // Data loaded successfully - refresh UI if needed
+    }
+    
+    @Override
+    public void onDataUpdated() {
+        // Data updated successfully - refresh UI if needed
+    }
+    
+    @Override
+    public void onDataError(String error) {
+        onShowError(error);
     }
     
     /****************************************

@@ -17,20 +17,10 @@ public class SettingsAppInfoSelectorActivity extends AppCompatActivity{
     }
 
     public void btnAction_ShowDocumentation(View view){
-        String value;
-
-        switch (view.getId()){
-            case R.id.btn_settings_appInfo_selector_openSource:
-                value = Constants.OPEN_SOURCE;
-                break;
-
-            default:
-            case R.id.btn_settings_appInfo_selector_termsOfUse:
-                value = Constants.TERMS_OF_USE;
-                break;
-        }
-
         Intent intent = new Intent(this, SettingsAppInfoPresenterActivity.class);
+        String value  = view.getId() == R.id.btn_settings_appInfo_selector_openSource
+                ? Constants.OPEN_SOURCE
+                : Constants.TERMS_OF_USE;
 
         intent.putExtra(Constants.CHOSEN_DOCUMENTATION, value);
         startActivity(intent);

@@ -56,6 +56,7 @@
                 android:background="@drawable/bg_comic_art_frame"
                 android:padding="24dp"
                 android:scaleType="centerInside"
+                android:contentDescription="@string/workout_exercise_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -15,6 +15,9 @@
     <string name="mix_workouts">Different Versions Of This Workout</string>
 
     <string name="complete">Complete</string>
+    <string name="complete_session">✅ Complete Session</string>
+    <string name="back_arrow">←</string>
+    <string name="progress_format">%1$d of %2$d workouts completed</string>
     
     <!-- Accessibility strings -->
     <string name="change_workout">Change workout type</string>
@@ -22,6 +25,10 @@
     <string name="timer_display">Countdown timer</string>
     <string name="rep_count_display">Repetition count</string>
     <string name="complete_set_button">Complete current set</string>
+    <string name="workout_selector_arrow">Workout selector arrow</string>
+    <string name="workout_exercise_image">Current exercise illustration</string>
+    <string name="music_icon">Music note</string>
+    <string name="drag_handle">Drag to reorder</string>
     
     <!-- Media control strings -->
     <string name="media_controls">Media Controls</string>

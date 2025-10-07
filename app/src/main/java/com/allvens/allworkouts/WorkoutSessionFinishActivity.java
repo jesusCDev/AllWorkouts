@@ -1,8 +1,6 @@
 package com.allvens.allworkouts;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -125,7 +123,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         }
         
         // Use linear logic to determine the next workout
-        LinearWorkoutResult result = getNextWorkout(currentChoiceWorkout, enabledWorkouts, sessionStartWorkout);
+        LinearWorkoutResult result = getNextWorkout(currentChoiceWorkout, enabledWorkouts);
         
         if (result.hasNext) {
             // Show next workout button
@@ -159,10 +157,9 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
      * 
      * @param currentWorkout Current workout name
      * @param enabledWorkouts List of enabled workout names in order
-     * @param sessionStartWorkout The workout that started this session (not used in linear mode)
      * @return LinearWorkoutResult indicating if there's a next workout and what it is
      */
-    private LinearWorkoutResult getNextWorkout(String currentWorkout, java.util.List<String> enabledWorkouts, String sessionStartWorkout) {
+    private LinearWorkoutResult getNextWorkout(String currentWorkout, java.util.List<String> enabledWorkouts) {
         // Handle edge cases
         if (enabledWorkouts.isEmpty()) {
             return new LinearWorkoutResult(false, null);
@@ -270,7 +267,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         progressBar.setProgress(progressPercentage);
         
         // Update progress text
-        String progressTextString = currentPosition + " of " + totalWorkouts + " workouts completed";
+        String progressTextString = getString(R.string.progress_format, currentPosition, totalWorkouts);
         progressText.setText(progressTextString);
         
         // Debug logging
@@ -288,9 +285,11 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // Configure Done button as secondary action (stays in top-left)
         Button doneButton = findViewById(R.id.button2);
         if(doneButton != null) {
-            doneButton.setText("←");
+            doneButton.setText(getString(R.string.back_arrow));
             doneButton.setBackgroundResource(R.drawable.bg_button_secondary);
-            doneButton.setTextColor(this.getResources().getColor(R.color.selectedButton));
+            if (getResources() != null) {
+                doneButton.setTextColor(getResources().getColor(R.color.selectedButton));
+            }
             doneButton.setElevation(2f);
         }
     }
@@ -302,15 +301,17 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         nextChoiceWorkout = null;
         
         // Change the Next Workout button to Complete Session button
-        nextWorkoutButton.setText("✅ Complete Session");
+        nextWorkoutButton.setText(getString(R.string.complete_session));
         nextWorkoutButton.setVisibility(View.VISIBLE);
         
         // Keep the Done button (back arrow) as normal secondary action
         Button doneButton = findViewById(R.id.button2);
         if(doneButton != null) {
-            doneButton.setText("←");
+            doneButton.setText(getString(R.string.back_arrow));
             doneButton.setBackgroundResource(R.drawable.bg_button_secondary);
-            doneButton.setTextColor(this.getResources().getColor(R.color.selectedButton));
+            if (getResources() != null) {
+                doneButton.setTextColor(getResources().getColor(R.color.selectedButton));
+            }
             doneButton.setElevation(2f);
         }
     }
@@ -370,31 +371,34 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         setButtonStyle(currentButton, true);
         lastButtonSelected = currentButton;
 
-        switch((view).getId()){
-            case R.id.btn_workoutFinish_LevelHard:
-                updateWorkoutProgress(PROG_INC_HARD);
-                break;
-
-            case R.id.btn_workoutFinish_LevelNeutral:
-                updateWorkoutProgress(PROG_INC_NEUTRAL);
-                break;
-
-            case R.id.btn_workoutFinish_LevelEasy:
-                updateWorkoutProgress(PROG_INC_EASY);
-                break;
+        int viewId = view.getId();
+        if (viewId == R.id.btn_workoutFinish_LevelHard) {
+            updateWorkoutProgress(PROG_INC_HARD);
+        } else if (viewId == R.id.btn_workoutFinish_LevelNeutral) {
+            updateWorkoutProgress(PROG_INC_NEUTRAL);
+        } else if (viewId == R.id.btn_workoutFinish_LevelEasy) {
+            updateWorkoutProgress(PROG_INC_EASY);
         }
     }
     
     private void setButtonStyle(Button button, boolean isSelected) {
+        if (button == null) {
+            return;
+        }
+        
         if (isSelected) {
             // Selected state - primary style
             button.setBackgroundResource(R.drawable.bg_button_primary);
-            button.setTextColor(this.getResources().getColor(R.color.background_dark));
+            if (getResources() != null) {
+                button.setTextColor(getResources().getColor(R.color.background_dark));
+            }
             button.setElevation(8f);
         } else {
             // Unselected state - secondary style  
             button.setBackgroundResource(R.drawable.bg_button_secondary);
-            button.setTextColor(this.getResources().getColor(R.color.selectedButton));
+            if (getResources() != null) {
+                button.setTextColor(getResources().getColor(R.color.selectedButton));
+            }
             button.setElevation(2f);
         }
     }

@@ -120,6 +120,11 @@ public class LogActivity extends AppCompatActivity
     }
     
     @Override
+    public void onDataLoaded() {
+        // Data loaded successfully
+    }
+    
+    @Override
     public void onDataUpdated() {
         businessController.onDataUpdated();
     }
@@ -130,8 +135,27 @@ public class LogActivity extends AppCompatActivity
     }
     
     @Override
-    public void onNavigationRequested(Intent intent) {
+    public void onNavigationRequested(Intent intent, boolean finishCurrent) {
         startActivity(intent);
+        if (finishCurrent) {
+            finish();
+        }
+    }
+    
+    // Wrapper for backwards compatibility with LogDataCallback
+    public void onNavigationRequested(Intent intent) {
+        onNavigationRequested(intent, false);
+    }
+    
+    // Additional BaseUICallback interface methods
+    @Override
+    public void onShowMessage(String message) {
+        uiManager.showInfoMessage(message);
+    }
+    
+    @Override
+    public void onShowError(String error) {
+        uiManager.showErrorMessage(error);
     }
     
     // LogControllerCallback implementations

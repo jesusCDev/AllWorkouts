@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.allvens.allworkouts.MainActivity;
+import com.allvens.allworkouts.base.BaseDataManager;
+import com.allvens.allworkouts.base.BaseInterfaces;
 import com.allvens.allworkouts.data_manager.backup.BackupManager;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 
@@ -16,22 +18,33 @@ import java.io.File;
  * Handles all data-related operations including database operations,
  * backup/restore operations, and file system interactions
  */
-public class SettingsDataManager {
+public class SettingsDataManager extends BaseDataManager {
     
-    public interface SettingsDataCallback {
-        void onOperationSuccess(String message);
-        void onOperationError(String message);
+    public interface SettingsDataCallback extends BaseInterfaces.BaseDataCallback {
         void onBackupStatusChanged(File[] backupFiles);
     }
     
-    private Context context;
-    private SettingsDataCallback callback;
     private BackupManager backupManager;
     
     public SettingsDataManager(Context context, SettingsDataCallback callback) {
-        this.context = context;
-        this.callback = callback;
+        super(context, callback);
         this.backupManager = new BackupManager(context);
+    }
+    
+    @Override
+    protected void initializeDataSources() throws Exception {
+        // Data sources are initialized in constructor
+    }
+    
+    @Override
+    protected void loadInitialData() throws Exception {
+        // Initial data loading is handled in initialize() method
+    }
+    
+    @Override
+    protected void cleanupDataSources() throws Exception {
+        // No cleanup needed for this data manager
+        backupManager = null;
     }
     
     /**
@@ -39,14 +52,14 @@ public class SettingsDataManager {
      */
     public void resetToDefaults() {
         try {
-            WorkoutWrapper wrapper = new WorkoutWrapper(context);
+            WorkoutWrapper wrapper = new WorkoutWrapper(getContext());
             wrapper.open();
             wrapper.deleteAllWorkouts();
             wrapper.deleteAllHistoryWorkouts();
             wrapper.close();
-            callback.onOperationSuccess("Workout data reset to defaults");
+            notifyDataLoaded(); // Notify that data operation completed successfully
         } catch (Exception e) {
-            callback.onOperationError("Failed to reset data: " + e.getMessage());
+            notifyDataError("Failed to reset data: " + e.getMessage());
         }
     }
     
@@ -63,7 +76,7 @@ public class SettingsDataManager {
     public void setAutoBackupEnabled(boolean enabled) {
         backupManager.setAutoBackupEnabled(enabled);
         String message = enabled ? "Automatic backups enabled" : "Automatic backups disabled";
-        callback.onOperationSuccess(message);
+        notifyDataLoaded(); // Operation completed successfully
     }
     
     /**
@@ -79,10 +92,10 @@ public class SettingsDataManager {
     public void performBackupExport() {
         try {
             String fileName = backupManager.createBackup();
-            callback.onOperationSuccess("Backup created: " + fileName);
-            callback.onBackupStatusChanged(getExistingBackups());
+            notifyDataLoaded(); // Backup creation completed
+            notifyBackupStatusChanged(getExistingBackups());
         } catch (Exception e) {
-            callback.onOperationError("Failed to create backup: " + e.getMessage());
+            notifyDataError("Failed to create backup: " + e.getMessage());
         }
     }
     
@@ -93,13 +106,13 @@ public class SettingsDataManager {
         try {
             boolean success = backupManager.importBackup(backupFile.getAbsolutePath());
             if (success) {
-                callback.onOperationSuccess("Backup imported successfully");
-                callback.onBackupStatusChanged(getExistingBackups());
+                notifyDataLoaded(); // Import completed successfully
+                notifyBackupStatusChanged(getExistingBackups());
             } else {
-                callback.onOperationError("Failed to import backup");
+                notifyDataError("Failed to import backup");
             }
         } catch (Exception e) {
-            callback.onOperationError("Import failed: " + e.getMessage());
+            notifyDataError("Import failed: " + e.getMessage());
         }
     }
     
@@ -112,16 +125,16 @@ public class SettingsDataManager {
             Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             intent.setDataAndType(uri, "resource/folder");
             
-            if (intent.resolveActivityInfo(context.getPackageManager(), 0) != null) {
-                context.startActivity(intent);
+            if (intent.resolveActivityInfo(getContext().getPackageManager(), 0) != null) {
+                getContext().startActivity(intent);
             } else {
                 // Fallback - try to open with any file manager
                 Intent fallbackIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 fallbackIntent.setType("*/*");
-                context.startActivity(Intent.createChooser(fallbackIntent, "Open Downloads"));
+                getContext().startActivity(Intent.createChooser(fallbackIntent, "Open Downloads"));
             }
         } catch (Exception e) {
-            callback.onOperationError("Could not open Downloads folder");
+            notifyDataError("Could not open Downloads folder");
         }
     }
     
@@ -130,16 +143,16 @@ public class SettingsDataManager {
      */
     public void restartApp() {
         try {
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(getContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            context.startActivity(intent);
+            getContext().startActivity(intent);
             
             // If context is an Activity, finish it
-            if (context instanceof android.app.Activity) {
-                ((android.app.Activity) context).finish();
+            if (getContext() instanceof android.app.Activity) {
+                ((android.app.Activity) getContext()).finish();
             }
         } catch (Exception e) {
-            callback.onOperationError("Failed to restart app: " + e.getMessage());
+            notifyDataError("Failed to restart app: " + e.getMessage());
         }
     }
     
@@ -148,7 +161,16 @@ public class SettingsDataManager {
      */
     public void initialize() {
         // Initial backup status update
-        callback.onBackupStatusChanged(getExistingBackups());
+        notifyBackupStatusChanged(getExistingBackups());
+    }
+    
+    /**
+     * Notify callback of backup status changes
+     */
+    private void notifyBackupStatusChanged(File[] backupFiles) {
+        if (getCallback() instanceof SettingsDataCallback) {
+            ((SettingsDataCallback) getCallback()).onBackupStatusChanged(backupFiles);
+        }
     }
     
     /**

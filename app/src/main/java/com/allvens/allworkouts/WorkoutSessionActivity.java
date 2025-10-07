@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.base.BaseInterfaces;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.managers.WorkoutSessionController;
 import com.allvens.allworkouts.managers.WorkoutSessionDataManager;
@@ -18,7 +19,8 @@ import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 public class WorkoutSessionActivity extends AppCompatActivity
     implements WorkoutSessionActivityUIManager.WorkoutSessionUICallback,
                WorkoutSessionDataManager.WorkoutSessionDataCallback,
-               WorkoutSessionController.WorkoutSessionControllerCallback {
+               WorkoutSessionController.WorkoutSessionControllerCallback,
+               BaseInterfaces.BaseUICallback {
 
     // Managers
     private WorkoutSessionActivityUIManager uiManager;
@@ -124,17 +126,45 @@ public class WorkoutSessionActivity extends AppCompatActivity
         // Session has started successfully
     }
     
-    @Override
     public void onSessionError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
     
-    @Override
     public void onNavigationRequested(Intent intent, boolean finishCurrent) {
+        android.util.Log.d("WorkoutSession", "Activity.onNavigationRequested() called");
+        android.util.Log.d("WorkoutSession", "Intent target: " + intent.getComponent());
+        android.util.Log.d("WorkoutSession", "finishCurrent: " + finishCurrent);
         startActivity(intent);
+        android.util.Log.d("WorkoutSession", "startActivity() called");
         if (finishCurrent) {
             finish();
+            android.util.Log.d("WorkoutSession", "finish() called - activity should close");
         }
+    }
+    
+    // BaseDataCallback implementations
+    @Override
+    public void onDataLoaded() {
+        // Data loaded successfully
+    }
+    
+    @Override
+    public void onDataUpdated() {
+        // Data updated successfully
+    }
+    
+    @Override
+    public void onDataError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+    
+    // BaseUICallback implementations
+    public void onShowMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    
+    public void onShowError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
     
     // WorkoutSessionControllerCallback implementations
@@ -145,7 +175,9 @@ public class WorkoutSessionActivity extends AppCompatActivity
     
     @Override
     public void onSessionComplete() {
+        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() called");
         dataManager.handleSessionCompletion();
+        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() - handleSessionCompletion() called");
     }
     
     @Override

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.allvens.allworkouts.MainActivity;
 import com.allvens.allworkouts.WorkoutSessionFinishActivity;
 import com.allvens.allworkouts.assets.Constants;
+import com.allvens.allworkouts.base.BaseDataManager;
+import com.allvens.allworkouts.base.BaseInterfaces;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
@@ -18,24 +20,34 @@ import com.allvens.allworkouts.workout_session_manager.workouts.WorkoutGenerator
  * Handles workout data retrieval, session persistence, intent data handling,
  * and coordination with database operations
  */
-public class WorkoutSessionDataManager {
+public class WorkoutSessionDataManager extends BaseDataManager {
     
-    public interface WorkoutSessionDataCallback {
+    public interface WorkoutSessionDataCallback extends BaseInterfaces.BaseDataCallback {
         void onWorkoutDataLoaded(Workout workout, WorkoutInfo workoutInfo);
         void onSessionStarted(String workoutName);
-        void onSessionError(String error);
-        void onNavigationRequested(Intent intent, boolean finishCurrent);
     }
     
-    private Context context;
-    private WorkoutSessionDataCallback callback;
     private Workout workout;
     private WorkoutInfo workoutInfo;
     private String sessionStartWorkout;
     
     public WorkoutSessionDataManager(Context context, WorkoutSessionDataCallback callback) {
-        this.context = context;
-        this.callback = callback;
+        super(context, callback);
+    }
+    
+    @Override
+    protected void initializeDataSources() throws Exception {
+        // Data sources are managed per-session
+    }
+    
+    @Override
+    protected void loadInitialData() throws Exception {
+        // Data loading is handled in initializeSession
+    }
+    
+    @Override
+    protected void cleanupDataSources() throws Exception {
+        // Session cleanup is handled in cleanup() method
     }
     
     /**
@@ -49,19 +61,19 @@ public class WorkoutSessionDataManager {
             // Handle session start workout
             sessionStartWorkout = sessionStartWorkoutExtra;
             if (sessionStartWorkout == null) {
-                sessionStartWorkout = SessionUtils.getSessionStart(context);
+                sessionStartWorkout = SessionUtils.getSessionStart(getContext());
             }
             
             // Save to SharedPreferences as backup
             if (sessionStartWorkout != null) {
-                SessionUtils.saveSessionStart(context, sessionStartWorkout);
+                SessionUtils.saveSessionStart(getContext(), sessionStartWorkout);
             }
             
             // Load workout data from database
             loadWorkoutData(workoutChoice);
             
         } catch (Exception e) {
-            callback.onSessionError("Failed to initialize session: " + e.getMessage());
+            notifyDataError("Failed to initialize session: " + e.getMessage());
         }
     }
     
@@ -70,7 +82,7 @@ public class WorkoutSessionDataManager {
      */
     private void loadWorkoutData(String workoutChoice) {
         try {
-            WorkoutWrapper wrapper = new WorkoutWrapper(context);
+            WorkoutWrapper wrapper = new WorkoutWrapper(getContext());
             wrapper.open();
             
             WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(workoutChoice));
@@ -80,11 +92,11 @@ public class WorkoutSessionDataManager {
             wrapper.close();
             
             // Notify callback that data is loaded
-            callback.onWorkoutDataLoaded(workout, workoutInfo);
-            callback.onSessionStarted(workoutInfo.getWorkout());
+            notifyWorkoutDataLoaded(workout, workoutInfo);
+            notifySessionStarted(workoutInfo.getWorkout());
             
         } catch (Exception e) {
-            callback.onSessionError("Failed to load workout data: " + e.getMessage());
+            notifyDataError("Failed to load workout data: " + e.getMessage());
         }
     }
     
@@ -92,20 +104,31 @@ public class WorkoutSessionDataManager {
      * Handle session completion navigation
      */
     public void handleSessionCompletion() {
+        android.util.Log.d("WorkoutSession", "DataManager.handleSessionCompletion() called");
         try {
-            Intent intent = new Intent(context, WorkoutSessionFinishActivity.class);
+            Intent intent = new Intent(getContext(), WorkoutSessionFinishActivity.class);
             // Pass the workout name as string, not the Workout object
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, getWorkoutName());
+            android.util.Log.d("WorkoutSession", "Intent created for WorkoutSessionFinishActivity with workout: " + getWorkoutName());
             
             // Thread the session start workout to WorkoutSessionFinishActivity
             if (sessionStartWorkout != null) {
                 intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
+                android.util.Log.d("WorkoutSession", "Added session start workout to intent: " + sessionStartWorkout);
             }
             
-            callback.onNavigationRequested(intent, true);
+            // Use activity callback for navigation - cast to BaseUICallback
+            if (getCallback() instanceof com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) {
+                android.util.Log.d("WorkoutSession", "Calling onNavigationRequested to WorkoutSessionFinishActivity");
+                ((com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) getCallback()).onNavigationRequested(intent, true);
+                android.util.Log.d("WorkoutSession", "onNavigationRequested called successfully");
+            } else {
+                android.util.Log.e("WorkoutSession", "Callback is not an instance of BaseUICallback!");
+            }
             
         } catch (Exception e) {
-            callback.onSessionError("Failed to handle session completion: " + e.getMessage());
+            android.util.Log.e("WorkoutSession", "Exception in handleSessionCompletion: " + e.getMessage());
+            notifyDataError("Failed to handle session completion: " + e.getMessage());
         }
     }
     
@@ -114,11 +137,14 @@ public class WorkoutSessionDataManager {
      */
     public void handleSessionExit() {
         try {
-            Intent intent = new Intent(context, MainActivity.class);
-            callback.onNavigationRequested(intent, false);
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            // Use activity callback for navigation - cast to BaseUICallback
+            if (getCallback() instanceof com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) {
+                ((com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) getCallback()).onNavigationRequested(intent, false);
+            }
             
         } catch (Exception e) {
-            callback.onSessionError("Failed to handle session exit: " + e.getMessage());
+            notifyDataError("Failed to handle session exit: " + e.getMessage());
         }
     }
     
@@ -155,7 +181,25 @@ public class WorkoutSessionDataManager {
      */
     public void saveSessionState() {
         if (sessionStartWorkout != null) {
-            SessionUtils.saveSessionStart(context, sessionStartWorkout);
+            SessionUtils.saveSessionStart(getContext(), sessionStartWorkout);
+        }
+    }
+    
+    /**
+     * Notify callback of workout data loaded
+     */
+    private void notifyWorkoutDataLoaded(Workout workout, WorkoutInfo workoutInfo) {
+        if (getCallback() instanceof WorkoutSessionDataCallback) {
+            ((WorkoutSessionDataCallback) getCallback()).onWorkoutDataLoaded(workout, workoutInfo);
+        }
+    }
+    
+    /**
+     * Notify callback of session started
+     */
+    private void notifySessionStarted(String workoutName) {
+        if (getCallback() instanceof WorkoutSessionDataCallback) {
+            ((WorkoutSessionDataCallback) getCallback()).onSessionStarted(workoutName);
         }
     }
     

@@ -33,6 +33,7 @@
     <!-- Notification Colors -->
     <color name="notification_primary">#D2423A</color>  <!-- Crimson for light theme notifications -->
     <color name="notification_accent">#E85A52</color>   <!-- Brighter accent for notifications -->
+    <color name="primary_bright">#FF6B62</color>        <!-- Even brighter for notifications -->
     
     <!-- Outline & Stroke -->
     <color name="outline">#577C8DA3</color>             <!-- 34% alpha on dark -->
