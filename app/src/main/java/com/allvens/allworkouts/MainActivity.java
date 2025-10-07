@@ -40,9 +40,13 @@ public class MainActivity extends AppCompatActivity
         // Refresh workout data
         workoutManager.refreshAvailableWorkouts();
         
-        // Refresh calendar to show latest workout data
+        // Refresh calendar to show latest workout data with force refresh
         if (workoutCalendar != null) {
-            workoutCalendar.refreshCalendar();
+            workoutCalendar.forceRefresh();
+            // Additional post-delay refresh to ensure proper layout
+            workoutCalendar.postDelayed(() -> {
+                workoutCalendar.forceRefresh();
+            }, 100);
         }
     }
 

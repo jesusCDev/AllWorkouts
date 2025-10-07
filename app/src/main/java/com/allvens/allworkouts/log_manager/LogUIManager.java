@@ -63,13 +63,57 @@ public class LogUIManager {
         Collections.reverse(historyForWorkout);
 
         ArrayList<WorkoutHistoryInfo> list = new ArrayList<>();
-
         list.addAll(historyForWorkout);
 
+        // Set up layout manager with proper configuration
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setAutoMeasureEnabled(true);
+        rvShowAllWorkoutSets.setLayoutManager(layoutManager);
+        
+        // Configure RecyclerView for better performance and layout
+        rvShowAllWorkoutSets.setHasFixedSize(false);
+        rvShowAllWorkoutSets.setNestedScrollingEnabled(true);
+        
+        // Disable item animator to prevent layout issues
+        rvShowAllWorkoutSets.setItemAnimator(null);
+        
+        // Set adapter and force immediate layout
         SetListRecyclerViewAdapter adapter = new SetListRecyclerViewAdapter(context, list);
-
         rvShowAllWorkoutSets.setAdapter(adapter);
-        rvShowAllWorkoutSets.setLayoutManager(new LinearLayoutManager(context));
+        
+        // Multiple approaches to force proper layout and prevent squishing
+        // Approach 1: Immediate layout request
+        rvShowAllWorkoutSets.requestLayout();
+        
+        // Approach 2: Post-layout fixes
+        rvShowAllWorkoutSets.post(() -> {
+            if (rvShowAllWorkoutSets.getAdapter() != null && rvShowAllWorkoutSets.getAdapter().getItemCount() > 0) {
+                // Force proper measurement and layout
+                rvShowAllWorkoutSets.getLayoutManager().requestLayout();
+                rvShowAllWorkoutSets.requestLayout();
+                rvShowAllWorkoutSets.invalidate();
+                
+                // Scroll to top to trigger proper layout calculation
+                rvShowAllWorkoutSets.scrollToPosition(0);
+            }
+        });
+        
+        // Approach 3: Additional passes with delays to ensure proper rendering
+        rvShowAllWorkoutSets.postDelayed(() -> {
+            if (rvShowAllWorkoutSets.getAdapter() != null && rvShowAllWorkoutSets.getAdapter().getItemCount() > 0) {
+                rvShowAllWorkoutSets.getLayoutManager().requestLayout();
+                rvShowAllWorkoutSets.requestLayout();
+                // Force remeasure of first visible items
+                for (int i = 0; i < Math.min(3, rvShowAllWorkoutSets.getAdapter().getItemCount()); i++) {
+                    rvShowAllWorkoutSets.getLayoutManager().findViewByPosition(i);
+                }
+            }
+        }, 100);
+        
+        // Approach 4: Final safety net - force layout after a longer delay
+        rvShowAllWorkoutSets.postDelayed(() -> {
+            rvShowAllWorkoutSets.requestLayout();
+        }, 200);
     }
 
     public void reset_SetList(){

@@ -197,14 +197,13 @@
                 <!-- App Info Button -->
                 <Button
                     android:id="@+id/button3"
-                    style="@style/Widget.App.Button"
+                    style="@style/Widget.App.Button.Tonal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_1"
                     android:onClick="btnAction_ShowDocumentation"
                     android:text="App Info"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorAccent"
                     android:textStyle="bold" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -263,10 +262,15 @@
                             android:onClick="btnAction_SetNotificationTime"
                             android:text="2:04 am"
                             android:textColor="@color/on_primary"
-                            android:textSize="@dimen/text_size_title"
+                            android:textSize="@dimen/text_size_body_large"
                             android:textStyle="bold"
-                            android:background="@drawable/bg_button_primary"
-                            android:padding="@dimen/spacing_2" />
+                            android:background="@drawable/bg_button_primary_modern"
+                            android:minHeight="@dimen/touch_target_min"
+                            android:gravity="center"
+                            android:paddingStart="@dimen/spacing_3"
+                            android:paddingEnd="@dimen/spacing_3"
+                            android:paddingTop="@dimen/spacing_2"
+                            android:paddingBottom="@dimen/spacing_2" />
                     </LinearLayout>
 
                     <Switch
@@ -306,134 +310,134 @@
                         android:id="@+id/btn_settings_notificationDaySU"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="S"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDayM"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="M"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDayTU"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="T"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDayW"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="W"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDayTH"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="T"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDayF"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="F"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
 
                     <Button
                         android:id="@+id/btn_settings_notificationDaySA"
                         style="@style/Widget.App.Button.Secondary"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:layout_marginStart="1dp"
                         android:onClick="btnAction_setDayNotifications"
                         android:text="S"
-                        android:textSize="7sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="false"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

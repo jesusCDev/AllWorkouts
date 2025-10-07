@@ -1,19 +1,32 @@
 <resources>
-    <!-- Main App Theme using modern design principles -->
+    <!-- ════════════════════════════════════════════════════════════════════════ -->
+    <!-- MODERN MATERIAL DESIGN THEME                                                 -->
+    <!-- ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Modern App Theme with layered surfaces and lime accent -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Primary brand color -->
-        <item name="colorPrimary">@color/colorAccent</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Modern Color Palette -->
+        <item name="colorPrimary">@color/accent_primary</item>         <!-- Lime accent -->
+        <item name="colorPrimaryDark">@color/surface_850</item>        <!-- Elevated surface -->
+        <item name="colorAccent">@color/accent_primary</item>          <!-- Lime accent -->
+        <!-- Remove unsupported attributes for now - can be added with Material 3 theme later -->
+        <!-- <item name="colorSecondary">@color/accent_primary_60</item> -->
+        <!-- <item name="colorSurface">@color/surface_900</item> -->
         
-        <!-- Text colors -->
-        <item name="android:textColorPrimary">@color/selectedButton</item>
-        <item name="android:textColorSecondary">@color/unSelectedButton</item>
+        <!-- Text colors for dark theme -->
+        <item name="android:textColorPrimary">@color/text_primary</item>   <!-- White -->
+        <item name="android:textColorSecondary">@color/text_secondary</item> <!-- Gray -->
+        <item name="android:textColorTertiary">@color/text_tertiary</item>  <!-- Subtle -->
         
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/background_dark</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <!-- Window & system attributes -->
+        <item name="android:windowBackground">@color/surface_900</item>
+        <item name="android:statusBarColor">@color/surface_950</item>    <!-- Darkest surface -->
+        <item name="android:navigationBarColor">@color/surface_950</item>
+        
+        <!-- Modern Material attributes -->
+        <item name="colorControlNormal">@color/text_secondary</item>    <!-- Inactive controls -->
+        <item name="colorControlActivated">@color/accent_primary</item>  <!-- Active controls -->
+        <item name="colorControlHighlight">@color/ripple_primary</item>  <!-- Touch feedback -->
     </style>
 
     <style name="tv_WorkoutMax_Positive">
@@ -42,11 +55,63 @@
 
 
 
-    <!-- ─────────── TYPOGRAPHY HIERARCHY ─────────── -->
-    <!-- default body text for chips / small labels -->
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+    <!-- MODERN TYPOGRAPHY SCALE                                                   -->
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+    
+    <!-- Display Text (Hero titles, large numbers) -->
+    <style name="TextAppearance.App.Display">
+        <item name="android:fontFamily">@font/archivo_black</item>
+        <item name="android:textSize">@dimen/text_size_display</item>    <!-- 32sp -->
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Headline 1 (Main page titles) -->
+    <style name="TextAppearance.App.Headline1">
+        <item name="android:fontFamily">@font/archivo_black</item>
+        <item name="android:textSize">@dimen/text_size_headline_1</item> <!-- 28sp -->
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Headline 2 (Section headers) -->
+    <style name="TextAppearance.App.Headline2">
+        <item name="android:fontFamily">@font/archivo_black</item>
+        <item name="android:textSize">@dimen/text_size_headline_2</item> <!-- 24sp -->
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+    
+    <!-- Title (Card titles, important labels) -->
+    <style name="TextAppearance.App.Title">
+        <item name="android:textSize">@dimen/text_size_title</item>      <!-- 20sp -->
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <!-- Body Large (Prominent content) -->
+    <style name="TextAppearance.App.BodyLarge">
+        <item name="android:textSize">@dimen/text_size_body_large</item> <!-- 18sp -->
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Body (Standard content) -->
     <style name="TextAppearance.App.Body" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/selectedButton</item>
+        <item name="android:textSize">@dimen/text_size_body</item>       <!-- 16sp -->
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Caption (Small labels, metadata) -->
+    <style name="TextAppearance.App.Caption">
+        <item name="android:textSize">@dimen/text_size_caption</item>    <!-- 14sp -->
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- Small (Fine print, legal) -->
+    <style name="TextAppearance.App.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>      <!-- 12sp -->
+        <item name="android:textColor">@color/text_tertiary</item>
     </style>
 
 
@@ -73,63 +138,75 @@
     <!-- Global toolbar on dark theme -->
     <style name="Widget.App.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/background_dark</item>
-        <item name="android:titleTextColor">@color/selectedButton</item>
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
-    <!-- Generic text style for screen titles -->
-    <style name="TextAppearance.App.Headline">
-        <item name="android:fontFamily">@font/archivo_black</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/selectedButton</item>
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+    <!-- LEGACY COMPATIBILITY STYLES                                               -->
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+    
+    <!-- Legacy headline style - maps to modern Headline2 -->
+    <style name="TextAppearance.App.Headline" parent="TextAppearance.App.Headline2">
+        <!-- Inherits from modern Headline2 style -->
     </style>
 
-    <!-- Modern Material Design Buttons -->
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+    <!-- MODERN BUTTON STYLES                                                      -->
+    <!-- ────────────────────────────────────────────────────────────────────── -->
     
-    <!-- Default text button -->
-    <style name="Widget.App.Button" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textColor">@color/selectedButton</item>
+    <!-- Base Button Style -->
+    <style name="Widget.App.Button" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/archivo_black</item>
         <item name="android:letterSpacing">0.01</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:paddingStart">@dimen/spacing_3</item>
-        <item name="android:paddingEnd">@dimen/spacing_3</item>
-        <item name="android:paddingTop">@dimen/spacing_2</item>
-        <item name="android:paddingBottom">@dimen/spacing_2</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>      <!-- 48dp -->
+        <item name="android:paddingStart">@dimen/spacing_4</item>           <!-- 24dp -->
+        <item name="android:paddingEnd">@dimen/spacing_4</item>             <!-- 24dp -->
+        <item name="android:paddingTop">@dimen/spacing_2</item>             <!-- 8dp -->
+        <item name="android:paddingBottom">@dimen/spacing_2</item>          <!-- 8dp -->
         <item name="android:stateListAnimator">@null</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>
 
-    <!-- Primary CTA button with elevated appearance (Crimson) -->
+    <!-- Primary Button (Filled with lime accent) -->
     <style name="Widget.App.Button.Primary" parent="Widget.App.Button">
-        <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:textColor">@color/on_primary</item>
-        <item name="android:elevation">@dimen/elevation_button</item>
-        <item name="android:translationZ">0dp</item>
+        <item name="android:background">@drawable/bg_button_primary_modern</item>
+        <item name="android:textColor">@color/on_accent_primary</item>     <!-- Dark text on lime -->
+        <item name="android:elevation">@dimen/elevation_button</item>      <!-- 2dp -->
+        <item name="android:stateListAnimator">@animator/button_elevation</item>
     </style>
 
-    <!-- Large primary button for important actions -->
+    <!-- Large Primary Button (For important CTAs) -->
     <style name="Widget.App.Button.Primary.Large" parent="Widget.App.Button.Primary">
-        <item name="android:minHeight">56dp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:paddingTop">@dimen/spacing_3</item>
-        <item name="android:paddingBottom">@dimen/spacing_3</item>
-        <item name="android:elevation">@dimen/elevation_card</item>
+        <item name="android:minHeight">@dimen/touch_target_standard</item> <!-- 56dp -->
+        <item name="android:textSize">@dimen/text_size_body_large</item>   <!-- 18sp -->
+        <item name="android:paddingTop">@dimen/spacing_3</item>             <!-- 16dp -->
+        <item name="android:paddingBottom">@dimen/spacing_3</item>          <!-- 16dp -->
+        <item name="android:elevation">@dimen/elevation_card</item>         <!-- 4dp -->
     </style>
     
-    <!-- Secondary outline button (Teal) -->
-    <style name="Widget.App.Button.Secondary" parent="Widget.App.Button">
-        <item name="android:background">@drawable/bg_button_secondary_modern</item>
-        <item name="android:textColor">@color/secondary</item>
+    <!-- Tonal Button (Surface with accent text) -->
+    <style name="Widget.App.Button.Tonal" parent="Widget.App.Button">
+        <item name="android:background">@drawable/bg_button_tonal_modern</item>
+        <item name="android:textColor">@color/accent_primary</item>        <!-- Lime text -->
     </style>
     
-    <!-- Danger button for destructive actions -->
+    <!-- Secondary Button (Outline style, legacy compatibility) -->
+    <style name="Widget.App.Button.Secondary" parent="Widget.App.Button.Tonal">
+        <!-- Maps to tonal for modern look -->
+    </style>
+    
+    <!-- Tonal Button with proper disabled state -->
+    <style name="Widget.App.Button.Tonal.StateAware" parent="Widget.App.Button.Tonal">
+        <item name="android:textColor">@color/button_tonal_text_color</item>
+    </style>
+    
+    <!-- Danger Button (For destructive actions) -->
     <style name="Widget.App.Button.Danger" parent="Widget.App.Button">
-        <item name="android:background">@drawable/bg_button_danger</item>
-        <item name="android:textColor">@color/dangerButton</item>
+        <item name="android:background">@drawable/bg_button_danger_modern</item>
+        <item name="android:textColor">@color/text_primary</item>
     </style>
     
     <!-- Dark AlertDialog Theme -->
@@ -147,12 +224,22 @@
         <item name="android:textStyle">bold</item>
     </style>
     
+    <!-- Dark TimePickerDialog Theme -->
+    <style name="DarkTimePickerDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/background_elevated</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="colorAccent">@color/accent_primary</item>
+        <item name="colorPrimary">@color/accent_primary</item>
+        <item name="android:colorControlActivated">@color/accent_primary</item>
+        <item name="android:buttonBarButtonStyle">@style/DialogButtonStyle</item>
+    </style>
+    
     <!-- Icon-only buttons removed - no longer used -->
 
-    <!-- styles.xml -->
-    <style name="TextAppearance.App" parent="TextAppearance.AppCompat">
-        <!-- Default body text colour on dark -->
-        <item name="android:textColor">@color/selectedButton</item>
+    <!-- Legacy app text appearance - maps to modern Body -->
+    <style name="TextAppearance.App" parent="TextAppearance.App.Body">
+        <!-- Inherits from modern Body style -->
     </style>
 
 </resources>

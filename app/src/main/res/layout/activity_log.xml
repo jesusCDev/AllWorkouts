@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/spacing_3">
 
     <!-- Workout Header -->
@@ -214,18 +220,14 @@
     <android.support.v7.widget.CardView
         android:id="@+id/history_card"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="180dp"
         android:layout_marginTop="@dimen/spacing_3"
-        android:layout_marginBottom="@dimen/spacing_3"
-        android:minHeight="200dp"
         app:cardBackgroundColor="@color/background_elevated"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
         app:layout_constraintTop_toBottomOf="@id/settings_card"
-        app:layout_constraintBottom_toTopOf="@id/button12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -245,10 +247,14 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_log_ShowAllWorkoutSets"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="120dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="true"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical"
                 android:paddingTop="@dimen/spacing_1"
-                android:paddingBottom="@dimen/spacing_1" />
+                android:paddingBottom="@dimen/spacing_1"
+                android:layoutAnimation="@null" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -258,12 +264,16 @@
         style="@style/Widget.App.Button.Danger"
         android:layout_width="0dp"
         android:layout_height="@dimen/touch_target_large"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginBottom="@dimen/spacing_4"
         android:onClick="btnAction_ResetWorkoutToZero"
         android:text="Reset Workout"
         android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

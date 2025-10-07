@@ -157,8 +157,10 @@ public class LogBusinessController {
      * Handle data updated notification from data manager
      */
     public void onDataUpdated() {
-        refreshScreen();
-        callback.onUIUpdateRequested();
+        if (isInitialized) {
+            refreshScreen();
+            callback.onUIUpdateRequested();
+        }
     }
     
     /**
@@ -166,8 +168,10 @@ public class LogBusinessController {
      */
     public void onWorkoutLoaded(WorkoutInfo workout) {
         hasValidWorkout = true;
-        refreshScreen();
-        callback.onUIUpdateRequested();
+        if (isInitialized) {
+            refreshScreen();
+            callback.onUIUpdateRequested();
+        }
     }
     
     /**
@@ -175,8 +179,10 @@ public class LogBusinessController {
      */
     public void onWorkoutNotFound() {
         hasValidWorkout = false;
-        refreshScreen();
-        callback.onUIUpdateRequested();
+        if (isInitialized) {
+            refreshScreen();
+            callback.onUIUpdateRequested();
+        }
     }
     
     /**

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base frosted glass -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#E6000000" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+    
+    <!-- Noise texture simulation with multiple small gradients -->
+    <item android:left="1dp" android:top="1dp" android:right="20dp" android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#08FFFFFF" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+    
+    <item android:left="15dp" android:top="3dp" android:right="8dp" android:bottom="12dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0AFFFFFF" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+    
+    <item android:left="8dp" android:top="6dp" android:right="15dp" android:bottom="6dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#06FFFFFF" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+    
+    <!-- Very subtle overall highlight -->
+    <item android:top="0dp" android:bottom="20dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#08FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+</layer-list>

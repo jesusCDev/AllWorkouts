@@ -4,19 +4,34 @@
     <!-- MODERN COMIC-INSPIRED DESIGN SYSTEM                                -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
-    <!-- ─── DARK THEME (PRIMARY) ─────────────────────────────────────────── -->
+    <!-- ─── MODERN DESIGN SYSTEM (PRIMARY) ─────────────────────────────────── -->
     
-    <!-- Surface Colors -->
-    <color name="surface_ink">#0F1216</color>           <!-- Highest contrast -->
-    <color name="surface">#0B1118</color>               <!-- Main surface -->
-    <color name="surface_variant">#121A23</color>       <!-- Elevated surface -->
+    <!-- Surface Colors - Layered Dark Surfaces -->
+    <color name="surface_950">#0B0F12</color>           <!-- Deepest surface -->
+    <color name="surface_900">#12171C</color>           <!-- Main app surface -->
+    <color name="surface_850">#182028</color>           <!-- Elevated cards -->
+    <color name="surface_800">#1F2832</color>           <!-- Higher elevation -->
+    <color name="surface_ink">#0F1216</color>           <!-- Legacy - highest contrast -->
+    <color name="surface">#12171C</color>               <!-- Legacy - maps to surface_900 -->
+    <color name="surface_variant">#182028</color>       <!-- Legacy - maps to surface_850 -->
     
-    <!-- Primary (Crimson) -->
-    <color name="primary">#D2423A</color>               <!-- Crimson red -->
-    <color name="on_primary">#FFFFFF</color>            <!-- White on crimson -->
-    <color name="primary_container">#571C1A</color>     <!-- Dark crimson container -->
+    <!-- Primary Accent (Lime/Neon Green) -->
+    <color name="accent_primary">#D3FF3E</color>         <!-- Modern lime accent -->
+    <color name="accent_primary_60">#99D3FF3E</color>    <!-- 60% alpha -->
+    <color name="accent_primary_30">#4DD3FF3E</color>    <!-- 30% alpha for ripples -->
+    <color name="accent_primary_15">#26D3FF3E</color>    <!-- 15% alpha for heat cells -->
+    <color name="on_accent_primary">#2A2008</color>      <!-- Dark text on lime -->
     
-    <!-- Secondary (Teal) -->
+    <!-- Alternative Orange Accent (if needed) -->
+    <color name="accent_orange">#FF7A59</color>          <!-- Warm orange option -->
+    <color name="accent_orange_30">#4DFF7A59</color>     <!-- 30% alpha -->
+    
+    <!-- Legacy Compatibility -->
+    <color name="primary">#D3FF3E</color>               <!-- Maps to lime accent -->
+    <color name="on_primary">#2A2008</color>            <!-- Dark on lime -->
+    <color name="primary_container">#571C1A</color>     <!-- Keep for legacy -->
+    
+    <!-- Secondary (Teal - Keep for variety) -->
     <color name="secondary">#2F7C8A</color>             <!-- Teal blue -->
     <color name="on_secondary">#FFFFFF</color>          <!-- White on teal -->
     <color name="secondary_container">#103842</color>   <!-- Dark teal container -->
@@ -43,31 +58,49 @@
     <!-- (Light theme colors removed - unused in current app implementation) -->
     
     <!-- ─── LEGACY COMPATIBILITY ─────────────────────────────────────────── -->
-    <!-- Keep existing names for backward compatibility -->
+    <!-- Legacy Compatibility -->
+    <color name="colorPrimary">@color/accent_primary</color>     <!-- Maps to lime accent -->
+    <color name="colorPrimaryDark">@color/surface_850</color>    <!-- Maps to elevated surface -->
+    <color name="colorAccent">@color/accent_primary</color>      <!-- Maps to lime accent -->
     
-    <color name="colorPrimary">@color/primary</color>           <!-- Maps to new crimson -->
-    <color name="colorPrimaryDark">@color/surface_variant</color> <!-- Maps to elevated surface -->
-    <color name="colorAccent">@color/primary</color>            <!-- Maps to new crimson -->
-    
-    <color name="background_dark">@color/surface</color>        <!-- Maps to new surface -->
-    <color name="background_elevated">@color/surface_variant</color> <!-- Maps to elevated -->
+    <color name="background_dark">@color/surface_900</color>     <!-- Maps to main surface -->
+    <color name="background_elevated">@color/surface_850</color> <!-- Maps to elevated -->
     
     <!-- Text Colors -->
-    <color name="selectedButton">#FFFFFF</color>         <!-- Primary text -->
-    <color name="unSelectedButton">#8B93A3</color>       <!-- Secondary text -->
+    <color name="text_primary">#FFFFFF</color>           <!-- Primary text (white) -->
+    <color name="text_secondary">#8B93A3</color>         <!-- Secondary text (gray) -->
+    <color name="text_tertiary">#64FFFFFF</color>        <!-- 40% white -->
+    <!-- Legacy text compatibility -->
+    <color name="selectedButton">@color/text_primary</color>   <!-- Maps to white -->
+    <color name="unSelectedButton">@color/text_secondary</color> <!-- Maps to gray -->
     
-    <!-- Legacy Button Colors -->
-    <color name="importantButton">@color/primary</color> <!-- Maps to crimson -->
-    <color name="dangerButton">@color/error</color>     <!-- Maps to error red -->
+    <!-- Modern Button Colors -->
+    <color name="button_primary">@color/accent_primary</color>   <!-- Lime accent -->
+    <color name="button_tonal">@color/surface_800</color>       <!-- Elevated surface -->
+    <color name="button_danger">@color/error</color>            <!-- Error red -->
+    <!-- Legacy button compatibility -->
+    <color name="importantButton">@color/button_primary</color> <!-- Maps to lime -->
+    <color name="dangerButton">@color/button_danger</color>    <!-- Maps to error red -->
     
     <!-- Legacy Objects -->
     <color name="objects">#46566E</color>               <!-- Keep for gradual migration -->
     <color name="focusAccent">@color/secondary</color>  <!-- Maps to teal -->
     
-    <!-- Translucent Colors -->
-    <color name="colorAccentLess">#57D2423A</color>      <!-- 34% crimson for ripples -->
-    <color name="primary_ripple">#57D2423A</color>       <!-- Crimson ripple -->
-    <color name="secondary_ripple">#572F7C8A</color>     <!-- Teal ripple -->
-    <color name="tertiary_ripple">#57E9B84A</color>      <!-- Gold ripple -->
+    <!-- Modern Ripple Colors -->
+    <color name="ripple_primary">@color/accent_primary_30</color>  <!-- 30% lime ripple -->
+    <color name="ripple_secondary">#4D2F7C8A</color>              <!-- 30% teal ripple -->
+    <color name="ripple_surface">#33FFFFFF</color>                <!-- 20% white ripple -->
+    <!-- Legacy ripple compatibility -->
+    <color name="colorAccentLess">@color/ripple_primary</color>   <!-- Maps to lime ripple -->
+    <color name="primary_ripple">@color/ripple_primary</color>    <!-- Lime ripple -->
+    <color name="secondary_ripple">@color/ripple_secondary</color> <!-- Teal ripple -->
+    <color name="tertiary_ripple">#4DE9B84A</color>               <!-- Gold ripple -->
+    
+    <!-- Heat-map Intensity Colors -->
+    <color name="heat_empty">@color/surface_800</color>          <!-- No workout -->
+    <color name="heat_low">@color/accent_primary_15</color>      <!-- 15% intensity -->
+    <color name="heat_medium">@color/accent_primary_30</color>    <!-- 30% intensity -->
+    <color name="heat_high">@color/accent_primary_60</color>     <!-- 60% intensity -->
+    <color name="heat_max">@color/accent_primary</color>         <!-- 100% intensity -->
 
 </resources>

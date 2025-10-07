@@ -1,34 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- MODERN DESIGN SYSTEM DIMENSIONS                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-    <dimen name="spacing_1">4dp</dimen>
-    <dimen name="spacing_2">8dp</dimen>
-    <dimen name="spacing_3">16dp</dimen>
-    <dimen name="spacing_4">24dp</dimen>
-    <dimen name="spacing_5">48dp</dimen>
-
-    <!-- Modern spacing scale -->
-    <dimen name="spacing_half">2dp</dimen>
+    <!-- 8-Point Spacing Grid -->
+    <dimen name="spacing_half">2dp</dimen>      <!-- Micro adjustments -->
+    <dimen name="spacing_1">4dp</dimen>        <!-- Tight spacing -->
+    <dimen name="spacing_2">8dp</dimen>        <!-- Small spacing -->
+    <dimen name="spacing_3">16dp</dimen>       <!-- Standard spacing -->
+    <dimen name="spacing_4">24dp</dimen>       <!-- Large spacing -->
+    <dimen name="spacing_5">32dp</dimen>       <!-- XL spacing -->
+    <dimen name="spacing_6">48dp</dimen>       <!-- XXL spacing -->
     
-    <!-- Corner radius for modern cards and buttons -->
-    <dimen name="corner_radius">12dp</dimen>           <!-- Standard cards -->
-    <dimen name="corner_radius_large">16dp</dimen>     <!-- Workout image frames -->
+    <!-- Modern Corner Radius Scale -->
+    <dimen name="corner_radius_small">8dp</dimen>      <!-- Heat cells, chips -->
+    <dimen name="corner_radius">12dp</dimen>           <!-- Standard buttons -->
+    <dimen name="corner_radius_large">16dp</dimen>     <!-- Cards, panels -->
+    <dimen name="corner_radius_xl">20dp</dimen>        <!-- Large cards -->
     
-    <!-- Comic-inspired stroke widths -->
-    <dimen name="stroke_width_standard">2dp</dimen>    <!-- Card borders, button outlines -->
+    <!-- Heat-map Grid Dimensions -->
+    <dimen name="heat_cell_size">32dp</dimen>          <!-- Calendar heat cells -->
+    <dimen name="heat_cell_gap">8dp</dimen>            <!-- Gap between cells -->
+    <dimen name="heat_cell_radius">@dimen/corner_radius_small</dimen> <!-- 8dp -->
     
-    <!-- Modern elevation scale -->
-    <dimen name="elevation_card">4dp</dimen>
-    <dimen name="elevation_button">2dp</dimen>
+    <!-- Stroke & Border Widths -->
+    <dimen name="stroke_thin">1dp</dimen>              <!-- Subtle borders -->
+    <dimen name="stroke_standard">2dp</dimen>          <!-- Standard borders -->
+    <dimen name="stroke_thick">3dp</dimen>             <!-- Emphasis borders -->
     
-    <!-- Touch target sizes -->
-    <dimen name="touch_target_min">48dp</dimen>
-    <dimen name="touch_target_large">56dp</dimen>
+    <!-- Modern Elevation Scale -->
+    <dimen name="elevation_none">0dp</dimen>           <!-- Flat elements -->
+    <dimen name="elevation_button">2dp</dimen>         <!-- Interactive elements -->
+    <dimen name="elevation_card">4dp</dimen>           <!-- Content cards -->
+    <dimen name="elevation_dialog">8dp</dimen>         <!-- Dialogs, menus -->
+    <dimen name="elevation_fab">12dp</dimen>           <!-- FABs, important CTAs -->
     
-    <!-- Typography scale -->
-    <dimen name="text_size_headline">24sp</dimen>
-    <dimen name="text_size_title">20sp</dimen>
-    <dimen name="text_size_body">16sp</dimen>
-    <dimen name="text_size_caption">14sp</dimen>
+    <!-- Touch Target Sizes (Accessibility) -->
+    <dimen name="touch_target_min">48dp</dimen>        <!-- Minimum for a11y -->
+    <dimen name="touch_target_standard">56dp</dimen>   <!-- Comfortable size -->
+    <dimen name="touch_target_large">64dp</dimen>      <!-- Primary actions -->
+    
+    <!-- Modern Typography Scale -->
+    <dimen name="text_size_display">32sp</dimen>       <!-- Hero titles -->
+    <dimen name="text_size_headline_1">28sp</dimen>    <!-- Main headings -->
+    <dimen name="text_size_headline_2">24sp</dimen>    <!-- Section headings -->
+    <dimen name="text_size_title">20sp</dimen>         <!-- Card titles -->
+    <dimen name="text_size_body_large">18sp</dimen>    <!-- Prominent body -->
+    <dimen name="text_size_body">16sp</dimen>          <!-- Standard body -->
+    <dimen name="text_size_caption">14sp</dimen>       <!-- Small labels -->
+    <dimen name="text_size_small">12sp</dimen>         <!-- Fine print -->
+    
+    <!-- Legacy Compatibility -->
+    <dimen name="text_size_headline">@dimen/text_size_headline_2</dimen> <!-- 24sp -->
 
 </resources>

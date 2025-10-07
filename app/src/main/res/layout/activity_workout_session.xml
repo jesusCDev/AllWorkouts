@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/surface_900"
     android:fitsSystemWindows="true"
     tools:context=".WorkoutSessionActivity">
 
@@ -25,112 +26,94 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Push Ups Session" />
 
-    <!-- Hero card with comic panel design -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_workout"
+    <!-- Full-screen workout image background covering entire screen -->
+    <ImageView
+        android:id="@+id/iv_workout_workoutImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/spacing_3"
-        android:layout_marginEnd="@dimen/spacing_3"
-        android:layout_marginTop="@dimen/spacing_3"
-        android:layout_marginBottom="@dimen/spacing_3"
-        app:cardBackgroundColor="@color/background_elevated"
-        app:cardCornerRadius="@dimen/corner_radius_large"
-        app:cardElevation="@dimen/elevation_card"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/workout_exercise_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+        
+    <!-- Subtle overlay for text readability covering entire screen -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_modern_overlay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Rep numbers floating over image -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_workout_WorkoutName"
         app:layout_constraintBottom_toTopOf="@id/bottomBlock">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/c_workoutSession_TimerRepsWorkoutHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <com.iambedant.text.OutlineTextView
+            android:id="@+id/tv_workout_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="200sp"
+            android:fontFamily="@font/archivo_black"
+            android:alpha="1.0"
+            app:outlineColor="#000000"
+            app:outlineWidth="4.0"
+            android:shadowColor="#80000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="12"
+            android:importantForAccessibility="yes"
+            android:contentDescription="@string/timer_display"
+            tools:text="30" />
 
-            <!-- Enhanced workout image with comic frame -->
-            <ImageView
-                android:id="@+id/iv_workout_workoutImage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@drawable/bg_comic_art_frame"
-                android:padding="24dp"
-                android:scaleType="centerInside"
-                android:contentDescription="@string/workout_exercise_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        <com.iambedant.text.OutlineTextView
+            android:id="@+id/tv_workout_repNumber_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="180sp"
+            android:fontFamily="@font/archivo_black"
+            android:alpha="1.0"
+            app:outlineColor="#000000"
+            app:outlineWidth="5.0"
+            android:shadowColor="#90000000"
+            android:shadowDx="0"
+            android:shadowDy="6"
+            android:shadowRadius="16"
+            android:importantForAccessibility="yes"
+            android:contentDescription="@string/rep_count_display"
+            tools:text="15" />
 
-            <!-- Centered text overlay for rep numbers and timer -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+        <com.iambedant.text.OutlineTextView
+            android:id="@+id/otv_workout_repNumber_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/transparent"
+            android:textSize="160sp"
+            app:outlineColor="@color/accent_primary"
+            app:outlineWidth="3.0"
+            android:fontFamily="@font/archivo_black"
+            android:alpha="0.4"
+            android:shadowColor="#70000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:importantForAccessibility="no"
+            tools:text="15" />
+    </LinearLayout>
 
-                <com.iambedant.text.OutlineTextView
-                    android:id="@+id/tv_workout_timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:textSize="180sp"
-                    android:fontFamily="@font/archivo_black"
-                    android:alpha="1.0"
-                    app:outlineColor="@android:color/white"
-                    app:outlineWidth="4.0"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="6"
-                    android:shadowRadius="12"
-                    android:importantForAccessibility="yes"
-                    android:contentDescription="@string/timer_display"
-                    tools:text="30" />
-
-                <com.iambedant.text.OutlineTextView
-                    android:id="@+id/tv_workout_repNumber_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:textSize="160sp"
-                    android:fontFamily="@font/archivo_black"
-                    android:alpha="0.7"
-                    app:outlineColor="@android:color/white"
-                    app:outlineWidth="4.0"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="6"
-                    android:shadowRadius="12"
-                    android:importantForAccessibility="yes"
-                    android:contentDescription="@string/rep_count_display"
-                    tools:text="15" />
-
-                <com.iambedant.text.OutlineTextView
-                    android:id="@+id/otv_workout_repNumber_front"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/transparent"
-                    android:textSize="160sp"
-                    app:outlineColor="@color/primary_ripple"
-                    app:outlineWidth="3.0"
-                    android:fontFamily="@font/archivo_black"
-                    android:alpha="0.8"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="6"
-                    android:shadowRadius="12"
-                    android:importantForAccessibility="no"
-                    tools:text="15" />
-            </LinearLayout>
-            
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <!-- ─── Bottom stats + big CTA ─────────────────────────────────────── -->
+    <!-- ─── Bottom stats + big CTA (transparent) ─────────────────────────────────────── -->
     <LinearLayout
         android:id="@+id/bottomBlock"
         android:layout_width="0dp"
@@ -142,8 +125,7 @@
         android:paddingBottom="@dimen/spacing_4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_workout">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <!-- ─── Media Controls (when enabled) ────────────────────────────── -->
         <include 
@@ -171,11 +153,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bg_chip"
+                android:background="@drawable/bg_chip_solid"
                 android:padding="@dimen/spacing_2"
                 android:minHeight="@dimen/touch_target_min"
                 android:gravity="center"
-                android:textColor="@color/selectedButton"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 tools:text="15" />
 
@@ -186,11 +168,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_2"
-                android:background="@drawable/bg_chip"
+                android:background="@drawable/bg_chip_solid"
                 android:padding="@dimen/spacing_2"
                 android:minHeight="@dimen/touch_target_min"
                 android:gravity="center"
-                android:textColor="@color/selectedButton"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 tools:text="12" />
 
@@ -201,11 +183,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_2"
-                android:background="@drawable/bg_chip"
+                android:background="@drawable/bg_chip_solid"
                 android:padding="@dimen/spacing_2"
                 android:minHeight="@dimen/touch_target_min"
                 android:gravity="center"
-                android:textColor="@color/selectedButton"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 tools:text="10" />
 
@@ -216,11 +198,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_2"
-                android:background="@drawable/bg_chip"
+                android:background="@drawable/bg_chip_solid"
                 android:padding="@dimen/spacing_2"
                 android:minHeight="@dimen/touch_target_min"
                 android:gravity="center"
-                android:textColor="@color/selectedButton"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 tools:text="8" />
 
@@ -231,22 +213,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_2"
-                android:background="@drawable/bg_chip"
+                android:background="@drawable/bg_chip_solid"
                 android:padding="@dimen/spacing_2"
                 android:minHeight="@dimen/touch_target_min"
                 android:gravity="center"
-                android:textColor="@color/selectedButton"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 tools:text="5" />
         </LinearLayout>
 
-        <!-- Jumbo COMPLETE button - taller for easier post-workout clicking -->
+        <!-- Jumbo COMPLETE button with glassmorphism -->
         <Button
             android:id="@+id/btn_workout_CompleteTask"
-            style="@style/Widget.App.Button.Primary.Large"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:background="@drawable/bg_card_solid"
             android:textSize="@dimen/text_size_title"
+            android:textColor="@color/on_accent_primary"
+            android:textStyle="bold"
             android:text="@string/complete"
             android:onClick="btnActionChangeActivities"
             android:contentDescription="@string/complete_set_button"

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base dark background for contrast -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_900" />
+            <corners android:radius="@dimen/corner_radius_large" />
+        </shape>
+    </item>
+    
+    <!-- Subtle texture overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="45"
+                android:startColor="#08FFFFFF"
+                android:centerColor="#15FFFFFF"
+                android:endColor="#08FFFFFF"
+                android:type="linear" />
+            <corners android:radius="@dimen/corner_radius_large" />
+        </shape>
+    </item>
+    
+    <!-- Glass highlight on top edge -->
+    <item android:top="0dp" android:bottom="200dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#20FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners 
+                android:topLeftRadius="@dimen/corner_radius_large"
+                android:topRightRadius="@dimen/corner_radius_large"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+        </shape>
+    </item>
+    
+    <!-- Inner border for premium look -->
+    <item 
+        android:left="2dp" 
+        android:right="2dp" 
+        android:top="2dp" 
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <stroke 
+                android:width="1dp" 
+                android:color="#30FFFFFF" />
+            <corners android:radius="@dimen/corner_radius_large" />
+        </shape>
+    </item>
+</layer-list>

@@ -41,12 +41,21 @@ public class LogActivity extends AppCompatActivity
         dataManager = new LogDataManager(this, this);
         businessController = new LogBusinessController(this, this);
         
-        // Setup UI
+        // Setup UI first
         uiManager.initializeViews(chosenWorkout);
         
-        // Initialize data and business logic
+        // Initialize data manager
         dataManager.initialize(chosenWorkout);
-        businessController.initialize(dataManager, uiManager.getLogUIManager());
+        
+        // Initialize business controller after UI is fully set up
+        // Check if LogUIManager is available before proceeding
+        if (uiManager.getLogUIManager() != null) {
+            businessController.initialize(dataManager, uiManager.getLogUIManager());
+        } else {
+            // Handle error - LogUIManager not available
+            uiManager.showErrorMessage("Failed to initialize logs interface");
+            finish();
+        }
     }
 
     @Override

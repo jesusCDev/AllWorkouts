@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 23+ specific attributes -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Modern Color Palette -->
+        <item name="colorPrimary">@color/accent_primary</item>         <!-- Lime accent -->
+        <item name="colorPrimaryDark">@color/surface_850</item>        <!-- Elevated surface -->
+        <item name="colorAccent">@color/accent_primary</item>          <!-- Lime accent -->
+        
+        <!-- Text colors for dark theme -->
+        <item name="android:textColorPrimary">@color/text_primary</item>   <!-- White -->
+        <item name="android:textColorSecondary">@color/text_secondary</item> <!-- Gray -->
+        <item name="android:textColorTertiary">@color/text_tertiary</item>  <!-- Subtle -->
+        
+        <!-- Window & system attributes -->
+        <item name="android:windowBackground">@color/surface_900</item>
+        <item name="android:statusBarColor">@color/surface_950</item>    <!-- Darkest surface -->
+        <item name="android:navigationBarColor">@color/surface_950</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Modern Material attributes -->
+        <item name="colorControlNormal">@color/text_secondary</item>    <!-- Inactive controls -->
+        <item name="colorControlActivated">@color/accent_primary</item>  <!-- Active controls -->
+        <item name="colorControlHighlight">@color/ripple_primary</item>  <!-- Touch feedback -->
+    </style>
+    
+    <!-- Global toolbar with API 23+ attributes -->
+    <style name="Widget.App.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/background_dark</item>
+        <item name="android:titleTextColor">@color/selectedButton</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+</resources>

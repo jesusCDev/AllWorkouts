@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_primary">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+            <corners android:radius="@dimen/heat_cell_radius" />
+        </shape>
+    </item>
+    <item>
+        <selector>
+            <!-- Selected state -->
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke 
+                        android:width="@dimen/stroke_standard" 
+                        android:color="@color/accent_primary" />
+                    <corners android:radius="@dimen/heat_cell_radius" />
+                </shape>
+            </item>
+            <!-- Today state outline -->
+            <item android:state_activated="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke 
+                        android:width="@dimen/stroke_standard" 
+                        android:color="@color/text_primary" />
+                    <corners android:radius="@dimen/heat_cell_radius" />
+                </shape>
+            </item>
+            <!-- Default transparent background -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <corners android:radius="@dimen/heat_cell_radius" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>

@@ -56,7 +56,8 @@ public class WorkoutSessionActivityUIManager {
         
         // Main UI elements
         tvWorkoutName = activity.findViewById(R.id.tv_workout_WorkoutName);
-        cTimerRepsWorkoutHolder = activity.findViewById(R.id.c_workoutSession_TimerRepsWorkoutHolder);
+        // cTimerRepsWorkoutHolder no longer exists in simplified layout
+        cTimerRepsWorkoutHolder = null;
         ivWorkoutImageHolder = activity.findViewById(R.id.iv_workout_workoutImage);
         tvTimerHolder = activity.findViewById(R.id.tv_workout_timer);
         tvFront = activity.findViewById(R.id.otv_workout_repNumber_front);

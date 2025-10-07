@@ -257,7 +257,7 @@ public class SettingsManager {
 
         TimePickerDialog mTimePicker;
 
-        mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+        mTimePicker = new TimePickerDialog(context, R.style.DarkTimePickerDialog, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 ui_manager.updateTimeStamp(((TextView)view), selectedHour, selectedMinute);

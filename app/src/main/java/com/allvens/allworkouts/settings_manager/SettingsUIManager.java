@@ -90,14 +90,14 @@ public class SettingsUIManager {
 
     public void updateDailyNotificationBtnStyle(Button btn, boolean notiOnDay) {
         if(notiOnDay){
-            // Selected state: white text on accent background
-            btn.setTextColor(ContextCompat.getColor(context, R.color.on_primary));
-            btn.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+            // Selected state: dark text on lime accent background
+            btn.setTextColor(ContextCompat.getColor(context, R.color.on_accent_primary));
+            btn.setBackgroundColor(ContextCompat.getColor(context, R.color.accent_primary));
             btn.setTypeface(btn.getTypeface(), android.graphics.Typeface.BOLD);
         }
         else {
-            // Unselected state: white text on transparent background
-            btn.setTextColor(ContextCompat.getColor(context, R.color.on_primary));
+            // Disabled state: white text on transparent background
+            btn.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
             btn.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
             btn.setTypeface(btn.getTypeface(), android.graphics.Typeface.NORMAL);
         }

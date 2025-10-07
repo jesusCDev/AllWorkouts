@@ -84,7 +84,7 @@ public class MainActivityUIManager {
             openWorkoutChooser(availableWorkouts);
         }
         
-        chooserIsOpen = !chooserIsOpen;
+        // Note: chooserIsOpen state is updated within open/close methods to prevent race conditions
     }
     
     /**
@@ -92,6 +92,12 @@ public class MainActivityUIManager {
      */
     public void closeWorkoutChooser() {
         if (!chooserIsOpen) return;
+        
+        // Update state immediately to prevent multiple simultaneous animations
+        chooserIsOpen = false;
+        
+        // Cancel any existing animations
+        workoutChooser.animate().cancel();
         
         // Update arrow to collapsed state
         workoutSelectorArrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
@@ -105,8 +111,6 @@ public class MainActivityUIManager {
                 workoutChooser.removeAllViews();
             })
             .start();
-            
-        chooserIsOpen = false;
     }
     
     /**
@@ -126,21 +130,27 @@ public class MainActivityUIManager {
     }
     
     private void openWorkoutChooser(String[] workouts) {
+        if (chooserIsOpen) return; // Prevent multiple simultaneous openings
+        
+        // Update state immediately
+        chooserIsOpen = true;
+        
+        // Cancel any existing animations
+        workoutChooser.animate().cancel();
+        
+        // Clear any existing workout buttons first
+        workoutChooser.removeAllViews();
+        
         // Update arrow to expanded state
         workoutSelectorArrow.setImageResource(R.drawable.ic_expand_more_black_24dp);
         
-        // Show chooser with animation
-        workoutChooser.setVisibility(View.VISIBLE);
-        workoutChooser.setAlpha(0f);
-        workoutChooser.animate()
-            .alpha(1f)
-            .setDuration(200)
-            .start();
-        
-        // Create buttons for each workout
+        // Create buttons for each workout before showing
         for (String workoutName : workouts) {
             Button button = createWorkoutButton(workoutName);
             button.setOnClickListener(v -> {
+                // Disable button to prevent double clicks
+                v.setEnabled(false);
+                
                 // Notify listener of workout selection
                 if (eventListener != null) {
                     eventListener.onWorkoutSelected(workoutName);
@@ -157,6 +167,14 @@ public class MainActivityUIManager {
             
             workoutChooser.addView(button);
         }
+        
+        // Show chooser with animation
+        workoutChooser.setVisibility(View.VISIBLE);
+        workoutChooser.setAlpha(0f);
+        workoutChooser.animate()
+            .alpha(1f)
+            .setDuration(200)
+            .start();
     }
     
     private Button createWorkoutButton(String name) {

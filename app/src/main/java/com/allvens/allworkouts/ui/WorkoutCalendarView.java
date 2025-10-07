@@ -28,13 +28,13 @@ public class WorkoutCalendarView extends View {
     
     private static final String TAG = "WorkoutCalendarView";
     
-    // Colors for different workout intensities
-    private int colorBackground;
-    private int colorNoWorkout;
-    private int colorOneWorkout;
-    private int colorAllWorkouts; 
+    // Modern heat-map intensity colors
+    private int[] heatColors = new int[5]; // [empty, low, medium, high, max]
+    private int colorAccent;
     private int colorTextPrimary;
     private int colorTextSecondary;
+    private int colorTodayStroke;
+    private int colorSelectedStroke;
     
     // Calendar data
     private Calendar calendar;
@@ -45,21 +45,26 @@ public class WorkoutCalendarView extends View {
     private int currentStreak = 0;
     private int maxStreak = 0;
     private int todayDay = -1;
+    private int selectedDay = -1; // For interactive selection
     
     // Drawing objects
     private Paint textPaint;
-    private Paint dayBackgroundPaint;
+    private Paint cellPaint;
     private Paint headerPaint;
     private Paint monthHeaderPaint;
-    private Paint todayOutlinePaint;
-    private Paint streakLinePaint;
+    private Paint strokePaint;
     
-    // Dimensions
-    private int cellWidth;
-    private int cellHeight;
+    // Modern grid dimensions
+    private float cellSize; // Heat cells are square
+    private float cellGap;
+    private float cellRadius;
     private int headerHeight;
     private int monthHeaderHeight;
     private Rect textBounds = new Rect();
+    
+    // Grid positioning
+    private float gridStartX;
+    private float gridStartY;
     
     // Calendar grid
     private static final String[] DAYS = {"S", "M", "T", "W", "T", "F", "S"};
@@ -81,27 +86,39 @@ public class WorkoutCalendarView extends View {
     }
     
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        // Load colors from resources (modern color system)
-        colorBackground = context.getResources().getColor(R.color.surface_variant);
-        colorNoWorkout = context.getResources().getColor(R.color.objects); // Gray (keeping existing)
-        colorOneWorkout = context.getResources().getColor(R.color.secondary); // Teal for partial workouts
-        colorAllWorkouts = context.getResources().getColor(R.color.primary); // Crimson for full workouts
-        colorTextPrimary = context.getResources().getColor(R.color.selectedButton);
-        colorTextSecondary = context.getResources().getColor(R.color.unSelectedButton);
+        // Load modern heat-map colors from design tokens
+        heatColors[0] = context.getResources().getColor(R.color.heat_empty);   // No workout
+        heatColors[1] = context.getResources().getColor(R.color.heat_low);     // 15% intensity
+        heatColors[2] = context.getResources().getColor(R.color.heat_medium);  // 30% intensity
+        heatColors[3] = context.getResources().getColor(R.color.heat_high);    // 60% intensity
+        heatColors[4] = context.getResources().getColor(R.color.heat_max);     // 100% intensity
+        
+        colorAccent = context.getResources().getColor(R.color.accent_primary);
+        colorTextPrimary = context.getResources().getColor(R.color.text_primary);
+        colorTextSecondary = context.getResources().getColor(R.color.text_secondary);
+        colorTodayStroke = context.getResources().getColor(R.color.text_primary);
+        colorSelectedStroke = context.getResources().getColor(R.color.accent_primary);
+        
+        // Load modern dimensions
+        cellSize = context.getResources().getDimensionPixelSize(R.dimen.heat_cell_size);
+        cellGap = context.getResources().getDimensionPixelSize(R.dimen.heat_cell_gap);
+        cellRadius = context.getResources().getDimensionPixelSize(R.dimen.heat_cell_radius);
         
         // Initialize calendar
         calendar = Calendar.getInstance();
         workoutCounts = new HashMap<>();
         updateCalendarData();
         
-        // Initialize paints
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // Initialize modern paints
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         textPaint.setColor(colorTextPrimary);
-        textPaint.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_caption)); // Back to readable size
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        textPaint.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.text_size_caption)); // 14sp for better readability
+        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setHinting(Paint.HINTING_ON);
+        textPaint.setFilterBitmap(true);
         
-        dayBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        cellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         
         headerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         headerPaint.setColor(colorTextSecondary);
@@ -115,19 +132,25 @@ public class WorkoutCalendarView extends View {
         monthHeaderPaint.setTypeface(Typeface.DEFAULT_BOLD);
         monthHeaderPaint.setTextAlign(Paint.Align.CENTER);
         
-        todayOutlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        todayOutlinePaint.setColor(colorTextPrimary);
-        todayOutlinePaint.setStyle(Paint.Style.STROKE);
-        todayOutlinePaint.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.spacing_1) + 1); // Thicker stroke
-        
-        streakLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        streakLinePaint.setColor(colorAllWorkouts);
-        streakLinePaint.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.spacing_1) + 1); // Slightly thicker
-        streakLinePaint.setStrokeCap(Paint.Cap.ROUND);
-        streakLinePaint.setAlpha(200); // Slightly transparent for subtlety
+        strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.stroke_standard));
         
         // Load workout data
         loadWorkoutData();
+    }
+    
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        if (visibility == VISIBLE) {
+            // Refresh calendar when view becomes visible
+            post(() -> {
+                updateCalendarData();
+                requestLayout();
+                invalidate();
+            });
+        }
     }
     
     private void updateCalendarData() {
@@ -148,11 +171,14 @@ public class WorkoutCalendarView extends View {
         // Calculate how many weeks we actually need for this month
         int totalCells = firstDayOfWeek + daysInMonth;
         weeksToShow = (int) Math.ceil(totalCells / 7.0);
-        // Minimum 5 weeks to avoid layout jumps
-        weeksToShow = Math.max(5, weeksToShow);
+        // Ensure we have enough weeks - no artificial minimum that could cut off dates
+        // Some months need 6 weeks (e.g., 31-day months starting on Friday/Saturday)
         
         Log.d(TAG, "Month: " + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
-        Log.d(TAG, "Days in month: " + daysInMonth + ", First day: " + firstDayOfWeek + ", Today: " + todayDay + ", Weeks: " + weeksToShow);
+        Log.d(TAG, "Days in month: " + daysInMonth + ", First day: " + firstDayOfWeek + ", Total cells: " + totalCells + ", Calculated weeks: " + weeksToShow + ", Today: " + todayDay);
+        
+        // Debug calendar layout to ensure all dates fit
+        debugCalendarLayout();
     }
     
     private void loadWorkoutData() {
@@ -268,33 +294,42 @@ public class WorkoutCalendarView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         
-        // Calculate cell dimensions - reasonably compact
-        cellWidth = w / 7; // 7 days per week
-        monthHeaderHeight = getResources().getDimensionPixelSize(R.dimen.spacing_5); // Proper spacing
-        headerHeight = getResources().getDimensionPixelSize(R.dimen.spacing_3); // Reasonable spacing
+        // Ensure calendar data is up-to-date for proper weeks calculation
+        updateCalendarData();
         
-        // Make cells with consistent spacing between rows and columns
-        int extraSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3);
-        int availableHeight = h - monthHeaderHeight - headerHeight - extraSpacing;
+        // Calculate header heights with more generous spacing
+        monthHeaderHeight = getResources().getDimensionPixelSize(R.dimen.spacing_5); // 32dp
+        headerHeight = getResources().getDimensionPixelSize(R.dimen.spacing_4); // 24dp
         
-        // Add row spacing to match column spacing
-        // Column spacing is natural from cellWidth division, so we need more space
-        int rowSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3); // Increase to match visual column spacing
-        int bottomPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // Explicit bottom padding
-        int totalRowSpacing = rowSpacing * weeksToShow + bottomPadding; // Space before each week + explicit bottom padding
+        // More generous padding around the calendar
+        int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // 16dp padding from edges
+        gridStartX = horizontalPadding;
+        float availableWidth = w - (horizontalPadding * 2);
         
-        // Calculate cell height accounting for row spacing and bottom padding
-        int availableForCells = availableHeight - totalRowSpacing;
-        cellHeight = availableForCells / weeksToShow;
+        // Calculate cell size dynamically to fill width
+        cellGap = getResources().getDimensionPixelSize(R.dimen.heat_cell_gap);
+        float totalGapWidth = cellGap * 6; // 6 gaps between 7 cells
+        cellSize = (availableWidth - totalGapWidth) / 7; // 7 cells
         
-        Log.d(TAG, "Size changed: " + w + "x" + h + ", cell: " + cellWidth + "x" + cellHeight);
+        // More generous spacing between header and calendar grid
+        int spacingBetweenHeaderAndGrid = getResources().getDimensionPixelSize(R.dimen.spacing_4); // 24dp
+        gridStartY = monthHeaderHeight + headerHeight + spacingBetweenHeaderAndGrid;
+        
+        Log.d(TAG, "Dynamic grid: " + w + "x" + h + ", cell: " + cellSize + ", gap: " + cellGap + ", start: (" + gridStartX + ", " + gridStartY + ")");
     }
     
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         
-        if (cellWidth <= 0 || cellHeight <= 0) return;
+        if (gridStartX <= 0 || gridStartY <= 0) return;
+        
+        // Save canvas state before any transformations
+        canvas.save();
+        
+        // Add top padding for visual breathing room
+        int topVisualPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // 16dp top padding
+        canvas.translate(0, topVisualPadding);
         
         // Draw month/year header
         drawMonthHeader(canvas);
@@ -302,8 +337,11 @@ public class WorkoutCalendarView extends View {
         // Draw day headers (S M T W T F S)
         drawDayHeaders(canvas);
         
-        // Draw calendar grid
-        drawCalendarGrid(canvas);
+        // Draw modern heat-map grid
+        drawHeatMapGrid(canvas);
+        
+        // Restore canvas state
+        canvas.restore();
     }
     
     private void drawMonthHeader(Canvas canvas) {
@@ -312,61 +350,61 @@ public class WorkoutCalendarView extends View {
         
         String monthText = monthNames[calendar.get(Calendar.MONTH)] + " " + calendar.get(Calendar.YEAR);
         
-        // Draw month/year in center
-        int centerX = getWidth() / 2;
+        // Calculate positioning with proper spacing
         int centerY = monthHeaderHeight / 2;
-        
         monthHeaderPaint.getTextBounds(monthText, 0, monthText.length(), textBounds);
-        int textY = centerY + (textBounds.height() / 2);
+        int monthTextY = centerY + (textBounds.height() / 2);
         
-        canvas.drawText(monthText, centerX, textY, monthHeaderPaint);
+        // Draw subtle glow effect behind text for modern look
+        monthHeaderPaint.setShadowLayer(6, 0, 2, 0x40FFFFFF);
         
-        // Draw streak info on the right if we have streaks
+        // Always center the month text properly
+        int centerX = getWidth() / 2;
+        canvas.drawText(monthText, centerX, monthTextY, monthHeaderPaint);
+        
+        // Clear shadow for other text
+        monthHeaderPaint.clearShadowLayer();
+        
+        // Draw streak info on the right side if available with modern glow
         if (maxStreak > 0 && todayDay > 0) {
             String streakText = "🔥 " + maxStreak;
-            
-            // Position streak text on the right side
+            headerPaint.setColor(colorAccent);
+            headerPaint.setShadowLayer(4, 0, 1, 0x80D3FF3E); // Subtle lime glow
             headerPaint.getTextBounds(streakText, 0, streakText.length(), textBounds);
-            int streakX = getWidth() - textBounds.width() - getResources().getDimensionPixelSize(R.dimen.spacing_2);
+            
+            int streakX = getWidth() - textBounds.width() - getResources().getDimensionPixelSize(R.dimen.spacing_3);
             int streakY = centerY + (textBounds.height() / 2);
             
-            // Use accent color for streak
-            headerPaint.setColor(colorAllWorkouts);
             canvas.drawText(streakText, streakX, streakY, headerPaint);
-            // Reset color
-            headerPaint.setColor(colorTextSecondary);
+            headerPaint.clearShadowLayer();
+            headerPaint.setColor(colorTextSecondary); // Reset color
         }
     }
     
     private void drawDayHeaders(Canvas canvas) {
-        // Add more spacing between month and day headers
-        int y = monthHeaderHeight + getResources().getDimensionPixelSize(R.dimen.spacing_3) + (headerHeight / 2);
+        float y = monthHeaderHeight + (headerHeight / 2f);
         
         for (int i = 0; i < 7; i++) {
-            int x = (i * cellWidth) + (cellWidth / 2);
+            float x = gridStartX + (i * (cellSize + cellGap)) + (cellSize / 2f);
             
             headerPaint.getTextBounds(DAYS[i], 0, DAYS[i].length(), textBounds);
-            int textY = y + (textBounds.height() / 2);
+            float textY = y + (textBounds.height() / 2f);
             
             canvas.drawText(DAYS[i], x, textY, headerPaint);
         }
     }
     
-    private void drawCalendarGrid(Canvas canvas) {
+    /**
+     * Draw the modern heat-map grid with square cells and intensity colors
+     */
+    private void drawHeatMapGrid(Canvas canvas) {
         int currentDay = 1;
-        int extraSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3);
-        int rowSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3);
         
-        // First pass: Draw all streak lines in the background
-        currentDay = 1;
         for (int week = 0; week < weeksToShow; week++) {
-            // Add row spacing before ALL weeks (including first week)
-            int rowY = monthHeaderHeight + headerHeight + extraSpacing + rowSpacing + (week * cellHeight) + (week * rowSpacing);
-            
             for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                int colX = dayOfWeek * cellWidth;
                 int dayToShow = -1;
                 
+                // Calculate which day to show in this cell
                 if (week == 0) {
                     if (dayOfWeek >= firstDayOfWeek && currentDay <= daysInMonth) {
                         dayToShow = currentDay++;
@@ -378,130 +416,84 @@ public class WorkoutCalendarView extends View {
                 }
                 
                 if (dayToShow > 0) {
-                    drawStreakLinesForDay(canvas, colX, rowY, cellWidth, cellHeight, dayToShow, dayOfWeek);
-                }
-            }
-        }
-        
-        // Second pass: Draw day cells on top
-        currentDay = 1;
-        for (int week = 0; week < weeksToShow; week++) {
-            // Add row spacing before ALL weeks (including first week)
-            int rowY = monthHeaderHeight + headerHeight + extraSpacing + rowSpacing + (week * cellHeight) + (week * rowSpacing);
-            
-            for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                int colX = dayOfWeek * cellWidth;
-                int dayToShow = -1;
-                
-                if (week == 0) {
-                    if (dayOfWeek >= firstDayOfWeek && currentDay <= daysInMonth) {
-                        dayToShow = currentDay++;
-                    }
-                } else {
-                    if (currentDay <= daysInMonth) {
-                        dayToShow = currentDay++;
-                    }
-                }
-                
-                if (dayToShow > 0) {
-                    drawDayCell(canvas, colX, rowY, cellWidth, cellHeight, dayToShow, dayOfWeek);
+                    drawHeatCell(canvas, dayOfWeek, week, dayToShow);
                 }
             }
         }
     }
     
-    private void drawStreakLinesForDay(Canvas canvas, int x, int y, int width, int height, int day, int dayOfWeek) {
-        // Get workout count for this day
+    /**
+     * Draw a single heat-map cell with modern design and visual effects
+     */
+    private void drawHeatCell(Canvas canvas, int dayOfWeek, int week, int day) {
+        // Calculate cell position
+        float cellX = gridStartX + (dayOfWeek * (cellSize + cellGap));
+        float cellY = gridStartY + (week * (cellSize + cellGap));
+        
+        // Get workout intensity for this day
         Integer workoutCount = workoutCounts.get(day);
         int count = (workoutCount != null) ? workoutCount : 0;
+        int intensityLevel = getIntensityLevel(count);
         
-        // Draw streak line to next day if both days have workouts and not at end of week
-        if (count > 0 && day < daysInMonth && dayOfWeek < 6) {
-            Integer nextCount = workoutCounts.get(day + 1);
-            if (nextCount != null && nextCount > 0) {
-                // Calculate centers and radius (matching the circle drawing logic)
-                int centerX = x + width / 2;
-                int centerY = y + height / 2;
-                int nextCellX = x + width;
-                int nextCenterX = nextCellX + (width / 2);
-                
-                // Use consistent radius (same as circles)
-                int basePadding = getResources().getDimensionPixelSize(R.dimen.spacing_1);
-                int radius = Math.min(width, height) / 3 + basePadding;
-                
-                drawStreakLine(canvas, centerX, centerY, nextCenterX, centerY, radius);
-            }
+        // Draw subtle shadow for depth (modern effect)
+        if (intensityLevel > 0) {
+            cellPaint.setColor(0x20000000); // Subtle shadow
+            canvas.drawRoundRect(cellX + 2, cellY + 2, cellX + cellSize + 2, cellY + cellSize + 2, cellRadius, cellRadius, cellPaint);
         }
-    }
-    
-    private void drawDayCell(Canvas canvas, int x, int y, int width, int height, int day, int dayOfWeek) {
-        // Get workout count for this day
-        Integer workoutCount = workoutCounts.get(day);
-        int count = (workoutCount != null) ? workoutCount : 0;
         
-        // Calculate positions - consistent sized circles for all days
-        int centerX = x + width / 2;
-        int centerY = y + height / 2;
+        // Draw the heat cell background with modern colors
+        cellPaint.setColor(heatColors[intensityLevel]);
+        canvas.drawRoundRect(cellX, cellY, cellX + cellSize, cellY + cellSize, cellRadius, cellRadius, cellPaint);
         
-        // Use consistent radius with enough padding for double-digit numbers
+        // Draw today's outline (ring)
+        if (day == todayDay) {
+            strokePaint.setColor(colorTodayStroke);
+            canvas.drawRoundRect(cellX - 1, cellY - 1, cellX + cellSize + 1, cellY + cellSize + 1, cellRadius, cellRadius, strokePaint);
+        }
+        
+        // Draw selected outline (if interactive selection is implemented)
+        if (day == selectedDay) {
+            strokePaint.setColor(colorSelectedStroke);
+            canvas.drawRoundRect(cellX - 2, cellY - 2, cellX + cellSize + 2, cellY + cellSize + 2, cellRadius, cellRadius, strokePaint);
+        }
+        
+        // Draw day number
         String dayText = String.valueOf(day);
-        int basePadding = getResources().getDimensionPixelSize(R.dimen.spacing_1);
-        int radius = Math.min(width, height) / 3 + basePadding; // Same size for all circles
-        
-        // Draw background circle based on workout activity
-        int backgroundColor = getBackgroundColorForWorkoutCount(count);
-        
-        // For today, draw a larger background circle first to block any streak lines
-        if (day == todayDay) {
-            int outlineRadius = radius + getResources().getDimensionPixelSize(R.dimen.spacing_1);
-            
-            // Draw background circle to block streak lines
-            dayBackgroundPaint.setColor(colorBackground); // Use card background color
-            canvas.drawCircle(centerX, centerY, outlineRadius + 2, dayBackgroundPaint);
-        }
-        
-        // Draw the main workout circle
-        dayBackgroundPaint.setColor(backgroundColor);
-        canvas.drawCircle(centerX, centerY, radius, dayBackgroundPaint);
-        
-        // Draw today's outline
-        if (day == todayDay) {
-            int outlineRadius = radius + getResources().getDimensionPixelSize(R.dimen.spacing_1);
-            canvas.drawCircle(centerX, centerY, outlineRadius, todayOutlinePaint);
-        }
-        
-        // Draw day number (dayText already declared above)
         textPaint.getTextBounds(dayText, 0, dayText.length(), textBounds);
-        int textY = centerY + (textBounds.height() / 2);
         
-        // Adjust text color based on background and today status
-        if (day == todayDay) {
-            textPaint.setColor(colorTextPrimary); // Always white for today
+        float textX = cellX + (cellSize / 2f);
+        float textY = cellY + (cellSize / 2f) + (textBounds.height() / 2f);
+        
+        // Use optimal contrast text color based on intensity
+        if (intensityLevel == 0) {
+            textPaint.setColor(colorTextSecondary); // Gray text on empty cells
+        } else if (intensityLevel >= 4) { // Max intensity (100% lime)
+            textPaint.setColor(getResources().getColor(R.color.on_accent_primary)); // Dark text on bright lime
+        } else if (intensityLevel >= 3) { // High intensity
+            textPaint.setColor(colorTextPrimary); // White text on medium lime
         } else {
-            textPaint.setColor(count > 0 ? colorTextPrimary : colorTextSecondary);
+            textPaint.setColor(colorTextPrimary); // White text on low intensity
         }
         
-        canvas.drawText(dayText, centerX, textY, textPaint);
+        canvas.drawText(dayText, textX, textY, textPaint);
     }
     
-    private void drawStreakLine(Canvas canvas, int startCenterX, int startCenterY, int endCenterX, int endCenterY, int radius) {
-        // Draw line from edge of current circle to edge of next circle
-        int lineStartX = startCenterX + radius;
-        int lineEndX = endCenterX - radius;
-        
-        // Only draw if the line makes sense (has positive length)
-        if (lineEndX > lineStartX) {
-            canvas.drawLine(lineStartX, startCenterY, lineEndX, endCenterY, streakLinePaint);
-        }
-    }
-    
-    private int getBackgroundColorForWorkoutCount(int count) {
+    /**
+     * Map workout count to intensity level for heat-map colors
+     * @param count Number of workouts completed (0-4)
+     * @return Intensity level index (0-4) for heatColors array
+     */
+    private int getIntensityLevel(int count) {
         if (count == 0) {
-            return colorNoWorkout;
-        } else if (count >= totalWorkoutTypes) {
-            return colorAllWorkouts; // Did all workout types
+            return 0; // Empty - gray
+        } else if (count == 1) {
+            return 1; // Low - 15% lime
+        } else if (count == 2) {
+            return 2; // Medium - 30% lime
+        } else if (count == 3) {
+            return 3; // High - 60% lime
         } else {
-            return colorOneWorkout; // Did some workouts
+            return 4; // Max - 100% lime (all workouts)
         }
     }
     
@@ -514,33 +506,121 @@ public class WorkoutCalendarView extends View {
         invalidate(); // Trigger redraw
     }
     
+    /**
+     * Force immediate calendar refresh (for debugging)
+     */
+    public void forceRefresh() {
+        updateCalendarData();
+        loadWorkoutData();
+        requestLayout();
+        invalidate();
+    }
+    
+    /**
+     * Set the calendar to show a specific month/year
+     * @param calendar Calendar instance set to desired month/year
+     */
+    public void setMonth(Calendar calendar) {
+        this.calendar = (Calendar) calendar.clone();
+        updateCalendarData();
+        loadWorkoutData();
+        invalidate();
+    }
+    
+    /**
+     * Set selected day for interactive highlighting (future feature)
+     * @param day Day of month to select (1-31) or -1 to clear selection
+     */
+    public void setSelectedDay(int day) {
+        this.selectedDay = day;
+        invalidate();
+    }
+    
+    /**
+     * Test method to verify all dates are properly calculated and positioned
+     * This helps debug if any dates are being cut off
+     */
+    public void debugCalendarLayout() {
+        int currentDay = 1;
+        Log.d(TAG, "=== Calendar Layout Debug ===");
+        Log.d(TAG, "WeeksToShow: " + weeksToShow + ", DaysInMonth: " + daysInMonth + ", FirstDayOfWeek: " + firstDayOfWeek);
+        
+        for (int week = 0; week < weeksToShow; week++) {
+            StringBuilder weekStr = new StringBuilder("Week " + week + ": ");
+            for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                int dayToShow = -1;
+                
+                if (week == 0) {
+                    if (dayOfWeek >= firstDayOfWeek && currentDay <= daysInMonth) {
+                        dayToShow = currentDay++;
+                    }
+                } else {
+                    if (currentDay <= daysInMonth) {
+                        dayToShow = currentDay++;
+                    }
+                }
+                
+                if (dayToShow > 0) {
+                    weekStr.append(dayToShow).append(" ");
+                } else {
+                    weekStr.append("- ");
+                }
+            }
+            Log.d(TAG, weekStr.toString());
+        }
+        
+        if (currentDay <= daysInMonth) {
+            Log.w(TAG, "WARNING: Days " + currentDay + " to " + daysInMonth + " were not positioned! Need more weeks.");
+        } else {
+            Log.d(TAG, "SUCCESS: All " + daysInMonth + " days positioned correctly.");
+        }
+    }
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         
-        int monthHeaderSize = getResources().getDimensionPixelSize(R.dimen.spacing_4);
-        int dayHeaderSize = getResources().getDimensionPixelSize(R.dimen.spacing_3);
-        int extraSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3);
+        // Ensure we have enough weeks calculated and up-to-date cell size
+        updateCalendarData();
+        
+        // Recalculate cell dimensions based on current width
+        int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // 16dp padding from edges
+        float availableWidth = width - (horizontalPadding * 2);
+        cellGap = getResources().getDimensionPixelSize(R.dimen.heat_cell_gap);
+        float totalGapWidth = cellGap * 6; // 6 gaps between 7 cells
+        cellSize = (availableWidth - totalGapWidth) / 7; // 7 cells
+        
+        // Calculate required height to show all content properly
+        float totalGridHeight = (cellSize * weeksToShow) + (cellGap * (weeksToShow - 1));
+        int headerSpace = monthHeaderHeight + headerHeight;
+        int spacingBetweenHeaderAndGrid = getResources().getDimensionPixelSize(R.dimen.spacing_4); // Match gridStartY calculation
+        int topPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // Top padding within calendar view
+        int bottomPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3); // Bottom padding within calendar view
+        
+        int requiredHeight = (int) (totalGridHeight + headerSpace + spacingBetweenHeaderAndGrid + topPadding + bottomPadding);
         
         int height;
         if (heightMode == MeasureSpec.EXACTLY) {
-            // Use all available space when constrained to fill parent
+            // Use specified height but warn if it's not adequate
             height = heightSize;
+            if (heightSize < requiredHeight) {
+                Log.w(TAG, "Calendar height constrained to " + heightSize + "dp, but requires " + requiredHeight + "dp. Dates may be cut off.");
+            }
         } else {
-            // Calculate based on compact cells when wrap_content
-            int cellSize = (width / 7) * 2 / 3; // Make cells 2/3 aspect ratio (wider than tall)
-            int rowSpacing = getResources().getDimensionPixelSize(R.dimen.spacing_3);
-            int bottomPadding = getResources().getDimensionPixelSize(R.dimen.spacing_3);
-            int totalRowSpacing = rowSpacing * weeksToShow + bottomPadding; // Space before each week + explicit bottom padding
-            height = (cellSize * weeksToShow) + monthHeaderSize + dayHeaderSize + extraSpacing + totalRowSpacing;
+            // Use calculated height
+            height = requiredHeight;
             
             if (heightMode == MeasureSpec.AT_MOST) {
                 height = Math.min(height, heightSize);
+                if (height < requiredHeight) {
+                    Log.w(TAG, "Calendar height limited to " + height + "dp, but requires " + requiredHeight + "dp. Dates may be cut off.");
+                }
             }
         }
         
+        Log.d(TAG, "Calendar measure: " + width + "x" + height + " (required: " + requiredHeight + ", weeks: " + weeksToShow + ", cellSize: " + cellSize + ")");
         setMeasuredDimension(width, height);
     }
 }
