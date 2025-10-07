@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class Helper {
 
-    private Context context;
+    private final Context context;
 
     public Helper(Context context){
         this.context = context;

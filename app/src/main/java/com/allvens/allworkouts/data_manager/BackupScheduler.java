@@ -26,9 +26,9 @@ public class BackupScheduler {
     public static final long FREQUENCY_DAILY = 24 * 60 * 60 * 1000L;
     public static final long FREQUENCY_WEEKLY = 7 * 24 * 60 * 60 * 1000L;
     
-    private Context context;
-    private AlarmManager alarmManager;
-    private SharedPreferences prefs;
+    private final Context context;
+    private final AlarmManager alarmManager;
+    private final SharedPreferences prefs;
     
     public BackupScheduler(Context context) {
         this.context = context;

@@ -40,24 +40,7 @@
     <color name="outline_variant">#3D7C8DA3</color>     <!-- 24% alpha variant -->
     
     <!-- ─── LIGHT THEME ──────────────────────────────────────────────────── -->
-    
-    <!-- Light Surface Colors -->
-    <color name="surface_light">#F7F8FA</color>         <!-- Light surface -->
-    <color name="surface_variant_light">#E9EDF2</color> <!-- Light elevated -->
-    
-    <!-- Light Primary (Crimson 600) -->
-    <color name="primary_light">#C73A3A</color>         <!-- Crimson 600 -->
-    <color name="primary_container_light">#FFE2DE</color> <!-- Light crimson container -->
-    
-    <!-- Light Secondary (Teal 500) -->
-    <color name="secondary_light">#3A8796</color>       <!-- Teal 500 -->
-    <color name="secondary_container_light">#D6EEF3</color> <!-- Light teal container -->
-    
-    <!-- Light Tertiary -->
-    <color name="tertiary_light">#D7A73A</color>        <!-- Gold for light theme -->
-    
-    <!-- Light Outline -->
-    <color name="outline_light">#293B4654</color>       <!-- 16% alpha on light -->
+    <!-- (Light theme colors removed - unused in current app implementation) -->
     
     <!-- ─── LEGACY COMPATIBILITY ─────────────────────────────────────────── -->
     <!-- Keep existing names for backward compatibility -->

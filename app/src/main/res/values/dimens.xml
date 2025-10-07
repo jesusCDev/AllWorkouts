@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="priority_1">24sp</dimen>
-    <dimen name="priority_2">18sp</dimen>
-    <dimen name="priority_3">16sp</dimen>
-
-
-    <dimen name="btn_textSize">16sp</dimen>
 
     <dimen name="spacing_1">4dp</dimen>
     <dimen name="spacing_2">8dp</dimen>
@@ -14,38 +8,27 @@
     <dimen name="spacing_5">48dp</dimen>
 
     <!-- Modern spacing scale -->
-    <dimen name="spacing_0">0dp</dimen>
     <dimen name="spacing_half">2dp</dimen>
     
     <!-- Corner radius for modern cards and buttons -->
     <dimen name="corner_radius">12dp</dimen>           <!-- Standard cards -->
-    <dimen name="corner_radius_small">8dp</dimen>      <!-- Inputs, chips -->
     <dimen name="corner_radius_large">16dp</dimen>     <!-- Workout image frames -->
-    <dimen name="corner_radius_fab">24dp</dimen>       <!-- FABs, rounded buttons -->
     
     <!-- Comic-inspired stroke widths -->
-    <dimen name="stroke_width_thin">1dp</dimen>        <!-- Hairline dividers -->
     <dimen name="stroke_width_standard">2dp</dimen>    <!-- Card borders, button outlines -->
-    
-    <!-- Contact shadow for workout images -->
-    <dimen name="contact_shadow_blur">20dp</dimen>
-    <dimen name="contact_shadow_offset">6dp</dimen>
     
     <!-- Modern elevation scale -->
     <dimen name="elevation_card">4dp</dimen>
     <dimen name="elevation_button">2dp</dimen>
-    <dimen name="elevation_fab">6dp</dimen>
     
     <!-- Touch target sizes -->
     <dimen name="touch_target_min">48dp</dimen>
     <dimen name="touch_target_large">56dp</dimen>
     
     <!-- Typography scale -->
-    <dimen name="text_size_display">32sp</dimen>
     <dimen name="text_size_headline">24sp</dimen>
     <dimen name="text_size_title">20sp</dimen>
     <dimen name="text_size_body">16sp</dimen>
     <dimen name="text_size_caption">14sp</dimen>
-    <dimen name="text_size_small">12sp</dimen>
 
 </resources>

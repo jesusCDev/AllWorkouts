@@ -10,10 +10,10 @@ import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
 
 public class WorkoutBasicsPrefsChecker {
 
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor edit;
-    private WorkoutPosAndStatus[] allWorkouts;
-    private WorkoutPosAndStatus[] enabledWorkouts;
+    private final SharedPreferences prefs;
+    private final SharedPreferences.Editor edit;
+    private final WorkoutPosAndStatus[] allWorkouts;
+    private final WorkoutPosAndStatus[] enabledWorkouts;
 
     public WorkoutBasicsPrefsChecker(Context context) {
         prefs              = context.getSharedPreferences(PreferencesValues.PREFS_NAMES, Context.MODE_PRIVATE);

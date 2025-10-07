@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">4Basic Workouts</string>
-    <string name="pull_ups">Pull Ups</string>
-    <string name="push_ups">Push Ups</string>
-    <string name="sit_ups">Sit Ups</string>
-    <string name="squats">Squats</string>
-    <string name="back_strengthening">Back Strengthening</string>
 
     <string name="logs">Logs</string>
     <string name="start">Start</string>
@@ -42,13 +37,9 @@
     <string name="media_previous">Previous track</string>
     <string name="media_next">Next track</string>
     <string name="media_play_pause">Play or pause music</string>
-    <string name="media_controls_enabled">Media controls enabled</string>
-    <string name="media_controls_disabled">Media controls disabled</string>
 
     <!-- Open Source -->
     <string name="open_source_title">Open Source</string>
-    <string name="workout_image">Workout Image</string>
-    <string name="workout_character_illustration">Workout character illustration</string>
     <string name="open_source_date">Last Updated: December 24 2018</string>
     <!-- todo - update later -->
     <string name="open_source_summary">4Basic Workouts was created using open source technologies that were under the apache licence 2.0. And all code of the latest builds is posted live at http://github.com/allvens/allworkout</string>
