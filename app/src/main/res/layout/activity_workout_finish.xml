@@ -33,9 +33,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/archivo_black"
+            android:fontFamily="@font/fraunces"
             android:text="Congratulations!"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/vermilion"
             android:textSize="32sp"
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/spacing_2" />
@@ -45,7 +45,7 @@
             android:id="@+id/tv_workoutFinish_WorkoutName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/archivo_black"
+            android:fontFamily="@font/fraunces"
             android:text="Workout"
             android:textColor="@color/selectedButton"
             android:textSize="@dimen/text_size_headline"
@@ -59,7 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_3"
-        app:cardBackgroundColor="@color/background_elevated"
+        app:cardBackgroundColor="@color/ink_850"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
         app:layout_constraintTop_toBottomOf="@id/header_section"
@@ -81,7 +81,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/selectedButton"
                 android:textSize="@dimen/text_size_title"
-                android:fontFamily="@font/archivo_black"
+                android:fontFamily="@font/fraunces"
                 android:layout_marginBottom="@dimen/spacing_3" />
 
             <!-- Subtitle -->
@@ -172,16 +172,18 @@
     <!-- Back Button - Top Left Corner -->
     <Button
         android:id="@+id/button2"
-        style="@style/Widget.App.Button.Secondary"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
+        android:minWidth="90dp"
         android:layout_margin="@dimen/spacing_2"
-        android:paddingStart="@dimen/spacing_2"
-        android:paddingEnd="@dimen/spacing_2"
+        android:paddingStart="@dimen/spacing_3"
+        android:paddingEnd="@dimen/spacing_3"
+        android:background="@drawable/bg_dropdown"
         android:onClick="goHome"
-        android:text="←"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:text="← Back"
+        android:textSize="15sp"
+        android:textColor="@color/text_primary"
+        android:textAllCaps="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

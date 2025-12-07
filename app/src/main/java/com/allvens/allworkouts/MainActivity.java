@@ -5,11 +5,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import android.widget.TextView;
+
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.managers.WorkoutSelectionManager;
 import com.allvens.allworkouts.ui.MainActivityUIManager;
 import com.allvens.allworkouts.ui.WorkoutCalendarView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity 
     implements MainActivityUIManager.UIEventListener, WorkoutSelectionManager.DataEventListener {
@@ -18,6 +24,10 @@ public class MainActivity extends AppCompatActivity
     private MainActivityUIManager uiManager;
     private WorkoutSelectionManager workoutManager;
     private WorkoutCalendarView workoutCalendar;
+    
+    // Stats views
+    private TextView tvStatMonth;
+    private TextView tvStatStreak;
 
     /* ====================================================================== */
     /*  LIFECYCLE                                                             */
@@ -48,6 +58,9 @@ public class MainActivity extends AppCompatActivity
                 workoutCalendar.forceRefresh();
             }, 100);
         }
+        
+        // Update stats
+        updateWorkoutStats();
     }
 
     /* ====================================================================== */
@@ -67,6 +80,10 @@ public class MainActivity extends AppCompatActivity
         // Bind views and set up UI
         uiManager.bindViews(findViewById(android.R.id.content));
         workoutCalendar = findViewById(R.id.calendar_workout_activity);
+        
+        // Bind stats views
+        tvStatMonth = findViewById(R.id.tv_stat_month);
+        tvStatStreak = findViewById(R.id.tv_stat_streak);
     }
     
     private void loadInitialData() {
@@ -137,5 +154,53 @@ public class MainActivity extends AppCompatActivity
         // Handle data errors - could show toast or log
         // For now, silently handle errors
         android.util.Log.w("MainActivity", "Workout selection error: " + error);
+    }
+    
+    /* ====================================================================== */
+    /*  STATS CALCULATION                                                     */
+    /* ====================================================================== */
+    
+    /**
+     * Calculate and update workout statistics
+     * Note: Since WorkoutHistoryInfo doesn't store dates, we show total session counts
+     */
+    private void updateWorkoutStats() {
+        WorkoutWrapper workoutWrapper = new WorkoutWrapper(this);
+        try {
+            workoutWrapper.open();
+            
+            // Get all workouts
+            List<WorkoutInfo> allWorkouts = workoutWrapper.getAllWorkouts();
+            
+            // Count total workout sessions across all workout types
+            int totalSessions = 0;
+            int bestProgress = 0;
+            
+            for (WorkoutInfo workout : allWorkouts) {
+                // Count workout history entries for this workout
+                List<com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo> history = 
+                    workoutWrapper.getHistoryForWorkout(workout.getId());
+                totalSessions += history.size();
+                
+                // Track highest progress level across all workouts
+                if (workout.getProgress() > bestProgress) {
+                    bestProgress = workout.getProgress();
+                }
+            }
+            
+            // Update UI
+            if (tvStatMonth != null) {
+                tvStatMonth.setText(String.valueOf(totalSessions));
+            }
+            
+            if (tvStatStreak != null) {
+                tvStatStreak.setText(String.valueOf(bestProgress));
+            }
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error calculating workout stats", e);
+        } finally {
+            workoutWrapper.close();
+        }
     }
 }

@@ -251,43 +251,9 @@ public class WorkoutCalendarView extends View {
     }
     
     private int getWorkoutCountForDay(WorkoutWrapper wrapper, Calendar day) {
-        // TODO: In future version, query database for actual workout history by date
-        // For now, create realistic sample data to demonstrate the feature
-        
-        Calendar today = Calendar.getInstance();
-        long dayTime = day.getTimeInMillis();
-        long todayTime = today.getTimeInMillis();
-        long daysDiff = (todayTime - dayTime) / (1000 * 60 * 60 * 24);
-        
-        // Don't show workouts for future dates
-        if (dayTime > todayTime) {
-            return 0;
-        }
-        
-        // Create sample pattern: more active in recent days, less in the past
-        int dayOfMonth = day.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
-        
-        // Skip some days to make it realistic (rest days)
-        if (dayOfWeek == Calendar.SUNDAY && dayOfMonth % 2 == 0) {
-            return 0; // Rest days on some Sundays
-        }
-        
-        if (daysDiff == 0) {
-            return 3; // Today: did most workouts
-        } else if (daysDiff <= 3) {
-            // Last 3 days: high activity
-            return (dayOfMonth % 4 == 0) ? 4 : ((dayOfMonth % 3 == 0) ? 2 : 1);
-        } else if (daysDiff <= 7) {
-            // Last week: moderate activity
-            return (dayOfMonth % 3 == 0) ? ((dayOfMonth % 2 == 0) ? 2 : 1) : 0;
-        } else if (daysDiff <= 14) {
-            // Two weeks ago: lower activity
-            return (dayOfMonth % 4 == 0) ? 1 : 0;
-        } else {
-            // Older: very little activity
-            return (dayOfMonth % 7 == 0 && dayOfMonth % 2 == 1) ? 1 : 0;
-        }
+        // TODO: Database doesn't track workout dates, so calendar shows empty cells
+        // In a future version, add date tracking to WorkoutHistoryInfo table
+        return 0;
     }
     
     @Override
@@ -364,21 +330,6 @@ public class WorkoutCalendarView extends View {
         
         // Clear shadow for other text
         monthHeaderPaint.clearShadowLayer();
-        
-        // Draw streak info on the right side if available with modern glow
-        if (maxStreak > 0 && todayDay > 0) {
-            String streakText = "🔥 " + maxStreak;
-            headerPaint.setColor(colorAccent);
-            headerPaint.setShadowLayer(4, 0, 1, 0x80D3FF3E); // Subtle lime glow
-            headerPaint.getTextBounds(streakText, 0, streakText.length(), textBounds);
-            
-            int streakX = getWidth() - textBounds.width() - getResources().getDimensionPixelSize(R.dimen.spacing_3);
-            int streakY = centerY + (textBounds.height() / 2);
-            
-            canvas.drawText(streakText, streakX, streakY, headerPaint);
-            headerPaint.clearShadowLayer();
-            headerPaint.setColor(colorTextSecondary); // Reset color
-        }
     }
     
     private void drawDayHeaders(Canvas canvas) {

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- DARK THEME SPECIFIC COLORS FOR NOTIFICATIONS AND UI ELEMENTS       -->
+    <!-- NOIR TATAMI DARK THEME                                             -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
-    <!-- Enhanced primary color for dark theme notifications -->
-    <color name="primary">#D3FF3E</color>               <!-- Lime accent for dark theme -->
-    <color name="primary_bright">#E1FF5C</color>        <!-- Even brighter lime for notifications -->
+    <!-- Primary colors for notifications -->
+    <color name="primary">@color/vermilion</color>
+    <color name="primary_bright">#FF5C3D</color>        <!-- Brighter vermilion for notifications -->
     
-    <!-- Notification specific colors for dark theme -->
-    <color name="notification_primary">#D3FF3E</color>  <!-- Lime accent for dark notifications -->
-    <color name="notification_accent">#E1FF5C</color>   <!-- Brighter lime for notification elements -->
+    <!-- Notification colors -->
+    <color name="notification_primary">@color/vermilion</color>
+    <color name="notification_accent">#FF5C3D</color>
     
-    <!-- Surface colors optimized for dark theme -->
-    <color name="surface">#0B1118</color>               <!-- Main dark surface -->
-    <color name="surface_variant">#121A23</color>       <!-- Elevated dark surface -->
-    <color name="background_dark">#0B1118</color>       <!-- Dark background -->
-    <color name="background_elevated">#121A23</color>   <!-- Elevated dark background -->
+    <!-- Surface colors -->
+    <color name="surface">@color/ink_900</color>
+    <color name="surface_variant">@color/ink_850</color>
+    <color name="background_dark">@color/ink_900</color>
+    <color name="background_elevated">@color/ink_850</color>
     
-    <!-- Text colors for dark theme -->
-    <color name="selectedButton">#FFFFFF</color>        <!-- Primary text on dark -->
-    <color name="unSelectedButton">#8B93A3</color>      <!-- Secondary text on dark -->
+    <!-- Text colors -->
+    <color name="selectedButton">@color/bone_100</color>
+    <color name="unSelectedButton">@color/bone_70</color>
     
-    <!-- Keep legacy mappings -->
-    <color name="colorPrimary">@color/primary</color>
-    <color name="colorAccent">@color/primary</color>
-    <color name="importantButton">@color/primary</color>
+    <!-- Legacy mappings -->
+    <color name="colorPrimary">@color/vermilion</color>
+    <color name="colorAccent">@color/vermilion</color>
+    <color name="importantButton">@color/vermilion</color>
 </resources>

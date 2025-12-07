@@ -2,5 +2,8 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/archivo_black</item>
+        <item>@font/fraunces</item>
+        <item>@font/teko</item>
+        <item>@font/atkinson_hyperlegible</item>
     </array>
 </resources>

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/bg_chip_solid"
+    android:background="@drawable/bg_chip_glossy"
     android:padding="@dimen/spacing_3"
     android:elevation="@dimen/elevation_button"
     tools:visibility="visible">

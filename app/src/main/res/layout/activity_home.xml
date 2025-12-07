@@ -27,9 +27,8 @@
         android:layout_marginStart="@dimen/spacing_4"
         android:layout_marginTop="@dimen/spacing_5"
         android:layout_marginEnd="@dimen/spacing_4"
-        android:layout_marginBottom="@dimen/spacing_4"
         android:text="4Basic Workouts"
-        android:textColor="@color/accent_primary"
+        android:textColor="@color/colorAccent"
         android:gravity="center"
         android:letterSpacing="0.02"
         android:shadowColor="#33000000"
@@ -44,17 +43,110 @@
     <com.allvens.allworkouts.ui.WorkoutCalendarView
         android:id="@+id/calendar_workout_activity"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/spacing_3"
-        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_3"
         android:layout_marginEnd="@dimen/spacing_3"
-        android:layout_marginBottom="@dimen/spacing_4"
-        android:background="@drawable/bg_calendar_modern"
-        android:padding="@dimen/spacing_4"
+        android:background="@drawable/bg_card_glass_premium"
+        android:padding="@dimen/spacing_3"
         android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_app_header" />
+        app:layout_constraintTop_toBottomOf="@id/tv_app_header"
+        app:layout_constraintBottom_toTopOf="@id/ll_quick_stats"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <!-- ─── Quick Stats Row ──────────── -->
+    <LinearLayout
+        android:id="@+id/ll_quick_stats"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_3"
+        android:layout_marginTop="@dimen/spacing_3"
+        android:layout_marginEnd="@dimen/spacing_3"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calendar_workout_activity"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar">
+
+        <!-- This Month Card -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/spacing_2"
+            android:background="@drawable/bg_card_glass_premium"
+            android:padding="@dimen/spacing_3"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:elevation="@dimen/elevation_card">
+
+            <TextView
+                style="@style/TextAppearance.App.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.8" />
+
+            <TextView
+                android:id="@+id/tv_stat_month"
+                style="@style/TextAppearance.App.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_1"
+                android:text="0"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                style="@style/TextAppearance.App.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sessions"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.7" />
+        </LinearLayout>
+
+        <!-- Current Streak Card -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_2"
+            android:background="@drawable/bg_card_glass_premium"
+            android:padding="@dimen/spacing_3"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:elevation="@dimen/elevation_card">
+
+            <TextView
+                style="@style/TextAppearance.App.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Best"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.8" />
+
+            <TextView
+                android:id="@+id/tv_stat_streak"
+                style="@style/TextAppearance.App.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_1"
+                android:text="0"
+                android:textColor="@color/accent_primary" />
+
+            <TextView
+                style="@style/TextAppearance.App.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="progress"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.7" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- ─── Workout chooser panel (overlay, floating above content) ─────── -->
     <android.support.v7.widget.LinearLayoutCompat
@@ -76,12 +168,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- ─── Bottom action bar ────────────────────────────────── -->
+    <!-- ─── Bottom action bar ────────────────────────────── -->
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layoutAnimation="@anim/layout_stagger_home"
         android:paddingStart="@dimen/spacing_3"
         android:paddingTop="@dimen/spacing_3"
         android:paddingEnd="@dimen/spacing_3"
@@ -96,21 +189,13 @@
             android:layout_height="@dimen/touch_target_min"
             android:layout_marginBottom="@dimen/spacing_3"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/bg_button_tonal_modern"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/spacing_3"
+            android:paddingEnd="@dimen/spacing_3"
+            android:background="@drawable/bg_dropdown"
             android:clickable="true"
             android:focusable="true"
             android:contentDescription="@string/change_workout">
-            
-            <ImageView
-                android:id="@+id/iv_workout_selector_arrow"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="@dimen/spacing_2"
-                android:layout_marginEnd="@dimen/spacing_2"
-                android:src="@drawable/ic_expand_less_black_24dp"
-                android:tint="@color/accent_primary"
-                android:contentDescription="@string/workout_selector_arrow" />
                 
             <TextView
                 android:id="@+id/tv_workout_selector_text"
@@ -119,17 +204,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
-                android:textStyle="bold"
-                android:textColor="@color/accent_primary"
-                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:gravity="start|center_vertical"
                 android:layout_gravity="center_vertical" />
-                
-            <!-- Invisible spacer to balance the arrow -->
-            <View
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="@dimen/spacing_2"
-                android:layout_marginEnd="@dimen/spacing_2" />
+            
+            <ImageView
+                android:id="@+id/iv_workout_selector_arrow"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_expand_more_black_24dp"
+                android:tint="@color/text_secondary"
+                android:alpha="0.6"
+                android:contentDescription="@string/workout_selector_arrow" />
                 
         </LinearLayout>
 

@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_3"
-        app:cardBackgroundColor="@color/background_elevated"
+        app:cardBackgroundColor="@color/ink_850"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/archivo_black"
+                android:fontFamily="@font/fraunces"
                 android:text="Settings"
                 android:textColor="@color/selectedButton"
                 android:textSize="@dimen/text_size_title"
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
+            app:cardBackgroundColor="@color/ink_850"
             app:cardCornerRadius="@dimen/corner_radius_large"
             app:cardElevation="@dimen/elevation_card">
 
@@ -214,7 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
+            app:cardBackgroundColor="@color/ink_850"
             app:cardCornerRadius="@dimen/corner_radius_large"
             app:cardElevation="@dimen/elevation_card">
 
@@ -261,10 +261,10 @@
                             android:layout_marginTop="@dimen/spacing_half"
                             android:onClick="btnAction_SetNotificationTime"
                             android:text="2:04 am"
-                            android:textColor="@color/on_primary"
-                            android:textSize="@dimen/text_size_body_large"
-                            android:textStyle="bold"
-                            android:background="@drawable/bg_button_primary_modern"
+                        android:textColor="@color/on_vermilion"
+                        android:textSize="@dimen/text_size_body_large"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_button_primary_noir"
                             android:minHeight="@dimen/touch_target_min"
                             android:gravity="center"
                             android:paddingStart="@dimen/spacing_3"
