@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/skip_workout_overlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000"
+    android:visibility="gone"
+    android:clickable="true"
+    android:focusable="true">
+    
+    <!-- Center content card -->
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@color/surface_850"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_dialog">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_5">
+            
+            <!-- Countdown number -->
+            <TextView
+                android:id="@+id/tv_skip_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="72sp"
+                android:textColor="@color/vermilion"
+                android:fontFamily="@font/teko_bold"
+                android:layout_marginBottom="@dimen/spacing_3" />
+            
+            <!-- Message -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skipping to next set..."
+                android:textSize="@dimen/text_size_body_large"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="@dimen/spacing_2" />
+            
+            <!-- Cancel instruction -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap anywhere to cancel"
+                android:textSize="@dimen/text_size_caption"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.7" />
+                
+        </LinearLayout>
+        
+    </android.support.v7.widget.CardView>
+    
+</FrameLayout>

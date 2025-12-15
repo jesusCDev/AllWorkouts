@@ -132,6 +132,7 @@ public class WorkoutWrapper {
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH, workoutHistory.getForth_value());
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH, workoutHistory.getFifth_value());
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX, workoutHistory.getMax_value());
+        values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_COMPLETION_DATE, workoutHistory.getCompletionDate());
         database.insert(WorkoutContract.WorkoutHistory_Entry.TABLE_NAME, null, values);
     }
 
@@ -142,13 +143,21 @@ public class WorkoutWrapper {
 
         try{
             while(cursor.moveToNext()){
+                // Get completion date, defaulting to 0 if column doesn't exist (migration scenario)
+                long completionDate = 0;
+                int dateColumnIndex = cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_COMPLETION_DATE);
+                if (dateColumnIndex != -1) {
+                    completionDate = cursor.getLong(dateColumnIndex);
+                }
+                
                 WorkoutHistoryInfo workoutHistory_info = new WorkoutHistoryInfo(
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_THIRD),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH),
-                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX));
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX),
+                        completionDate);
 
                 workoutHistory_info.setId(getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry._ID));
                 workouts.add(workoutHistory_info);
@@ -171,6 +180,83 @@ public class WorkoutWrapper {
 
     public void deleteAllHistoryWorkouts(){
         database.delete(WorkoutContract.WorkoutHistory_Entry.TABLE_NAME, null, null);
+    }
+    
+    /**
+     * Get workout history for a specific date range
+     * @param startDate Unix timestamp (seconds) for range start
+     * @param endDate Unix timestamp (seconds) for range end
+     * @return List of workout history entries in the date range
+     */
+    public List<WorkoutHistoryInfo> getWorkoutHistoryForDateRange(long startDate, long endDate) {
+        List<WorkoutHistoryInfo> workouts = new ArrayList<>();
+        String selectQuery = "SELECT * FROM workout_history WHERE completion_date >= ? AND completion_date <= ?";
+        Cursor cursor = database.rawQuery(selectQuery, new String[]{String.valueOf(startDate), String.valueOf(endDate)});
+        
+        try {
+            while(cursor.moveToNext()) {
+                long completionDate = 0;
+                int dateColumnIndex = cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_COMPLETION_DATE);
+                if (dateColumnIndex != -1) {
+                    completionDate = cursor.getLong(dateColumnIndex);
+                }
+                
+                WorkoutHistoryInfo workoutHistory_info = new WorkoutHistoryInfo(
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_THIRD),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX),
+                        completionDate);
+                
+                workoutHistory_info.setId(getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry._ID));
+                workouts.add(workoutHistory_info);
+            }
+        } finally {
+            if(cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        
+        return workouts;
+    }
+    
+    /**
+     * Get all workout history entries for a specific day
+     * @param dayStartTimestamp Unix timestamp (seconds) for start of day (00:00:00)
+     * @param dayEndTimestamp Unix timestamp (seconds) for end of day (23:59:59)
+     * @return Count of workouts completed on that day
+     */
+    public int getWorkoutCountForDay(long dayStartTimestamp, long dayEndTimestamp) {
+        return getWorkoutHistoryForDateRange(dayStartTimestamp, dayEndTimestamp).size();
+    }
+    
+    /**
+     * Get list of unique workout IDs that were completed on a specific day
+     * @param dayStartTimestamp Unix timestamp (seconds) for start of day (00:00:00)
+     * @param dayEndTimestamp Unix timestamp (seconds) for end of day (23:59:59)
+     * @return List of unique workout IDs completed that day
+     */
+    public java.util.Set<Long> getUniqueWorkoutIdsForDay(long dayStartTimestamp, long dayEndTimestamp) {
+        java.util.Set<Long> uniqueWorkoutIds = new java.util.HashSet<>();
+        String selectQuery = "SELECT DISTINCT id FROM workout_history WHERE completion_date >= ? AND completion_date <= ?";
+        Cursor cursor = database.rawQuery(selectQuery, new String[]{String.valueOf(dayStartTimestamp), String.valueOf(dayEndTimestamp)});
+        
+        try {
+            int idColumnIndex = cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_WORKOUT_ID);
+            if (idColumnIndex != -1) {
+                while(cursor.moveToNext()) {
+                    uniqueWorkoutIds.add(cursor.getLong(idColumnIndex));
+                }
+            }
+        } finally {
+            if(cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        
+        return uniqueWorkoutIds;
     }
     
     /**

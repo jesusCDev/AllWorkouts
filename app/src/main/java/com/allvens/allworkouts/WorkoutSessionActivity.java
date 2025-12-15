@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.base.BaseInterfaces;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.gesture.SkipWorkoutGestureHandler;
 import com.allvens.allworkouts.managers.WorkoutSessionController;
 import com.allvens.allworkouts.managers.WorkoutSessionDataManager;
 import com.allvens.allworkouts.ui.WorkoutSessionActivityUIManager;
@@ -26,6 +27,7 @@ public class WorkoutSessionActivity extends AppCompatActivity
     private WorkoutSessionActivityUIManager uiManager;
     private WorkoutSessionDataManager dataManager;
     private WorkoutSessionController sessionController;
+    private SkipWorkoutGestureHandler gestureHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +74,9 @@ public class WorkoutSessionActivity extends AppCompatActivity
         uiManager.onDestroy();
         sessionController.cleanup();
         dataManager.cleanup();
+        if (gestureHandler != null) {
+            gestureHandler.cleanup();
+        }
     }
 
     /****************************************
@@ -119,6 +124,39 @@ public class WorkoutSessionActivity extends AppCompatActivity
         // Initialize session controller with workout data and UI elements
         WorkoutSessionActivityUIManager.UIElements uiElements = uiManager.getUIElements();
         sessionController.initializeSession(workout, workoutInfo, uiElements);
+        
+        // Set up skip gesture handler
+        setupSkipGesture();
+    }
+    
+    /**
+     * Set up skip workout gesture (long-press on non-button areas)
+     */
+    private void setupSkipGesture() {
+        gestureHandler = new SkipWorkoutGestureHandler(this, () -> {
+            // Gesture detected - show countdown overlay
+            uiManager.showSkipCountdown(
+                // On countdown complete - skip to next set
+                () -> {
+                    if (sessionController != null) {
+                        sessionController.skipToNextSet();
+                    }
+                },
+                // On cancel - just log
+                () -> {
+                    android.util.Log.d("WorkoutSession", "Skip cancelled by user");
+                }
+            );
+        });
+        
+        // Attach gesture handler to the workout session root layout
+        android.view.View rootLayout = findViewById(R.id.workout_session_root);
+        if (rootLayout != null) {
+            gestureHandler.attachToView(rootLayout);
+            android.util.Log.d("WorkoutSession", "Gesture handler attached to root layout");
+        } else {
+            android.util.Log.e("WorkoutSession", "Root layout not found!");
+        }
     }
     
     @Override

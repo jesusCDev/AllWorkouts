@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity
     
     // Stats views
     private TextView tvStatMonth;
-    private TextView tvStatStreak;
+    private TextView tvStatCurrentStreak;
+    private TextView tvStatMaxStreak;
+    private TextView tvTodayCompletion;
 
     /* ====================================================================== */
     /*  LIFECYCLE                                                             */
@@ -83,7 +85,9 @@ public class MainActivity extends AppCompatActivity
         
         // Bind stats views
         tvStatMonth = findViewById(R.id.tv_stat_month);
-        tvStatStreak = findViewById(R.id.tv_stat_streak);
+        tvStatCurrentStreak = findViewById(R.id.tv_stat_current_streak);
+        tvStatMaxStreak = findViewById(R.id.tv_stat_max_streak);
+        tvTodayCompletion = findViewById(R.id.tv_today_completion);
     }
     
     private void loadInitialData() {
@@ -129,8 +133,10 @@ public class MainActivity extends AppCompatActivity
     
     @Override
     public void onChooserToggleRequested() {
-        // Handle chooser toggle request - delegate to UI manager with current workout data
-        uiManager.toggleWorkoutChooser(workoutManager.getAvailableWorkouts());
+        // Handle chooser toggle request - delegate to UI manager with current workout data and completion status
+        String[] availableWorkouts = workoutManager.getAvailableWorkouts();
+        java.util.Set<String> completedToday = getCompletedWorkoutsToday();
+        uiManager.toggleWorkoutChooser(availableWorkouts, completedToday);
     }
     
     /* ====================================================================== */
@@ -139,8 +145,9 @@ public class MainActivity extends AppCompatActivity
     
     @Override
     public void onWorkoutsRefreshed(String[] workouts) {
-        // Handle updated workout list - ensure valid selection
-        workoutManager.ensureValidSelection();
+        // Handle updated workout list - ensure valid selection, preferring uncompleted workouts
+        java.util.Set<String> completedToday = getCompletedWorkoutsToday();
+        workoutManager.ensureValidSelection(completedToday);
     }
     
     @Override
@@ -161,8 +168,7 @@ public class MainActivity extends AppCompatActivity
     /* ====================================================================== */
     
     /**
-     * Calculate and update workout statistics
-     * Note: Since WorkoutHistoryInfo doesn't store dates, we show total session counts
+     * Calculate and update workout statistics with date-based streaks
      */
     private void updateWorkoutStats() {
         WorkoutWrapper workoutWrapper = new WorkoutWrapper(this);
@@ -174,27 +180,38 @@ public class MainActivity extends AppCompatActivity
             
             // Count total workout sessions across all workout types
             int totalSessions = 0;
-            int bestProgress = 0;
-            
             for (WorkoutInfo workout : allWorkouts) {
-                // Count workout history entries for this workout
                 List<com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo> history = 
                     workoutWrapper.getHistoryForWorkout(workout.getId());
                 totalSessions += history.size();
-                
-                // Track highest progress level across all workouts
-                if (workout.getProgress() > bestProgress) {
-                    bestProgress = workout.getProgress();
-                }
             }
+            
+            // Calculate streaks based on actual completion dates
+            int[] streaks = calculateStreaks(workoutWrapper);
+            int currentStreak = streaks[0];
+            int maxStreak = streaks[1];
+            
+            // Calculate today's completion
+            String todayCompletion = calculateTodayCompletion(workoutWrapper, allWorkouts.size());
             
             // Update UI
             if (tvStatMonth != null) {
                 tvStatMonth.setText(String.valueOf(totalSessions));
             }
             
-            if (tvStatStreak != null) {
-                tvStatStreak.setText(String.valueOf(bestProgress));
+            if (tvStatCurrentStreak != null) {
+                tvStatCurrentStreak.setText(String.valueOf(currentStreak));
+            }
+            
+            if (tvStatMaxStreak != null) {
+                tvStatMaxStreak.setText("• 🔥 " + maxStreak + " best");
+            }
+            
+            if (tvTodayCompletion != null && todayCompletion != null && !todayCompletion.isEmpty()) {
+                tvTodayCompletion.setText(todayCompletion);
+                tvTodayCompletion.setVisibility(android.view.View.VISIBLE);
+            } else if (tvTodayCompletion != null) {
+                tvTodayCompletion.setVisibility(android.view.View.GONE);
             }
             
         } catch (Exception e) {
@@ -202,5 +219,154 @@ public class MainActivity extends AppCompatActivity
         } finally {
             workoutWrapper.close();
         }
+    }
+    
+    /**
+     * Calculate current and max streak from workout history dates
+     * @return int array [currentStreak, maxStreak]
+     */
+    private int[] calculateStreaks(WorkoutWrapper workoutWrapper) {
+        int currentStreak = 0;
+        int maxStreak = 0;
+        
+        try {
+            // Get today's date at midnight
+            java.util.Calendar today = java.util.Calendar.getInstance();
+            today.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            today.set(java.util.Calendar.MINUTE, 0);
+            today.set(java.util.Calendar.SECOND, 0);
+            today.set(java.util.Calendar.MILLISECOND, 0);
+            
+            // Check backwards from today for current streak
+            java.util.Calendar checkDay = (java.util.Calendar) today.clone();
+            while (true) {
+                long dayStart = checkDay.getTimeInMillis() / 1000;
+                long dayEnd = dayStart + (24 * 60 * 60) - 1;
+                
+                int count = workoutWrapper.getWorkoutCountForDay(dayStart, dayEnd);
+                if (count > 0) {
+                    currentStreak++;
+                    checkDay.add(java.util.Calendar.DAY_OF_MONTH, -1);
+                } else {
+                    break;
+                }
+                
+                // Prevent infinite loop - limit to 365 days
+                if (currentStreak >= 365) break;
+            }
+            
+            // Calculate max streak by checking all dates in history
+            // Get earliest workout date
+            long earliestDate = Long.MAX_VALUE;
+            List<WorkoutInfo> allWorkouts = workoutWrapper.getAllWorkouts();
+            for (WorkoutInfo workout : allWorkouts) {
+                List<com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo> history = 
+                    workoutWrapper.getHistoryForWorkout(workout.getId());
+                for (com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo h : history) {
+                    if (h.getCompletionDate() > 0 && h.getCompletionDate() < earliestDate) {
+                        earliestDate = h.getCompletionDate();
+                    }
+                }
+            }
+            
+            // Only calculate max streak if we have valid dates
+            if (earliestDate != Long.MAX_VALUE) {
+                java.util.Calendar scanDay = java.util.Calendar.getInstance();
+                scanDay.setTimeInMillis(earliestDate * 1000);
+                scanDay.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                scanDay.set(java.util.Calendar.MINUTE, 0);
+                scanDay.set(java.util.Calendar.SECOND, 0);
+                scanDay.set(java.util.Calendar.MILLISECOND, 0);
+                
+                int tempStreak = 0;
+                while (scanDay.getTimeInMillis() <= today.getTimeInMillis()) {
+                    long dayStart = scanDay.getTimeInMillis() / 1000;
+                    long dayEnd = dayStart + (24 * 60 * 60) - 1;
+                    
+                    int count = workoutWrapper.getWorkoutCountForDay(dayStart, dayEnd);
+                    if (count > 0) {
+                        tempStreak++;
+                        maxStreak = Math.max(maxStreak, tempStreak);
+                    } else {
+                        tempStreak = 0;
+                    }
+                    
+                    scanDay.add(java.util.Calendar.DAY_OF_MONTH, 1);
+                }
+            }
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error calculating streaks", e);
+        }
+        
+        return new int[]{currentStreak, maxStreak};
+    }
+    
+    /**
+     * Calculate today's workout completion status
+     * @return String like "2/4 completed today" or empty if none completed
+     */
+    private String calculateTodayCompletion(WorkoutWrapper workoutWrapper, int totalWorkouts) {
+        try {
+            // Get today's date range
+            java.util.Calendar today = java.util.Calendar.getInstance();
+            today.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            today.set(java.util.Calendar.MINUTE, 0);
+            today.set(java.util.Calendar.SECOND, 0);
+            today.set(java.util.Calendar.MILLISECOND, 0);
+            long dayStart = today.getTimeInMillis() / 1000;
+            long dayEnd = dayStart + (24 * 60 * 60) - 1;
+            
+            // Get unique workout types completed today
+            int completedToday = workoutWrapper.getUniqueWorkoutIdsForDay(dayStart, dayEnd).size();
+            
+            if (completedToday > 0) {
+                return "✓ " + completedToday + "/" + totalWorkouts + " completed today";
+            }
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error calculating today's completion", e);
+        }
+        
+        return "";
+    }
+    
+    /**
+     * Get set of workout names completed today
+     * @return Set of workout names that were completed today
+     */
+    private java.util.Set<String> getCompletedWorkoutsToday() {
+        java.util.Set<String> completedWorkouts = new java.util.HashSet<>();
+        WorkoutWrapper workoutWrapper = new WorkoutWrapper(this);
+        
+        try {
+            workoutWrapper.open();
+            
+            // Get today's date range
+            java.util.Calendar today = java.util.Calendar.getInstance();
+            today.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            today.set(java.util.Calendar.MINUTE, 0);
+            today.set(java.util.Calendar.SECOND, 0);
+            today.set(java.util.Calendar.MILLISECOND, 0);
+            long dayStart = today.getTimeInMillis() / 1000;
+            long dayEnd = dayStart + (24 * 60 * 60) - 1;
+            
+            // Get unique workout IDs completed today
+            java.util.Set<Long> completedIds = workoutWrapper.getUniqueWorkoutIdsForDay(dayStart, dayEnd);
+            
+            // Convert IDs to workout names
+            List<WorkoutInfo> allWorkouts = workoutWrapper.getAllWorkouts();
+            for (WorkoutInfo workout : allWorkouts) {
+                if (completedIds.contains(workout.getId())) {
+                    completedWorkouts.add(workout.getWorkout());
+                }
+            }
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error getting completed workouts", e);
+        } finally {
+            workoutWrapper.close();
+        }
+        
+        return completedWorkouts;
     }
 }

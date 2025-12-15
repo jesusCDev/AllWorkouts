@@ -251,9 +251,22 @@ public class WorkoutCalendarView extends View {
     }
     
     private int getWorkoutCountForDay(WorkoutWrapper wrapper, Calendar day) {
-        // TODO: Database doesn't track workout dates, so calendar shows empty cells
-        // In a future version, add date tracking to WorkoutHistoryInfo table
-        return 0;
+        // Get start and end timestamps for the day (in seconds)
+        Calendar dayStart = (Calendar) day.clone();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
+        long startTimestamp = dayStart.getTimeInMillis() / 1000;
+        
+        Calendar dayEnd = (Calendar) day.clone();
+        dayEnd.set(Calendar.HOUR_OF_DAY, 23);
+        dayEnd.set(Calendar.MINUTE, 59);
+        dayEnd.set(Calendar.SECOND, 59);
+        dayEnd.set(Calendar.MILLISECOND, 999);
+        long endTimestamp = dayEnd.getTimeInMillis() / 1000;
+        
+        return wrapper.getWorkoutCountForDay(startTimestamp, endTimestamp);
     }
     
     @Override

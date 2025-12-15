@@ -176,8 +176,17 @@ public class WorkoutMediaController {
      * Get current track information from active media sessions
      */
     private String getCurrentTrackInfo() {
-        // First, try to get track info from MediaSessionManager if available
-        String trackInfo = getTrackInfoFromMediaSessions();
+        // First, check MediaSessionTracker for track info from notification listener service
+        MediaSessionTracker tracker = MediaSessionTracker.getInstance();
+        String trackInfo = tracker.getFormattedTrackInfo();
+        
+        if (trackInfo != null && !trackInfo.isEmpty()) {
+            android.util.Log.d("WorkoutMediaController", "Got track info from tracker: " + trackInfo);
+            return trackInfo;
+        }
+        
+        // Second, try to get track info from MediaSessionManager if available (legacy fallback)
+        trackInfo = getTrackInfoFromMediaSessions();
         if (trackInfo != null && !trackInfo.equals("Music Controls")) {
             android.util.Log.d("WorkoutMediaController", "Got track info from MediaSession: " + trackInfo);
             return trackInfo;

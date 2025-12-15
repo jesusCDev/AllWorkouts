@@ -180,6 +180,60 @@ public class WorkoutSessionController {
     }
     
     /**
+     * Skip to next workout set (triggered by gesture)
+     * Follows normal flow: workout → timer → workout
+     */
+    public void skipToNextSet() {
+        if (!sessionActive) {
+            android.util.Log.w("WorkoutSession", "Cannot skip - session not active");
+            return;
+        }
+        
+        // Check if we're already at the final set
+        if (currentProgress >= 5) {
+            android.util.Log.w("WorkoutSession", "Cannot skip - already at final set");
+            return;
+        }
+        
+        android.util.Log.d("WorkoutSession", "Skipping from progress: " + currentProgress);
+        
+        // Determine current state
+        boolean isTimerRunning = timer != null && timer.get_TimerRunning();
+        
+        if (isTimerRunning) {
+            // Currently on timer screen - skip timer and go to next workout
+            android.util.Log.d("WorkoutSession", "Skipping timer, moving to workout");
+            timer.stop_timer();
+            callback.onTimerStateChanged(false);
+            workoutSessionUIManager.changeScreenToWorkout();
+        } else {
+            // Currently on workout screen - complete this set and go to timer
+            android.util.Log.d("WorkoutSession", "Completing set, moving to timer");
+            
+            // Increment progress (completing current set)
+            currentProgress++;
+            workoutSessionUIManager.setProgress(currentProgress);
+            callback.onProgressChanged(currentProgress);
+            
+            android.util.Log.d("WorkoutSession", "Progress after skip: " + currentProgress + "/5");
+            
+            // Check if we've completed all 5 sets
+            if (currentProgress >= 5) {
+                android.util.Log.d("WorkoutSession", "All sets complete - finishing session");
+                callback.onSessionComplete();
+            } else {
+                // Start timer for break before next set
+                android.util.Log.d("WorkoutSession", "Starting break timer");
+                workoutSessionUIManager.changeScreenToTimer();
+                int breakTime = workout.get_BreakTime(currentProgress);
+                timer.create_timer(breakTime);
+                timer.start_timer();
+                callback.onTimerStateChanged(true);
+            }
+        }
+    }
+    
+    /**
      * Get current session progress (0-5)
      */
     public int getCurrentProgress() {

@@ -136,7 +136,7 @@ public class WorkoutSelectionManager {
     
     /**
      * Ensure we have a valid selected workout
-     * If current selection is invalid, select the first available workout
+     * If current selection is invalid, select the first uncompleted workout (or first available)
      */
     public void ensureValidSelection() {
         if (currentSelectedWorkout == null || !isWorkoutAvailable(currentSelectedWorkout)) {
@@ -145,6 +145,45 @@ public class WorkoutSelectionManager {
                 selectWorkout(firstWorkout);
             }
         }
+    }
+    
+    /**
+     * Ensure we have a valid selected workout, preferring uncompleted workouts
+     * @param completedToday Set of workout names completed today
+     */
+    public void ensureValidSelection(java.util.Set<String> completedToday) {
+        if (currentSelectedWorkout == null || !isWorkoutAvailable(currentSelectedWorkout)) {
+            // Try to select first uncompleted workout
+            String firstUncompleted = getFirstUncompletedWorkout(completedToday);
+            if (firstUncompleted != null) {
+                selectWorkout(firstUncompleted);
+            } else {
+                // All workouts completed, select first available
+                String firstWorkout = getFirstAvailableWorkout();
+                if (firstWorkout != null) {
+                    selectWorkout(firstWorkout);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get the first uncompleted workout from available workouts
+     * @param completedToday Set of workout names completed today
+     * @return First uncompleted workout name, or null if all completed
+     */
+    private String getFirstUncompletedWorkout(java.util.Set<String> completedToday) {
+        if (completedToday == null || availableWorkouts.length == 0) {
+            return getFirstAvailableWorkout();
+        }
+        
+        for (String workout : availableWorkouts) {
+            if (!completedToday.contains(workout)) {
+                return workout;
+            }
+        }
+        
+        return null; // All workouts completed
     }
     
     /**

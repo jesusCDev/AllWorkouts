@@ -52,10 +52,6 @@ public class WorkoutMaximumActivity extends AppCompatActivity {
     /****************************************
      /**** BUTTON ACTIONS
      ****************************************/
-    
-    public void onBackPressed(View view) {
-        super.onBackPressed();
-    }
 
     public void btnAction_max_CompleteMax(View view) {
         workoutMax_manager.update_WorkoutProgress();

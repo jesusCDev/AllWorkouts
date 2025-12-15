@@ -77,11 +77,11 @@ public class MainActivityUIManager {
     /**
      * Toggle the workout chooser open/closed state
      */
-    public void toggleWorkoutChooser(String[] availableWorkouts) {
+    public void toggleWorkoutChooser(String[] availableWorkouts, java.util.Set<String> completedToday) {
         if (chooserIsOpen) {
             closeWorkoutChooser();
         } else {
-            openWorkoutChooser(availableWorkouts);
+            openWorkoutChooser(availableWorkouts, completedToday);
         }
         
         // Note: chooserIsOpen state is updated within open/close methods to prevent race conditions
@@ -129,7 +129,7 @@ public class MainActivityUIManager {
         }
     }
     
-    private void openWorkoutChooser(String[] workouts) {
+    private void openWorkoutChooser(String[] workouts, java.util.Set<String> completedToday) {
         if (chooserIsOpen) return; // Prevent multiple simultaneous openings
         
         // Update state immediately
@@ -146,7 +146,8 @@ public class MainActivityUIManager {
         
         // Create buttons for each workout before showing
         for (String workoutName : workouts) {
-            Button button = createWorkoutButton(workoutName);
+            boolean isCompleted = completedToday != null && completedToday.contains(workoutName);
+            Button button = createWorkoutButton(workoutName, isCompleted);
             button.setOnClickListener(v -> {
                 // Disable button to prevent double clicks
                 v.setEnabled(false);
@@ -177,12 +178,12 @@ public class MainActivityUIManager {
             .start();
     }
     
-    private Button createWorkoutButton(String name) {
+    private Button createWorkoutButton(String name, boolean isCompleted) {
         Button button = new Button(context);
         button.setText(name);
         
         // Apply styling
-        styleChooserButton(button);
+        styleChooserButton(button, isCompleted);
         
         // Set layout parameters
         LinearLayoutCompat.LayoutParams layoutParams = 
@@ -193,19 +194,32 @@ public class MainActivityUIManager {
         button.setLayoutParams(layoutParams);
         
         // Accessibility
-        button.setContentDescription(
-                context.getString(R.string.select_workout_type, name));
+        String description = isCompleted ? 
+                "Completed: " + context.getString(R.string.select_workout_type, name) :
+                context.getString(R.string.select_workout_type, name);
+        button.setContentDescription(description);
         
         return button;
     }
     
-    private void styleChooserButton(Button button) {
+    private void styleChooserButton(Button button, boolean isCompleted) {
         // Apply all style attributes programmatically for dynamic buttons
-        button.setTextColor(context.getResources().getColor(R.color.selectedButton));
+        if (isCompleted) {
+            // Grey out completed workouts
+            button.setTextColor(context.getResources().getColor(R.color.text_secondary));
+            button.setAlpha(0.5f);
+        } else {
+            button.setTextColor(context.getResources().getColor(R.color.selectedButton));
+            button.setAlpha(1.0f);
+        }
+        
         button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, 
                 context.getResources().getDimensionPixelSize(R.dimen.text_size_body));
         button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
         button.setAllCaps(false);
+        
+        // Left align text
+        button.setGravity(android.view.Gravity.START | android.view.Gravity.CENTER_VERTICAL);
         
         // Set background drawable
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -216,7 +230,7 @@ public class MainActivityUIManager {
         
         // Set padding
         int paddingVertical = context.getResources().getDimensionPixelSize(R.dimen.spacing_3);
-        int paddingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.spacing_2);
+        int paddingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.spacing_3);
         button.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
         
         // Set proper touch target size

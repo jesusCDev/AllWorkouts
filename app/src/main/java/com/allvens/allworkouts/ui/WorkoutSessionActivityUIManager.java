@@ -32,6 +32,9 @@ public class WorkoutSessionActivityUIManager {
     private WorkoutSessionUICallback callback;
     private WorkoutMediaController mediaController;
     private View mediaControlsLayout;
+    private View skipOverlayLayout;
+    private TextView tvSkipCountdown;
+    private android.os.Handler countdownHandler;
     
     // Main UI Elements
     private TextView tvWorkoutName;
@@ -46,6 +49,7 @@ public class WorkoutSessionActivityUIManager {
     public WorkoutSessionActivityUIManager(Context context, WorkoutSessionUICallback callback) {
         this.context = context;
         this.callback = callback;
+        this.countdownHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     }
     
     /**
@@ -72,6 +76,12 @@ public class WorkoutSessionActivityUIManager {
         
         // Control button
         btnChangeScreens = activity.findViewById(R.id.btn_workout_CompleteTask);
+        
+        // Skip overlay elements
+        skipOverlayLayout = activity.findViewById(R.id.skip_workout_overlay);
+        if (skipOverlayLayout != null) {
+            tvSkipCountdown = skipOverlayLayout.findViewById(R.id.tv_skip_countdown);
+        }
     }
     
     /**
@@ -155,6 +165,11 @@ public class WorkoutSessionActivityUIManager {
             mediaController.cleanup();
             mediaController = null;
         }
+        
+        // Clean up countdown handler
+        if (countdownHandler != null) {
+            countdownHandler.removeCallbacksAndMessages(null);
+        }
     }
     
     /**
@@ -181,6 +196,80 @@ public class WorkoutSessionActivityUIManager {
     public void handleSessionExit() {
         if (callback != null) {
             callback.onSessionExit();
+        }
+    }
+    
+    /**
+     * Show skip countdown overlay and animate countdown
+     * @param onComplete Callback when countdown completes
+     * @param onCancel Callback when countdown is cancelled
+     */
+    public void showSkipCountdown(Runnable onComplete, Runnable onCancel) {
+        if (skipOverlayLayout == null) {
+            android.util.Log.w("WorkoutSessionUI", "Skip overlay not found");
+            return;
+        }
+        
+        // Show overlay
+        skipOverlayLayout.setVisibility(View.VISIBLE);
+        
+        // Set up cancel on click
+        skipOverlayLayout.setOnClickListener(v -> {
+            hideSkipCountdown();
+            if (onCancel != null) {
+                onCancel.run();
+            }
+        });
+        
+        // Start countdown animation
+        animateCountdown(3, onComplete);
+    }
+    
+    /**
+     * Animate countdown from given number to 0
+     */
+    private void animateCountdown(int count, Runnable onComplete) {
+        if (tvSkipCountdown == null || skipOverlayLayout == null) {
+            return;
+        }
+        
+        if (count <= 0) {
+            // Countdown complete
+            hideSkipCountdown();
+            if (onComplete != null) {
+                onComplete.run();
+            }
+            return;
+        }
+        
+        // Update countdown display
+        tvSkipCountdown.setText(String.valueOf(count));
+        
+        // Animate scale
+        tvSkipCountdown.setScaleX(1.3f);
+        tvSkipCountdown.setScaleY(1.3f);
+        tvSkipCountdown.animate()
+            .scaleX(1.0f)
+            .scaleY(1.0f)
+            .setDuration(300)
+            .start();
+        
+        // Schedule next countdown
+        countdownHandler.postDelayed(() -> animateCountdown(count - 1, onComplete), 1000);
+    }
+    
+    /**
+     * Hide skip countdown overlay
+     */
+    public void hideSkipCountdown() {
+        if (skipOverlayLayout != null) {
+            skipOverlayLayout.setVisibility(View.GONE);
+            skipOverlayLayout.setOnClickListener(null);
+        }
+        
+        // Cancel any pending countdown
+        if (countdownHandler != null) {
+            countdownHandler.removeCallbacksAndMessages(null);
         }
     }
     

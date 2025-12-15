@@ -169,24 +169,6 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <!-- Back Button - Top Left Corner -->
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:minWidth="90dp"
-        android:layout_margin="@dimen/spacing_2"
-        android:paddingStart="@dimen/spacing_3"
-        android:paddingEnd="@dimen/spacing_3"
-        android:background="@drawable/bg_dropdown"
-        android:onClick="goHome"
-        android:text="← Back"
-        android:textSize="15sp"
-        android:textColor="@color/text_primary"
-        android:textAllCaps="false"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <!-- 📊 Progress Section -->
     <LinearLayout
         android:id="@+id/progress_section"

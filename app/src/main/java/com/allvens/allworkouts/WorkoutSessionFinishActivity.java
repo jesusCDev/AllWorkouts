@@ -275,23 +275,12 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     }
     
     /**
-     * Shows the next workout button and configures Done button for non-final workout
+     * Shows the next workout button for non-final workout
      */
     private void showNextWorkoutButton(Button nextWorkoutButton, String nextWorkout) {
         nextChoiceWorkout = nextWorkout;
         nextWorkoutButton.setText(nextWorkout);
         nextWorkoutButton.setVisibility(View.VISIBLE);
-        
-        // Configure Done button as secondary action (stays in top-left)
-        Button doneButton = findViewById(R.id.button2);
-        if(doneButton != null) {
-            doneButton.setText(getString(R.string.back_arrow));
-            doneButton.setBackgroundResource(R.drawable.bg_button_secondary);
-            if (getResources() != null) {
-                doneButton.setTextColor(getResources().getColor(R.color.selectedButton));
-            }
-            doneButton.setElevation(2f);
-        }
     }
     
     /**
@@ -303,17 +292,6 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // Change the Next Workout button to Complete Session button
         nextWorkoutButton.setText(getString(R.string.complete_session));
         nextWorkoutButton.setVisibility(View.VISIBLE);
-        
-        // Keep the Done button (back arrow) as normal secondary action
-        Button doneButton = findViewById(R.id.button2);
-        if(doneButton != null) {
-            doneButton.setText(getString(R.string.back_arrow));
-            doneButton.setBackgroundResource(R.drawable.bg_button_secondary);
-            if (getResources() != null) {
-                doneButton.setTextColor(getResources().getColor(R.color.selectedButton));
-            }
-            doneButton.setElevation(2f);
-        }
     }
 
     private void updateWorkoutProgress(int progress){

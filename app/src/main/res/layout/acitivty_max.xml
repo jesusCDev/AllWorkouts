@@ -7,22 +7,6 @@
     android:layout_height="match_parent"
     android:padding="@dimen/spacing_3">
 
-    <!-- Floating Back Button -->
-    <Button
-        android:id="@+id/btn_back"
-        style="@style/Widget.App.Button.Secondary"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="@dimen/spacing_2"
-        android:layout_marginStart="@dimen/spacing_2"
-        android:onClick="onBackPressed"
-        android:text="@string/back_arrow"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:elevation="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <!-- Clean Header Card -->
     <android.support.v7.widget.CardView
         android:id="@+id/header_card"
@@ -32,7 +16,7 @@
         app:cardBackgroundColor="@color/ink_850"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
-        app:layout_constraintTop_toBottomOf="@id/btn_back"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

@@ -43,7 +43,12 @@ final class WorkoutContract {
                     WorkoutHistory_Entry.COLUMN_FORTH + " INTEGER NOT NULL, " +
                     WorkoutHistory_Entry.COLUMN_FIFTH + " INTEGER NOT NULL, " +
                     WorkoutHistory_Entry.COLUMN_MAX + " INTEGER NOT NULL, " +
+                    WorkoutHistory_Entry.COLUMN_COMPLETION_DATE + " INTEGER NOT NULL, " +
                     "UNIQUE ( " + WorkoutHistory_Entry._ID + ") ON CONFLICT REPLACE )";
+
+    static final String ALTER_TABLE_ADD_COMPLETION_DATE =
+            "ALTER TABLE " + WorkoutHistory_Entry.TABLE_NAME + " ADD COLUMN " +
+                    WorkoutHistory_Entry.COLUMN_COMPLETION_DATE + " INTEGER DEFAULT " + (System.currentTimeMillis() / 1000);
 
     public static class Workout_Entry implements BaseColumns{
         public static final String TABLE_NAME         = "workout_info";
@@ -55,14 +60,15 @@ final class WorkoutContract {
     }
     
     public static class WorkoutHistory_Entry implements BaseColumns{
-        public static final String TABLE_NAME        = "workout_history";
-        public static final String COLUMN_WORKOUT_ID = "id";
-        public static final String COLUMN_FIRST      = "first_value";
-        public static final String COLUMN_SECOND     = "second_value";
-        public static final String COLUMN_THIRD      = "third_value";
-        public static final String COLUMN_FORTH      = "fourth_value";
-        public static final String COLUMN_FIFTH      = "fifth_value";
-        public static final String COLUMN_MAX        = "max_value";
+        public static final String TABLE_NAME            = "workout_history";
+        public static final String COLUMN_WORKOUT_ID     = "id";
+        public static final String COLUMN_FIRST          = "first_value";
+        public static final String COLUMN_SECOND         = "second_value";
+        public static final String COLUMN_THIRD          = "third_value";
+        public static final String COLUMN_FORTH          = "fourth_value";
+        public static final String COLUMN_FIFTH          = "fifth_value";
+        public static final String COLUMN_MAX            = "max_value";
+        public static final String COLUMN_COMPLETION_DATE = "completion_date";
     }
 
 }
