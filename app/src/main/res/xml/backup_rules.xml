@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Back up the SQLite database -->
+    <include domain="database" path="." />
+    
+    <!-- Back up SharedPreferences -->
+    <include domain="sharedpref" path="." />
+    
+    <!-- Exclude cache files -->
+    <exclude domain="cache" path="." />
+</full-backup-content>

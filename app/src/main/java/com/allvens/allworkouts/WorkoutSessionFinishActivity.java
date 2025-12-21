@@ -12,8 +12,11 @@ import android.widget.TextView;
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
 import com.allvens.allworkouts.data_manager.DifficultyRatingManager;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
+import com.allvens.allworkouts.data_manager.backup.BackupManager;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
@@ -410,6 +413,35 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     public void goHome(View view) {
         // Clear session state when user goes home
         SessionUtils.clearSession(this);
+        
+        // Trigger auto-backup if enabled
+        triggerAutoBackup();
+        
         startActivity(new Intent(this, MainActivity.class));
+    }
+    
+    /**
+     * Triggers automatic backup if enabled
+     * Runs asynchronously to not block UI
+     */
+    private void triggerAutoBackup() {
+        SettingsPrefsManager prefsManager = new SettingsPrefsManager(this);
+        boolean autoBackupEnabled = prefsManager.getPrefSetting(PreferencesValues.AUTO_BACKUP_ENABLED);
+        
+        if (!autoBackupEnabled) {
+            android.util.Log.d("WorkoutFinish", "Auto-backup disabled, skipping");
+            return;
+        }
+        
+        // Run backup asynchronously
+        new Thread(() -> {
+            try {
+                BackupManager backupManager = new BackupManager(this);
+                backupManager.createAutomaticBackup();
+                android.util.Log.d("WorkoutFinish", "Auto-backup completed successfully");
+            } catch (Exception e) {
+                android.util.Log.e("WorkoutFinish", "Auto-backup failed", e);
+            }
+        }).start();
     }
 }

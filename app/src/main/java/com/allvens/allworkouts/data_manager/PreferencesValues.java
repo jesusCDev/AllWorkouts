@@ -25,4 +25,13 @@ public interface PreferencesValues {
     String NOTIFICATION_TIME_MINUTE = "notification_time_min";   // int minute
     String NOTIFICATION_DAYS        = "notification_days";       // String 1 and 0 for on off for days.
     String MEDIA_CONTROLS_ON        = "media_controls_pref";     // boolean
+    
+    /********** Backup Keys **********/
+    String AUTO_BACKUP_ENABLED       = "auto_backup_enabled";     // boolean
+    String BACKUP_PROMPT_DISMISSED   = "backup_prompt_dismissed"; // boolean - resets on reinstall
+    String BACKUP_FOLDER_URI         = "backup_folder_uri";       // String URI - persisted SAF folder access
+    
+    /********** Display Settings **********/
+    String SHOW_TIME_ESTIMATE        = "show_time_estimate";      // boolean - default true
+    String SHOW_STATS_CARDS          = "show_stats_cards";        // boolean - default true
 }

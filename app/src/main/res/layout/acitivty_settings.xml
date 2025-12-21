@@ -485,6 +485,110 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <!-- Display Settings Card -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/display_settings_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Display Settings"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold" />
+
+                <!-- Show Time Estimate -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Time Estimate"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Estimated workout duration on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_time_estimate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Show Stats Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Stats Cards"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Total workouts and streak info on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_stats_cards"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
         <!-- Backup & Restore Card -->
         <android.support.v7.widget.CardView
             android:id="@+id/backup_card"

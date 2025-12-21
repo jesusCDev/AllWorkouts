@@ -59,6 +59,15 @@ public class SettingsManager {
         set_SettingsValues(sVibrate, sSound, sNotification);
         sMediaControls.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
     }
+    
+    /**
+     * Setup display settings switches (default to true if not set)
+     */
+    public void set_DisplaySettingsValues(Switch sShowTimeEstimate, Switch sShowStatsCards) {
+        // Default to true for display settings
+        sShowTimeEstimate.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_TIME_ESTIMATE, true));
+        sShowStatsCards.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true));
+    }
 
     /********** Notification Settings **********/
 

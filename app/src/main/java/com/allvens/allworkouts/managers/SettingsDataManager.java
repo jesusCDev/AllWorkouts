@@ -92,9 +92,11 @@ public class SettingsDataManager extends BaseDataManager {
     public void performBackupExport() {
         try {
             String fileName = backupManager.createBackup();
-            notifyDataLoaded(); // Backup creation completed
+            android.util.Log.d("SettingsDataManager", "Backup created: " + fileName);
+            notifyDataLoaded(); // Signal success
             notifyBackupStatusChanged(getExistingBackups());
         } catch (Exception e) {
+            android.util.Log.e("SettingsDataManager", "Backup failed", e);
             notifyDataError("Failed to create backup: " + e.getMessage());
         }
     }

@@ -31,6 +31,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
         void onDayNotificationClicked(View view);
         void onExportBackup();
         void onImportBackup(File backupFile);
+        void onBrowseForBackupFile();
+        void onBrowseForBackupFolder();
         void onShowDocumentation();
     }
     
@@ -46,6 +48,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private Switch sSound;
     private Switch sNotification;
     private Switch sMediaControls;
+    
+    // Display settings switches
+    private Switch sShowTimeEstimate;
+    private Switch sShowStatsCards;
     
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
@@ -63,6 +69,9 @@ public class SettingsActivityUIManager extends BaseUIManager {
         settingsManager.setUp_WorkoutsAndPositions(llWorkoutPositions);
         settingsManager.setUp_TimeDisplay(tvTimeDisplay);
         settingsManager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
+        
+        // Setup display settings (default to true if not set)
+        settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards);
     }
     
     @Override
@@ -72,6 +81,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sSound.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SOUND_ON));
         sMediaControls.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.MEDIA_CONTROLS_ON));
         sNotification.setOnCheckedChangeListener(settingsManager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON));
+        
+        // Display settings listeners
+        sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
+        sShowStatsCards.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_STATS_CARDS));
     }
     
     @Override
@@ -117,6 +130,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Backup UI elements
         switchAutoBackup = ((android.app.Activity) getContext()).findViewById(R.id.s_auto_backup);
         tvBackupStatus = ((android.app.Activity) getContext()).findViewById(R.id.tv_backup_status);
+        
+        // Display settings switches
+        sShowTimeEstimate = ((android.app.Activity) getContext()).findViewById(R.id.s_show_time_estimate);
+        sShowStatsCards = ((android.app.Activity) getContext()).findViewById(R.id.s_show_stats_cards);
     }
     
     /**
@@ -152,7 +169,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
     public void showExportBackupDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
         builder.setTitle("Export Backup")
-                .setMessage("Create a backup of your workout data and settings to Downloads folder?")
+                .setMessage("Create a backup of your workout data?\n\nSaved to: Documents/AllWorkouts_Backups\n(Persists across uninstalls)")
                 .setPositiveButton("Export", (dialog, which) -> notifyExportBackup())
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -162,23 +179,57 @@ public class SettingsActivityUIManager extends BaseUIManager {
      * Show import backup file selection dialog
      */
     public void showImportBackupDialog(File[] backupFiles) {
-        if (backupFiles.length == 0) {
-            showInfoMessage("No backup files found in Downloads folder");
+        // Handle null or empty backup list - show browse options only
+        if (backupFiles == null || backupFiles.length == 0) {
+            showNoBackupsFoundDialog();
             return;
         }
         
-        String[] fileNames = new String[backupFiles.length];
+        // Sort by date descending (newest first) - backupFiles should already be sorted but ensure it
+        java.util.Arrays.sort(backupFiles, (f1, f2) -> Long.compare(f2.lastModified(), f1.lastModified()));
+        
+        // Add browse options at the end of the list
+        String[] displayItems = new String[backupFiles.length + 2];
         for (int i = 0; i < backupFiles.length; i++) {
-            String fileName = backupFiles[i].getName();
             long lastModified = backupFiles[i].lastModified();
-            String date = android.text.format.DateFormat.format("MMM dd, yyyy HH:mm", lastModified).toString();
-            fileNames[i] = fileName + "\n" + date;
+            String date = android.text.format.DateFormat.format("EEE, MMM dd yyyy", lastModified).toString();
+            String time = android.text.format.DateFormat.format("hh:mm a", lastModified).toString();
+            displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + time;
         }
+        // Add browse options with separator
+        displayItems[backupFiles.length] = "━━━━━━━━━━━━━━━━━━━━\n📂  Select Backup Folder...";
+        displayItems[backupFiles.length + 1] = "━━━━━━━━━━━━━━━━━━━━\n📄  Select Backup File...";
         
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
         builder.setTitle("Select Backup to Import")
-                .setItems(fileNames, (dialog, which) -> {
-                    showImportConfirmationDialog(backupFiles[which]);
+                .setItems(displayItems, (dialog, which) -> {
+                    if (which < backupFiles.length) {
+                        // Selected a backup file from list
+                        showImportConfirmationDialog(backupFiles[which]);
+                    } else if (which == backupFiles.length) {
+                        // Select Backup Folder
+                        notifyBrowseForBackupFolder();
+                    } else {
+                        // Select Backup File
+                        notifyBrowseForBackupFile();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    
+    /**
+     * Show dialog when no backups are found with helpful info
+     */
+    private void showNoBackupsFoundDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
+        builder.setTitle("No Backups Found")
+                .setMessage("No backup files found from this app install.\n\nSelect a backup folder or file from a previous install.")
+                .setPositiveButton("Select Folder", (dialog, which) -> {
+                    notifyBrowseForBackupFolder();
+                })
+                .setNeutralButton("Select File", (dialog, which) -> {
+                    notifyBrowseForBackupFile();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -204,13 +255,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
     public void showBackupLocationInfo(String fileName, Runnable onOpenDownloads) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
         builder.setTitle("Backup Created")
-                .setMessage("Backup saved to Downloads folder:\n" + fileName + "\n\nYou can share or move this file to backup your workout data.")
+                .setMessage("Backup saved to:\nDocuments/AllWorkouts_Backups/\n" + fileName + "\n\nThis backup will persist even if you uninstall the app.")
                 .setPositiveButton("OK", null)
-                .setNeutralButton("Open Downloads", (dialog, which) -> {
-                    if (onOpenDownloads != null) {
-                        onOpenDownloads.run();
-                    }
-                })
                 .show();
     }
     
@@ -293,6 +339,18 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private void notifyImportBackup(File backupFile) {
         if (getCallback() instanceof SettingsUICallback) {
             ((SettingsUICallback) getCallback()).onImportBackup(backupFile);
+        }
+    }
+    
+    private void notifyBrowseForBackupFile() {
+        if (getCallback() instanceof SettingsUICallback) {
+            ((SettingsUICallback) getCallback()).onBrowseForBackupFile();
+        }
+    }
+    
+    private void notifyBrowseForBackupFolder() {
+        if (getCallback() instanceof SettingsUICallback) {
+            ((SettingsUICallback) getCallback()).onBrowseForBackupFolder();
         }
     }
     

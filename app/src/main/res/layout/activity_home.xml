@@ -54,30 +54,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_app_header" />
 
-    <!-- ─── Middle Section (Stats - fills available space) ──────────── -->
-    <LinearLayout
+    <!-- ─── Middle Section (Stats - fills available space, scrollable) ──────────── -->
+    <ScrollView
         android:id="@+id/middle_section"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/spacing_3"
-        android:paddingEnd="@dimen/spacing_3"
-        android:paddingTop="@dimen/spacing_4"
-        android:gravity="top"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/calendar_workout_activity"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Time Estimate (Prominent) -->
         <LinearLayout
-            android:id="@+id/ll_time_estimate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/spacing_3"
+            android:paddingEnd="@dimen/spacing_3"
+            android:paddingTop="@dimen/spacing_4"
+            android:paddingBottom="@dimen/spacing_2">
+
+            <!-- Time Estimate (Prominent) -->
+            <LinearLayout
+                android:id="@+id/ll_time_estimate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/bg_dropdown"
-            android:padding="@dimen/spacing_3"
+            android:paddingStart="@dimen/spacing_3"
+            android:paddingEnd="@dimen/spacing_3"
+            android:paddingTop="@dimen/spacing_2"
+            android:paddingBottom="@dimen/spacing_2"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/spacing_3"
             android:visibility="gone">
 
@@ -87,7 +97,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="~25 min"
-                android:textColor="@color/accent_primary" />
+                android:textColor="@color/accent_primary"
+                android:includeFontPadding="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,10 +110,14 @@
             <TextView
                 android:id="@+id/tv_time_estimate_completion"
                 style="@style/TextAppearance.App.Body"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Done by 3:30 PM"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:includeFontPadding="true" />
         </LinearLayout>
 
         <!-- Quick Stats Row -->
@@ -181,7 +196,8 @@
                     android:alpha="0.7" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <!-- ─── Workout chooser panel (overlay) ─────── -->
     <android.support.v7.widget.LinearLayoutCompat

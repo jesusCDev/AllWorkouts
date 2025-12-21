@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.data_manager.WorkoutTimeEstimator;
+import com.allvens.allworkouts.data_manager.backup.BackupManager;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.managers.WorkoutSelectionManager;
@@ -34,9 +37,14 @@ public class MainActivity extends AppCompatActivity
     private android.view.View llTimeEstimate;
     private TextView tvTimeEstimateDuration;
     private TextView tvTimeEstimateCompletion;
+    private android.view.View llQuickStats;
     
     // Time estimator
     private WorkoutTimeEstimator timeEstimator;
+    
+    // Backup prompt (only show once per app session)
+    private boolean hasShownBackupPrompt = false;
+    private SettingsPrefsManager prefsManager;
 
     /* ====================================================================== */
     /*  LIFECYCLE                                                             */
@@ -68,11 +76,17 @@ public class MainActivity extends AppCompatActivity
             }, 100);
         }
         
+        // Update stats visibility based on settings
+        updateStatsVisibility();
+        
         // Update stats
         updateWorkoutStats();
         
         // Update time estimate
         updateTimeEstimate();
+        
+        // Check if we should prompt user to enable backup
+        checkBackupPrompt();
     }
 
     /* ====================================================================== */
@@ -83,6 +97,7 @@ public class MainActivity extends AppCompatActivity
         uiManager = new MainActivityUIManager(this);
         workoutManager = new WorkoutSelectionManager(this);
         timeEstimator = new WorkoutTimeEstimator(this);
+        prefsManager = new SettingsPrefsManager(this);
         
         // Set up event listeners
         uiManager.setEventListener(this);
@@ -102,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         llTimeEstimate = findViewById(R.id.ll_time_estimate);
         tvTimeEstimateDuration = findViewById(R.id.tv_time_estimate_duration);
         tvTimeEstimateCompletion = findViewById(R.id.tv_time_estimate_completion);
+        llQuickStats = findViewById(R.id.ll_quick_stats);
     }
     
     private void loadInitialData() {
@@ -390,11 +406,138 @@ public class MainActivity extends AppCompatActivity
         return completedWorkouts;
     }
     
+    /* ====================================================================== */
+    /*  BACKUP PROMPT                                                          */
+    /* ====================================================================== */
+    
+    /**
+     * Check if we should show the backup setup prompt
+     * Shows once per app session if auto-backup is disabled and user hasn't dismissed permanently
+     */
+    private void checkBackupPrompt() {
+        // Only show once per app session
+        if (hasShownBackupPrompt) return;
+        
+        // Check if user has permanently dismissed the prompt
+        boolean promptDismissed = prefsManager.getPrefSetting(PreferencesValues.BACKUP_PROMPT_DISMISSED);
+        if (promptDismissed) return;
+        
+        // Check if auto-backup is already enabled
+        boolean autoBackupEnabled = prefsManager.getPrefSetting(PreferencesValues.AUTO_BACKUP_ENABLED);
+        if (autoBackupEnabled) return;
+        
+        // Mark as shown for this session
+        hasShownBackupPrompt = true;
+        
+        // Show the prompt
+        showBackupSetupDialog();
+    }
+    
+    /**
+     * Shows dialog prompting user to enable auto-backup
+     */
+    private void showBackupSetupDialog() {
+        // Check if there are existing backups to restore
+        BackupManager backupManager = new BackupManager(this);
+        boolean hasBackups = backupManager.hasExistingBackups();
+        
+        android.util.Log.d("MainActivity", "Backup prompt - hasBackups: " + hasBackups);
+        
+        // Create a container layout for the dialog content
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setPadding(48, 16, 48, 16);
+        
+        // Message text
+        android.widget.TextView messageText = new android.widget.TextView(this);
+        String message = hasBackups 
+            ? "📂 Found existing backup data!\n\nEnable auto-backup to keep your workout progress safe across reinstalls."
+            : "🛡️ Protect your workout progress!\n\nEnable auto-backup to save your data automatically after each workout.";
+        messageText.setText(message);
+        messageText.setTextSize(16);
+        messageText.setPadding(0, 0, 0, 24);
+        layout.addView(messageText);
+        
+        // Don't ask again checkbox
+        android.widget.CheckBox dontAskCheckbox = new android.widget.CheckBox(this);
+        dontAskCheckbox.setText("Don't ask me again");
+        layout.addView(dontAskCheckbox);
+        
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this)
+            .setTitle("Enable Auto-Backup?")
+            .setView(layout)
+            .setPositiveButton("Enable", (dialog, which) -> {
+                enableAutoBackup();
+                // Show restore option after a short delay
+                if (hasBackups) {
+                    new android.os.Handler().postDelayed(() -> {
+                        showRestoreBackupOption(backupManager);
+                    }, 500);
+                }
+            })
+            .setNegativeButton("Not Now", (dialog, which) -> {
+                // Save "don't ask again" preference if checked
+                if (dontAskCheckbox.isChecked()) {
+                    prefsManager.update_PrefSetting(PreferencesValues.BACKUP_PROMPT_DISMISSED, true);
+                }
+            })
+            .setCancelable(true);
+        
+        builder.show();
+    }
+    
+    /**
+     * Enable auto-backup feature
+     */
+    private void enableAutoBackup() {
+        prefsManager.update_PrefSetting(PreferencesValues.AUTO_BACKUP_ENABLED, true);
+        android.widget.Toast.makeText(this, "Auto-backup enabled!", android.widget.Toast.LENGTH_SHORT).show();
+    }
+    
+    /**
+     * Shows option to restore from existing backup
+     */
+    private void showRestoreBackupOption(BackupManager backupManager) {
+        java.io.File mostRecent = backupManager.getMostRecentBackup();
+        if (mostRecent == null) return;
+        
+        // Format backup date
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM d, yyyy", java.util.Locale.getDefault());
+        String backupDate = sdf.format(new java.util.Date(mostRecent.lastModified()));
+        
+        new android.app.AlertDialog.Builder(this)
+            .setTitle("Restore Backup?")
+            .setMessage("Found backup from " + backupDate + ". Would you like to restore your data?")
+            .setPositiveButton("Restore", (dialog, which) -> {
+                boolean success = backupManager.importBackup(mostRecent.getAbsolutePath());
+                if (success) {
+                    android.widget.Toast.makeText(this, "Backup restored! Restarting...", android.widget.Toast.LENGTH_SHORT).show();
+                    // Restart activity to reflect restored data
+                    recreate();
+                } else {
+                    android.widget.Toast.makeText(this, "Failed to restore backup", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Skip", null)
+            .show();
+    }
+    
+    /* ====================================================================== */
+    /*  TIME ESTIMATE                                                         */
+    /* ====================================================================== */
+    
     /**
      * Calculate and display estimated total session time for all enabled workouts
      */
     private void updateTimeEstimate() {
         if (llTimeEstimate == null || timeEstimator == null) return;
+        
+        // Check if time estimate should be shown
+        boolean showTimeEstimate = prefsManager.getPrefSetting(PreferencesValues.SHOW_TIME_ESTIMATE, true);
+        if (!showTimeEstimate) {
+            llTimeEstimate.setVisibility(android.view.View.GONE);
+            return;
+        }
         
         try {
             // Get all enabled workouts
@@ -427,5 +570,15 @@ public class MainActivity extends AppCompatActivity
             android.util.Log.e("MainActivity", "Error updating time estimate", e);
             llTimeEstimate.setVisibility(android.view.View.GONE);
         }
+    }
+    
+    /**
+     * Update visibility of stats cards based on user preference
+     */
+    private void updateStatsVisibility() {
+        if (llQuickStats == null) return;
+        
+        boolean showStatsCards = prefsManager.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true);
+        llQuickStats.setVisibility(showStatsCards ? android.view.View.VISIBLE : android.view.View.GONE);
     }
 }

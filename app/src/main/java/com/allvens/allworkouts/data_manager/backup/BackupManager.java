@@ -42,12 +42,15 @@ public class BackupManager {
     private static final String BACKUP_EXTENSION = ".json";
     private static final int MAX_AUTO_BACKUPS = 3;
     
+    // Use Documents folder for persistent backups (survives uninstall)
+    private static final String DOCUMENTS_BACKUP_FOLDER = "Documents/AllWorkouts_Backups";
+    
     private Context context;
     private WorkoutWrapper workoutWrapper;
     private SettingsPrefsManager prefsManager;
     private BackupScheduler backupScheduler;
     
-    private static final String PREF_AUTO_BACKUP_ENABLED = "auto_backup_enabled";
+    // Use PreferencesValues.AUTO_BACKUP_ENABLED for consistency
     
     public BackupManager(Context context) {
         this.context = context;
@@ -111,13 +114,13 @@ public class BackupManager {
     }
     
     /**
-     * Exports backup to Downloads folder with user-friendly filename
+     * Exports backup to Documents/AllWorkouts_Backups folder (persists across uninstalls)
      */
     public String exportBackup() throws IOException {
         Log.d(TAG, "Starting backup export...");
         BackupData backup = createBackupData();
         String filename = generateBackupFilename(false);
-        File backupFile = new File(getDownloadsDirectory(), filename);
+        File backupFile = new File(getBackupDirectory(), filename);
         
         Log.d(TAG, "Writing backup to: " + backupFile.getAbsolutePath());
         writeBackupToFile(backup, backupFile);
@@ -172,29 +175,27 @@ public class BackupManager {
     
     /**
      * Get existing backup files sorted by date (newest first)
+     * Only returns files that actually exist and are readable
+     * All backups are stored in Documents/AllWorkouts_Backups
      */
     public File[] getExistingBackups() {
         ArrayList<File> backupsList = new ArrayList<>();
         
-        // Check Downloads folder
-        File downloadsDir = getDownloadsDirectory();
-        if (downloadsDir.exists()) {
-            File[] files = downloadsDir.listFiles((dir, name) -> 
-                name.startsWith(BACKUP_PREFIX) && name.endsWith(BACKUP_EXTENSION));
-            if (files != null) {
-                backupsList.addAll(Arrays.asList(files));
+        // Check primary location
+        File backupDir = getBackupDirectory();
+        addBackupsFromDirectory(backupsList, backupDir, "Documents/" + BACKUP_FOLDER);
+        
+        // Also check alternate case variations (filesystem may be case-sensitive)
+        File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        String[] caseVariations = {"ALLWORKOUTS_BACKUPS", "allworkouts_backups", "Allworkouts_Backups"};
+        for (String variant : caseVariations) {
+            File altDir = new File(documentsDir, variant);
+            if (altDir.exists() && !altDir.equals(backupDir)) {
+                addBackupsFromDirectory(backupsList, altDir, "Documents/" + variant);
             }
         }
         
-        // Check automatic backup folder
-        File backupDir = getBackupDirectory();
-        if (backupDir.exists()) {
-            File[] files = backupDir.listFiles((dir, name) -> 
-                name.startsWith(BACKUP_PREFIX) && name.endsWith(BACKUP_EXTENSION));
-            if (files != null) {
-                backupsList.addAll(Arrays.asList(files));
-            }
-        }
+        Log.d(TAG, "Total verified backups found: " + backupsList.size());
         
         // Sort by date (newest first)
         File[] backups = backupsList.toArray(new File[0]);
@@ -204,17 +205,56 @@ public class BackupManager {
     }
     
     /**
+     * Helper to add backup files from a directory, verifying each file exists
+     */
+    private void addBackupsFromDirectory(ArrayList<File> list, File directory, String locationName) {
+        Log.d(TAG, "Checking " + locationName + ": " + directory.getAbsolutePath());
+        
+        if (!directory.exists()) {
+            Log.d(TAG, "  -> Directory does not exist");
+            return;
+        }
+        
+        if (!directory.canRead()) {
+            Log.d(TAG, "  -> Cannot read directory (permission issue)");
+            return;
+        }
+        
+        File[] files = directory.listFiles((dir, name) -> 
+            name.startsWith(BACKUP_PREFIX) && name.endsWith(BACKUP_EXTENSION));
+        
+        if (files == null) {
+            Log.d(TAG, "  -> listFiles returned null");
+            return;
+        }
+        
+        int addedCount = 0;
+        for (File f : files) {
+            // Verify file actually exists and is readable
+            if (f.exists() && f.canRead() && f.length() > 0) {
+                list.add(f);
+                addedCount++;
+                Log.d(TAG, "  + " + f.getName() + " (" + f.length() + " bytes)");
+            } else {
+                Log.d(TAG, "  - Skipping " + f.getName() + " (exists=" + f.exists() + ", canRead=" + f.canRead() + ")");
+            }
+        }
+        
+        Log.d(TAG, "  -> Found " + addedCount + " valid backups in " + locationName);
+    }
+    
+    /**
      * Check if auto backup is enabled
      */
     public boolean isAutoBackupEnabled() {
-        return prefsManager.getPrefSetting(PREF_AUTO_BACKUP_ENABLED);
+        return prefsManager.getPrefSetting(PreferencesValues.AUTO_BACKUP_ENABLED);
     }
     
     /**
      * Enable or disable auto backup
      */
     public void setAutoBackupEnabled(boolean enabled) {
-        prefsManager.update_PrefSetting(PREF_AUTO_BACKUP_ENABLED, enabled);
+        prefsManager.update_PrefSetting(PreferencesValues.AUTO_BACKUP_ENABLED, enabled);
         
         if (enabled) {
             // Schedule weekly backups
@@ -362,6 +402,11 @@ public class BackupManager {
                     historyJson.put("forth", historyItem.getForth_value());
                     historyJson.put("fifth", historyItem.getFifth_value());
                     historyJson.put("max", historyItem.getMax_value());
+                    historyJson.put("completionDate", historyItem.getCompletionDate());
+                    // Include duration (null-safe)
+                    if (historyItem.getDurationSeconds() != null) {
+                        historyJson.put("duration", historyItem.getDurationSeconds());
+                    }
                     historyArray.put(historyJson);
                 }
                 historiesJson.put(entry.getKey().toString(), historyArray);
@@ -430,13 +475,25 @@ public class BackupManager {
                 
                 for (int i = 0; i < historyArray.length(); i++) {
                     JSONObject historyJson = historyArray.getJSONObject(i);
+                    
+                    // Parse completion date (default to 0 for old backups)
+                    long completionDate = historyJson.optLong("completionDate", 0);
+                    
+                    // Parse duration (nullable for old backups or outliers)
+                    Long duration = null;
+                    if (historyJson.has("duration") && !historyJson.isNull("duration")) {
+                        duration = historyJson.getLong("duration");
+                    }
+                    
                     WorkoutHistoryInfo historyItem = new WorkoutHistoryInfo(
                         historyJson.getInt("first"),
                         historyJson.getInt("second"),
                         historyJson.getInt("third"),
                         historyJson.getInt("forth"),
                         historyJson.getInt("fifth"),
-                        historyJson.getInt("max")
+                        historyJson.getInt("max"),
+                        completionDate,
+                        duration
                     );
                     historyItem.setId(historyJson.getLong("id"));
                     historyList.add(historyItem);
@@ -478,8 +535,33 @@ public class BackupManager {
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
     
+    /**
+     * Get backup directory in Documents folder (persists across uninstalls)
+     */
     private File getBackupDirectory() {
-        return new File(context.getExternalFilesDir(null), BACKUP_FOLDER);
+        // Use Documents folder for persistent storage
+        File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        return new File(documentsDir, BACKUP_FOLDER);
+    }
+    
+    /**
+     * Check if there are existing backups that could be restored
+     * Useful for prompting user on fresh install
+     */
+    public boolean hasExistingBackups() {
+        File[] backups = getExistingBackups();
+        return backups != null && backups.length > 0;
+    }
+    
+    /**
+     * Get the most recent backup file
+     */
+    public File getMostRecentBackup() {
+        File[] backups = getExistingBackups();
+        if (backups != null && backups.length > 0) {
+            return backups[0]; // Already sorted newest first
+        }
+        return null;
     }
     
     private void rotateBackups() {

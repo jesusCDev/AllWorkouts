@@ -1,6 +1,7 @@
 package com.allvens.allworkouts;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -8,7 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.FileOutputStream;
 
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.content.ContentResolver;
+
+import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.managers.SettingsDataManager;
 import com.allvens.allworkouts.ui.SettingsActivityUIManager;
 
@@ -18,6 +28,12 @@ public class SettingsActivity extends AppCompatActivity
 
     private SettingsActivityUIManager uiManager;
     private SettingsDataManager dataManager;
+    private SettingsPrefsManager prefsManager;
+    private File[] cachedBackupFiles; // Cache backup files for consistency
+    
+    private static final int PICK_BACKUP_FILE = 1001;
+    private static final int PICK_BACKUP_FOLDER = 1002;
+    private static final int PICK_BACKUP_FOLDER_FOR_IMPORT = 1003;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,6 +43,7 @@ public class SettingsActivity extends AppCompatActivity
         // Initialize managers
         uiManager = new SettingsActivityUIManager(this, this);
         dataManager = new SettingsDataManager(this, this);
+        prefsManager = new SettingsPrefsManager(this);
         
         // Setup UI
         uiManager.initialize(); // This calls initializeViews, setupViews, and setupListeners internally
@@ -60,7 +77,17 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void btnAction_ImportBackup(View view) {
+        // Fetch backup list
         File[] backupFiles = dataManager.getExistingBackups();
+        int count = (backupFiles != null) ? backupFiles.length : 0;
+        
+        // Show what we found with first file path for debugging
+        if (count > 0) {
+            android.widget.Toast.makeText(this, "Found " + count + ": " + backupFiles[0].getName(), android.widget.Toast.LENGTH_LONG).show();
+        } else {
+            android.widget.Toast.makeText(this, "No backups found", android.widget.Toast.LENGTH_SHORT).show();
+        }
+        
         uiManager.showImportBackupDialog(backupFiles);
     }
     
@@ -95,6 +122,282 @@ public class SettingsActivity extends AppCompatActivity
     }
     
     @Override
+    public void onBrowseForBackupFile() {
+        // Use SAF to let user pick a specific backup file
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/json");
+        // Also allow any file type in case JSON isn't recognized
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/json", "*/*"});
+        startActivityForResult(intent, PICK_BACKUP_FILE);
+    }
+    
+    @Override
+    public void onBrowseForBackupFolder() {
+        // Use SAF to let user pick a backup folder for import
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        
+        // Try to start in Documents folder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Uri documentsUri = Uri.parse("content://com.android.externalstorage.documents/document/primary:Documents");
+            intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentsUri);
+        }
+        
+        startActivityForResult(intent, PICK_BACKUP_FOLDER_FOR_IMPORT);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == PICK_BACKUP_FILE && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                importBackupFromUri(uri);
+            }
+        } else if (requestCode == PICK_BACKUP_FOLDER && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                handleFolderSelectedForAutoBackup(uri);
+            }
+        } else if (requestCode == PICK_BACKUP_FOLDER_FOR_IMPORT && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                handleFolderSelectedForImport(uri);
+            }
+        }
+    }
+    
+    /**
+     * Handle folder selection for auto-backup setup
+     */
+    private void handleFolderSelectedForAutoBackup(Uri folderUri) {
+        // Take persistent permission
+        final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+        getContentResolver().takePersistableUriPermission(folderUri, takeFlags);
+        
+        // Save the URI
+        prefsManager.update_PrefSetting(PreferencesValues.BACKUP_FOLDER_URI, folderUri.toString());
+        
+        // Enable auto backup now that we have folder access
+        dataManager.setAutoBackupEnabled(true);
+        uiManager.updateAutoBackupSwitch(true);
+        
+        android.widget.Toast.makeText(this, "Backup folder configured! Auto-backup enabled.", android.widget.Toast.LENGTH_LONG).show();
+        
+        // Check for existing backups in the selected folder
+        checkForBackupsInUri(folderUri);
+    }
+    
+    /**
+     * Handle folder selection for import (shows backup list immediately)
+     */
+    private void handleFolderSelectedForImport(Uri folderUri) {
+        // Take persistent permission (for future use)
+        final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+        try {
+            getContentResolver().takePersistableUriPermission(folderUri, takeFlags);
+            // Save URI for future use
+            prefsManager.update_PrefSetting(PreferencesValues.BACKUP_FOLDER_URI, folderUri.toString());
+        } catch (Exception e) {
+            android.util.Log.w("SettingsActivity", "Could not persist folder permission: " + e.getMessage());
+        }
+        
+        // Show backups from this folder
+        showBackupsFromUri(folderUri);
+    }
+    
+    /**
+     * Show list of backups from a folder URI
+     */
+    private void showBackupsFromUri(Uri folderUri) {
+        try {
+            Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(
+                folderUri, DocumentsContract.getTreeDocumentId(folderUri));
+            
+            android.database.Cursor cursor = getContentResolver().query(
+                childrenUri,
+                new String[]{DocumentsContract.Document.COLUMN_DISPLAY_NAME, 
+                             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                             DocumentsContract.Document.COLUMN_LAST_MODIFIED},
+                null, null, null);
+            
+            if (cursor != null) {
+                java.util.ArrayList<String> docIds = new java.util.ArrayList<>();
+                java.util.ArrayList<Long> times = new java.util.ArrayList<>();
+                
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(0);
+                    if (name.startsWith("allworkouts_backup_") && name.endsWith(".json")) {
+                        docIds.add(cursor.getString(1));
+                        times.add(cursor.getLong(2));
+                    }
+                }
+                cursor.close();
+                
+                if (docIds.isEmpty()) {
+                    android.widget.Toast.makeText(this, "No backup files found in this folder", android.widget.Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
+                // Sort by date descending (newest first)
+                Integer[] indices = new Integer[docIds.size()];
+                for (int i = 0; i < indices.length; i++) indices[i] = i;
+                java.util.Arrays.sort(indices, (a, b) -> Long.compare(times.get(b), times.get(a)));
+                
+                // Build sorted display items
+                String[] displayItems = new String[docIds.size()];
+                final String[] sortedDocIds = new String[docIds.size()];
+                for (int i = 0; i < indices.length; i++) {
+                    int idx = indices[i];
+                    sortedDocIds[i] = docIds.get(idx);
+                    long time = times.get(idx);
+                    String date = android.text.format.DateFormat.format("EEE, MMM dd yyyy", time).toString();
+                    String timeStr = android.text.format.DateFormat.format("hh:mm a", time).toString();
+                    displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + timeStr;
+                }
+                
+                // Show selection dialog
+                new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
+                    .setTitle("Select Backup to Import")
+                    .setItems(displayItems, (dialog, which) -> {
+                        Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
+                        importBackupFromUri(fileUri);
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+            }
+        } catch (Exception e) {
+            android.widget.Toast.makeText(this, "Error reading folder: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Check for existing backup files in the selected folder
+     */
+    private void checkForBackupsInUri(Uri folderUri) {
+        try {
+            Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(
+                folderUri, DocumentsContract.getTreeDocumentId(folderUri));
+            
+            android.database.Cursor cursor = getContentResolver().query(
+                childrenUri,
+                new String[]{DocumentsContract.Document.COLUMN_DISPLAY_NAME, DocumentsContract.Document.COLUMN_DOCUMENT_ID},
+                null, null, null);
+            
+            if (cursor != null) {
+                int backupCount = 0;
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(0);
+                    if (name.startsWith("allworkouts_backup_") && name.endsWith(".json")) {
+                        backupCount++;
+                    }
+                }
+                cursor.close();
+                
+                if (backupCount > 0) {
+                    // Show prompt to restore
+                    showRestoreFromFolderPrompt(folderUri, backupCount);
+                }
+            }
+        } catch (Exception e) {
+            android.util.Log.e("SettingsActivity", "Error checking backups: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Show prompt asking if user wants to restore from found backups
+     */
+    private void showRestoreFromFolderPrompt(Uri folderUri, int backupCount) {
+        new android.support.v7.app.AlertDialog.Builder(this)
+            .setTitle("Backups Found")
+            .setMessage("Found " + backupCount + " backup file(s) in this folder. Would you like to restore from the most recent one?")
+            .setPositiveButton("Restore", (dialog, which) -> {
+                importMostRecentFromUri(folderUri);
+            })
+            .setNegativeButton("Not Now", null)
+            .show();
+    }
+    
+    /**
+     * Import the most recent backup from a folder URI
+     */
+    private void importMostRecentFromUri(Uri folderUri) {
+        try {
+            Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(
+                folderUri, DocumentsContract.getTreeDocumentId(folderUri));
+            
+            android.database.Cursor cursor = getContentResolver().query(
+                childrenUri,
+                new String[]{DocumentsContract.Document.COLUMN_DISPLAY_NAME, 
+                             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                             DocumentsContract.Document.COLUMN_LAST_MODIFIED},
+                null, null, null);
+            
+            if (cursor != null) {
+                String newestDocId = null;
+                long newestTime = 0;
+                
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(0);
+                    String docId = cursor.getString(1);
+                    long modified = cursor.getLong(2);
+                    
+                    if (name.startsWith("allworkouts_backup_") && name.endsWith(".json")) {
+                        if (modified > newestTime) {
+                            newestTime = modified;
+                            newestDocId = docId;
+                        }
+                    }
+                }
+                cursor.close();
+                
+                if (newestDocId != null) {
+                    Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, newestDocId);
+                    importBackupFromUri(fileUri);
+                }
+            }
+        } catch (Exception e) {
+            android.widget.Toast.makeText(this, "Failed to import: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Import backup from a content URI (SAF)
+     */
+    private void importBackupFromUri(Uri uri) {
+        try {
+            // Copy the file to a temp location we can access
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream == null) {
+                android.widget.Toast.makeText(this, "Could not open file", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Create temp file
+            File tempFile = new File(getCacheDir(), "temp_backup.json");
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+            
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            
+            inputStream.close();
+            outputStream.close();
+            
+            // Import from temp file
+            dataManager.performBackupImport(tempFile);
+            
+        } catch (Exception e) {
+            android.widget.Toast.makeText(this, "Failed to import: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    @Override
     public void onShowDocumentation() {
         startActivity(new Intent(this, SettingsAppInfoSelectorActivity.class));
     }
@@ -118,6 +421,9 @@ public class SettingsActivity extends AppCompatActivity
     
     @Override
     public void onBackupStatusChanged(File[] backupFiles) {
+        cachedBackupFiles = backupFiles; // Cache for import button
+        android.util.Log.d("SettingsActivity", "Backup status updated - backups: " + 
+            (backupFiles != null ? backupFiles.length : "null"));
         uiManager.updateBackupStatus(backupFiles);
     }
     
@@ -170,8 +476,55 @@ public class SettingsActivity extends AppCompatActivity
         
         // Setup auto backup switch listener
         uiManager.setAutoBackupSwitchListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Check if we have a valid folder URI
+                if (!hasValidBackupFolderUri()) {
+                    // Need to select folder first
+                    promptForBackupFolder();
+                    // Don't enable yet - wait for folder selection
+                    uiManager.updateAutoBackupSwitch(false);
+                    return;
+                }
+            }
             dataManager.setAutoBackupEnabled(isChecked);
         });
+    }
+    
+    /**
+     * Check if we have a valid persisted backup folder URI
+     */
+    private boolean hasValidBackupFolderUri() {
+        String uriString = prefsManager.getPrefSettingString(PreferencesValues.BACKUP_FOLDER_URI);
+        if (uriString == null || uriString.isEmpty()) {
+            return false;
+        }
+        
+        // Check if permission is still valid
+        Uri uri = Uri.parse(uriString);
+        for (android.content.UriPermission perm : getContentResolver().getPersistedUriPermissions()) {
+            if (perm.getUri().equals(uri) && perm.isReadPermission() && perm.isWritePermission()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Prompt user to select backup folder
+     */
+    private void promptForBackupFolder() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        
+        // Try to start in Documents folder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Hint to start in Documents
+            Uri documentsUri = Uri.parse("content://com.android.externalstorage.documents/document/primary:Documents");
+            intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentsUri);
+        }
+        
+        startActivityForResult(intent, PICK_BACKUP_FOLDER);
     }
     
     /****************************************

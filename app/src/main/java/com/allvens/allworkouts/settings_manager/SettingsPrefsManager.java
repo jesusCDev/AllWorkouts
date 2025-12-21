@@ -21,6 +21,28 @@ public class SettingsPrefsManager {
     public boolean getPrefSetting(String prefKey){
         return prefs.getBoolean(prefKey, false);
     }
+    
+    /**
+     * Get boolean preference with custom default value
+     */
+    public boolean getPrefSetting(String prefKey, boolean defaultValue){
+        return prefs.getBoolean(prefKey, defaultValue);
+    }
+    
+    /**
+     * Get string preference (returns null if not set)
+     */
+    public String getPrefSettingString(String prefKey){
+        return prefs.getString(prefKey, null);
+    }
+    
+    /**
+     * Update string preference
+     */
+    public void update_PrefSetting(String prefKey, String value){
+        edit.putString(prefKey, value);
+        edit.commit();
+    }
 
     public int get_NotifiHour() {
         return prefs.getInt(PreferencesValues.NOTIFICATION_TIME_HOUR, 0);
