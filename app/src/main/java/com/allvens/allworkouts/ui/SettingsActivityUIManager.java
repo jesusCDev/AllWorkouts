@@ -34,6 +34,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
         void onBrowseForBackupFile();
         void onBrowseForBackupFolder();
         void onShowDocumentation();
+        void onMediaControlsToggled(boolean enabled);
+        boolean isNotificationListenerEnabled();
     }
     
     private SettingsManager settingsManager;
@@ -64,6 +66,13 @@ public class SettingsActivityUIManager extends BaseUIManager {
     
     @Override
     protected void setupViews() {
+        refreshSettingsValues();
+    }
+    
+    /**
+     * Refresh all settings values from preferences (call after import)
+     */
+    public void refreshSettingsValues() {
         // Setup settings values using the existing SettingsManager
         settingsManager.set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls);
         settingsManager.setUp_WorkoutsAndPositions(llWorkoutPositions);
@@ -79,12 +88,33 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Settings switches listeners (delegate to SettingsManager)
         sVibrate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.VIBRATE_ON));
         sSound.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SOUND_ON));
-        sMediaControls.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.MEDIA_CONTROLS_ON));
         sNotification.setOnCheckedChangeListener(settingsManager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON));
+        
+        // Media controls with permission check
+        sMediaControls.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Save the preference
+            settingsManager.update_PrefSettings(PreferencesValues.MEDIA_CONTROLS_ON).onCheckedChanged(buttonView, isChecked);
+            // Notify activity to handle permission if enabling
+            notifyMediaControlsToggled(isChecked);
+        });
         
         // Display settings listeners
         sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
         sShowStatsCards.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_STATS_CARDS));
+    }
+    
+    /**
+     * Show dialog prompting for notification listener permission
+     */
+    public void showNotificationListenerPermissionDialog(Runnable onOpenSettings) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
+        builder.setTitle("Permission Required")
+                .setMessage("To show the current song name, this app needs Notification Access permission.\n\nWould you like to grant it now?")
+                .setPositiveButton("Open Settings", (dialog, which) -> {
+                    if (onOpenSettings != null) onOpenSettings.run();
+                })
+                .setNegativeButton("Not Now", null)
+                .show();
     }
     
     @Override
@@ -351,6 +381,12 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private void notifyBrowseForBackupFolder() {
         if (getCallback() instanceof SettingsUICallback) {
             ((SettingsUICallback) getCallback()).onBrowseForBackupFolder();
+        }
+    }
+    
+    private void notifyMediaControlsToggled(boolean enabled) {
+        if (getCallback() instanceof SettingsUICallback) {
+            ((SettingsUICallback) getCallback()).onMediaControlsToggled(enabled);
         }
     }
     

@@ -414,6 +414,23 @@ public class SettingsActivity extends AppCompatActivity
         startActivity(new Intent(this, SettingsAppInfoSelectorActivity.class));
     }
     
+    @Override
+    public void onMediaControlsToggled(boolean enabled) {
+        if (enabled && !isNotificationListenerEnabled()) {
+            // Show permission dialog
+            uiManager.showNotificationListenerPermissionDialog(() -> {
+                openNotificationListenerSettings();
+            });
+        }
+    }
+    
+    @Override
+    public boolean isNotificationListenerEnabled() {
+        String pkgName = getPackageName();
+        String flat = android.provider.Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(pkgName);
+    }
+    
     // SettingsDataCallback implementations
     public void onOperationSuccess(String message) {
         // Handle specific backup operations with additional UI flows
@@ -583,9 +600,25 @@ public class SettingsActivity extends AppCompatActivity
     private void handleBackupImportSuccess(String message) {
         uiManager.showSuccessMessage(message);
         
+        // Refresh settings UI to show imported values
+        uiManager.refreshSettingsValues();
+        setupBackupUI(); // Refresh backup status
+        
         // Show restart recommendation after delay
         new Handler().postDelayed(() -> {
             showRestartRecommendation();
         }, 1000);
+    }
+    
+    /**
+     * Open notification listener settings (required for media controls)
+     */
+    public void openNotificationListenerSettings() {
+        try {
+            Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+            startActivity(intent);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(this, "Could not open notification settings", android.widget.Toast.LENGTH_SHORT).show();
+        }
     }
 }
