@@ -87,6 +87,11 @@ public class SettingsManager {
     /* ---------- Workout Position & Status ---------- */
 
     public void setUp_WorkoutsAndPositions(LinearLayout llWorkoutsAndPositions) {
+        // Clear existing views and reset tracker for refresh
+        llWorkoutsAndPositions.removeAllViews();
+        switchPosTracker = 0;
+        posSwitches = new SwitchCompat[5];
+        
         WorkoutBasicsPrefsChecker prefsChecker = new WorkoutBasicsPrefsChecker(context);
         WorkoutPosTouchListener touchListener  = new WorkoutPosTouchListener(context);
 

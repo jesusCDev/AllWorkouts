@@ -236,6 +236,21 @@ public class SettingsActivity extends AppCompatActivity
                 }
                 cursor.close();
                 
+                // Get folder display name for title
+                String folderName = getFolderDisplayName(folderUri);
+                
+                // Handle empty folder
+                if (docIds.isEmpty()) {
+                    new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
+                        .setTitle("No Backups Found")
+                        .setMessage("No backup files in:\n" + folderName + "\n\nSelect a different folder or browse for a file.")
+                        .setPositiveButton("Change Folder", (dialog, which) -> onBrowseForBackupFolder())
+                        .setNeutralButton("Browse File", (dialog, which) -> onBrowseForBackupFile())
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                    return;
+                }
+                
                 // Sort by date descending (newest first)
                 Integer[] indices = new Integer[docIds.size()];
                 for (int i = 0; i < indices.length; i++) indices[i] = i;
@@ -255,9 +270,9 @@ public class SettingsActivity extends AppCompatActivity
                     displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + timeStr;
                 }
                 
-                // Show selection dialog with buttons at bottom
+                // Show selection dialog with folder path and buttons at bottom
                 new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
-                    .setTitle("Select Backup to Import")
+                    .setTitle(backupCount + " Backups in " + folderName)
                     .setItems(displayItems, (dialog, which) -> {
                         Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
                         importBackupFromUri(fileUri);
@@ -272,6 +287,24 @@ public class SettingsActivity extends AppCompatActivity
             android.util.Log.e("SettingsActivity", "Error reading folder: " + e.getMessage());
             File[] backupFiles = dataManager.getExistingBackups();
             uiManager.showImportBackupDialog(backupFiles);
+        }
+    }
+    
+    /**
+     * Get display name for a folder URI
+     */
+    private String getFolderDisplayName(Uri folderUri) {
+        try {
+            String docId = DocumentsContract.getTreeDocumentId(folderUri);
+            // Format: "primary:Documents/AllWorkouts_Backups" -> "AllWorkouts_Backups"
+            if (docId.contains("/")) {
+                return docId.substring(docId.lastIndexOf("/") + 1);
+            } else if (docId.contains(":")) {
+                return docId.substring(docId.lastIndexOf(":") + 1);
+            }
+            return docId;
+        } catch (Exception e) {
+            return "Selected Folder";
         }
     }
     
@@ -440,9 +473,54 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public void onBackupStatusChanged(File[] backupFiles) {
         cachedBackupFiles = backupFiles; // Cache for import button
-        android.util.Log.d("SettingsActivity", "Backup status updated - backups: " + 
-            (backupFiles != null ? backupFiles.length : "null"));
-        uiManager.updateBackupStatus(backupFiles);
+        
+        // If we have a valid SAF folder, count files from there instead
+        if (hasValidBackupFolderUri()) {
+            updateBackupStatusFromSafFolder();
+        } else {
+            uiManager.updateBackupStatus(backupFiles);
+        }
+    }
+    
+    /**
+     * Update backup status by counting files in SAF folder
+     */
+    private void updateBackupStatusFromSafFolder() {
+        try {
+            String uriString = prefsManager.getPrefSettingString(PreferencesValues.BACKUP_FOLDER_URI);
+            Uri folderUri = Uri.parse(uriString);
+            
+            Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(
+                folderUri, DocumentsContract.getTreeDocumentId(folderUri));
+            
+            android.database.Cursor cursor = getContentResolver().query(
+                childrenUri,
+                new String[]{DocumentsContract.Document.COLUMN_DISPLAY_NAME, 
+                             DocumentsContract.Document.COLUMN_LAST_MODIFIED},
+                null, null, null);
+            
+            if (cursor != null) {
+                int count = 0;
+                long newestTime = 0;
+                
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(0);
+                    if (name.startsWith("allworkouts_backup_") && name.endsWith(".json")) {
+                        count++;
+                        long time = cursor.getLong(1);
+                        if (time > newestTime) newestTime = time;
+                    }
+                }
+                cursor.close();
+                
+                String folderName = getFolderDisplayName(folderUri);
+                uiManager.updateBackupStatusWithFolder(count, newestTime, folderName);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("SettingsActivity", "Error counting SAF backups: " + e.getMessage());
+            // Fall back to standard file list
+            uiManager.updateBackupStatus(cachedBackupFiles);
+        }
     }
     
     // BaseUICallback implementations

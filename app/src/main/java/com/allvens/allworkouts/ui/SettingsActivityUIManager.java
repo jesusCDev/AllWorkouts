@@ -300,7 +300,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
      * Update backup status display text
      */
     public void updateBackupStatus(File[] backupFiles) {
-        if (backupFiles.length == 0) {
+        if (backupFiles == null || backupFiles.length == 0) {
             tvBackupStatus.setText("No backups yet");
         } else {
             String status = backupFiles.length + " backup" + (backupFiles.length > 1 ? "s" : "") + " available";
@@ -308,6 +308,22 @@ public class SettingsActivityUIManager extends BaseUIManager {
                 long lastModified = backupFiles[0].lastModified();
                 String lastBackupDate = android.text.format.DateFormat.format("MMM dd, yyyy", lastModified).toString();
                 status += " (Last: " + lastBackupDate + ")";
+            }
+            tvBackupStatus.setText(status);
+        }
+    }
+    
+    /**
+     * Update backup status with SAF folder info
+     */
+    public void updateBackupStatusWithFolder(int count, long newestTime, String folderName) {
+        if (count == 0) {
+            tvBackupStatus.setText("No backups in " + folderName);
+        } else {
+            String status = count + " backup" + (count > 1 ? "s" : "") + " in " + folderName;
+            if (newestTime > 0) {
+                String lastBackupDate = android.text.format.DateFormat.format("MMM dd, yyyy", newestTime).toString();
+                status += "\nLast: " + lastBackupDate;
             }
             tvBackupStatus.setText(status);
         }
