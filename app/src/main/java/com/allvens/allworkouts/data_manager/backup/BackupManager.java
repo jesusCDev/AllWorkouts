@@ -586,18 +586,25 @@ public class BackupManager {
     private Map<String, Object> getAllPreferences() {
         Map<String, Object> prefs = new HashMap<>();
         
+        // Boolean settings
         prefs.put(PreferencesValues.VIBRATE_ON, prefsManager.getPrefSetting(PreferencesValues.VIBRATE_ON));
         prefs.put(PreferencesValues.SOUND_ON, prefsManager.getPrefSetting(PreferencesValues.SOUND_ON));
+        prefs.put(PreferencesValues.SCREEN_ON, prefsManager.getPrefSetting(PreferencesValues.SCREEN_ON));
         prefs.put(PreferencesValues.MEDIA_CONTROLS_ON, prefsManager.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
         prefs.put(PreferencesValues.NOTIFICATION_ON, prefsManager.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
+        prefs.put(PreferencesValues.SHOW_TIME_ESTIMATE, prefsManager.getPrefSetting(PreferencesValues.SHOW_TIME_ESTIMATE, true));
+        prefs.put(PreferencesValues.SHOW_STATS_CARDS, prefsManager.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true));
         
         return prefs;
     }
     
     private void restorePreferences(Map<String, Object> preferences) {
+        if (preferences == null) return;
         for (Map.Entry<String, Object> entry : preferences.entrySet()) {
             if (entry.getValue() instanceof Boolean) {
                 prefsManager.update_PrefSetting(entry.getKey(), (Boolean) entry.getValue());
+            } else if (entry.getValue() instanceof Number) {
+                prefsManager.update_PrefSetting(entry.getKey(), ((Number) entry.getValue()).intValue());
             }
         }
     }
@@ -630,22 +637,36 @@ public class BackupManager {
     }
     
     private Map<String, Integer> getWorkoutPositions() {
-        // Implementation depends on how workout positions are stored
-        // This is a placeholder
-        return new HashMap<>();
+        Map<String, Integer> positions = new HashMap<>();
+        positions.put(PreferencesValues.PULL_POS, prefsManager.getPrefSettingInt(PreferencesValues.PULL_POS, 0));
+        positions.put(PreferencesValues.PUSH_POS, prefsManager.getPrefSettingInt(PreferencesValues.PUSH_POS, 1));
+        positions.put(PreferencesValues.SIT_POS, prefsManager.getPrefSettingInt(PreferencesValues.SIT_POS, 2));
+        positions.put(PreferencesValues.SQT_POS, prefsManager.getPrefSettingInt(PreferencesValues.SQT_POS, 3));
+        positions.put(PreferencesValues.BACK_POS, prefsManager.getPrefSettingInt(PreferencesValues.BACK_POS, 4));
+        return positions;
     }
     
     private void restoreWorkoutPositions(Map<String, Integer> positions) {
-        // Implementation for restoring workout positions
+        if (positions == null) return;
+        for (Map.Entry<String, Integer> entry : positions.entrySet()) {
+            prefsManager.update_PrefSetting(entry.getKey(), entry.getValue());
+        }
     }
     
     private Map<String, Boolean> getWorkoutEnabledStatus() {
-        // Implementation depends on how workout enabled status is stored
-        // This is a placeholder
-        return new HashMap<>();
+        Map<String, Boolean> status = new HashMap<>();
+        status.put(PreferencesValues.PULL_STAT, prefsManager.getPrefSetting(PreferencesValues.PULL_STAT, true));
+        status.put(PreferencesValues.PUSH_STAT, prefsManager.getPrefSetting(PreferencesValues.PUSH_STAT, true));
+        status.put(PreferencesValues.SIT_STAT, prefsManager.getPrefSetting(PreferencesValues.SIT_STAT, true));
+        status.put(PreferencesValues.SQT_STAT, prefsManager.getPrefSetting(PreferencesValues.SQT_STAT, true));
+        status.put(PreferencesValues.BACK_STAT, prefsManager.getPrefSetting(PreferencesValues.BACK_STAT, true));
+        return status;
     }
     
     private void restoreWorkoutEnabledStatus(Map<String, Boolean> enabled) {
-        // Implementation for restoring workout enabled status
+        if (enabled == null) return;
+        for (Map.Entry<String, Boolean> entry : enabled.entrySet()) {
+            prefsManager.update_PrefSetting(entry.getKey(), entry.getValue());
+        }
     }
 }

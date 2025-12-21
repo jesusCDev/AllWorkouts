@@ -43,6 +43,21 @@ public class SettingsPrefsManager {
         edit.putString(prefKey, value);
         edit.commit();
     }
+    
+    /**
+     * Get int preference
+     */
+    public int getPrefSettingInt(String prefKey, int defaultValue){
+        return prefs.getInt(prefKey, defaultValue);
+    }
+    
+    /**
+     * Update int preference
+     */
+    public void update_PrefSetting(String prefKey, int value){
+        edit.putInt(prefKey, value);
+        edit.commit();
+    }
 
     public int get_NotifiHour() {
         return prefs.getInt(PreferencesValues.NOTIFICATION_TIME_HOUR, 0);

@@ -77,18 +77,17 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void btnAction_ImportBackup(View view) {
-        // Fetch backup list
-        File[] backupFiles = dataManager.getExistingBackups();
-        int count = (backupFiles != null) ? backupFiles.length : 0;
-        
-        // Show what we found with first file path for debugging
-        if (count > 0) {
-            android.widget.Toast.makeText(this, "Found " + count + ": " + backupFiles[0].getName(), android.widget.Toast.LENGTH_LONG).show();
+        // Check if we have a saved backup folder with valid permission
+        if (hasValidBackupFolderUri()) {
+            // Use the saved folder automatically
+            String uriString = prefsManager.getPrefSettingString(PreferencesValues.BACKUP_FOLDER_URI);
+            Uri folderUri = Uri.parse(uriString);
+            showBackupsFromUri(folderUri);
         } else {
-            android.widget.Toast.makeText(this, "No backups found", android.widget.Toast.LENGTH_SHORT).show();
+            // No saved folder - show standard import dialog
+            File[] backupFiles = dataManager.getExistingBackups();
+            uiManager.showImportBackupDialog(backupFiles);
         }
-        
-        uiManager.showImportBackupDialog(backupFiles);
     }
     
     /****************************************
@@ -237,20 +236,17 @@ public class SettingsActivity extends AppCompatActivity
                 }
                 cursor.close();
                 
-                if (docIds.isEmpty()) {
-                    android.widget.Toast.makeText(this, "No backup files found in this folder", android.widget.Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                
                 // Sort by date descending (newest first)
                 Integer[] indices = new Integer[docIds.size()];
                 for (int i = 0; i < indices.length; i++) indices[i] = i;
                 java.util.Arrays.sort(indices, (a, b) -> Long.compare(times.get(b), times.get(a)));
                 
-                // Build sorted display items
-                String[] displayItems = new String[docIds.size()];
-                final String[] sortedDocIds = new String[docIds.size()];
-                for (int i = 0; i < indices.length; i++) {
+                // Build sorted display items + options at bottom
+                int backupCount = docIds.size();
+                String[] displayItems = new String[backupCount + 2]; // +2 for Change Folder and Select File
+                final String[] sortedDocIds = new String[backupCount];
+                
+                for (int i = 0; i < backupCount; i++) {
                     int idx = indices[i];
                     sortedDocIds[i] = docIds.get(idx);
                     long time = times.get(idx);
@@ -259,18 +255,34 @@ public class SettingsActivity extends AppCompatActivity
                     displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + timeStr;
                 }
                 
+                // Add options at bottom
+                displayItems[backupCount] = "━━━━━━━━━━━━━━━━━━━━\n📂  Change Folder...";
+                displayItems[backupCount + 1] = "━━━━━━━━━━━━━━━━━━━━\n📄  Select Backup File...";
+                
                 // Show selection dialog
                 new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
                     .setTitle("Select Backup to Import")
                     .setItems(displayItems, (dialog, which) -> {
-                        Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
-                        importBackupFromUri(fileUri);
+                        if (which < backupCount) {
+                            // Selected a backup
+                            Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
+                            importBackupFromUri(fileUri);
+                        } else if (which == backupCount) {
+                            // Change folder
+                            onBrowseForBackupFolder();
+                        } else {
+                            // Select file
+                            onBrowseForBackupFile();
+                        }
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
             }
         } catch (Exception e) {
-            android.widget.Toast.makeText(this, "Error reading folder: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+            // Folder permission may have been revoked - show standard dialog
+            android.util.Log.e("SettingsActivity", "Error reading folder: " + e.getMessage());
+            File[] backupFiles = dataManager.getExistingBackups();
+            uiManager.showImportBackupDialog(backupFiles);
         }
     }
     
