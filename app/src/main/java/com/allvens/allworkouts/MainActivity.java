@@ -181,6 +181,15 @@ public class MainActivity extends AppCompatActivity
         
         // Update time estimate when workouts refresh
         updateTimeEstimate();
+        
+        // If the workout chooser is open, refresh it with the new order
+        if (uiManager.isChooserOpen()) {
+            uiManager.closeWorkoutChooser();
+            // Re-open with updated workout list after a brief delay
+            workoutCalendar.postDelayed(() -> {
+                uiManager.toggleWorkoutChooser(workouts, completedToday);
+            }, 100);
+        }
     }
     
     @Override
