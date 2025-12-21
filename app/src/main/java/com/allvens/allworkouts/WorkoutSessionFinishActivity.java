@@ -27,6 +27,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private String currentChoiceWorkout;
     private String nextChoiceWorkout;
     private String sessionStartWorkout; // The workout that started this session
+    private Long durationSeconds; // Duration of the workout session (null if invalid/outlier)
 
     private final static int PROG_INC_NEUTRAL = 1;
     private final static int PROG_INC_EASY    = 2;
@@ -75,6 +76,18 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         if (sessionStartWorkout == null) {
             sessionStartWorkout = currentChoiceWorkout;
         }
+        
+        // Get duration from intent (only present if valid)
+        if (getIntent().hasExtra(Constants.DURATION_SECONDS_KEY)) {
+            durationSeconds = getIntent().getLongExtra(Constants.DURATION_SECONDS_KEY, 0);
+            if (durationSeconds <= 0) {
+                durationSeconds = null;
+            }
+            android.util.Log.d("WorkoutFinish", "Received duration: " + durationSeconds + "s");
+        } else {
+            durationSeconds = null;
+            android.util.Log.d("WorkoutFinish", "No duration received (outlier or legacy)");
+        }
 
         ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(currentChoiceWorkout);
 
@@ -96,17 +109,20 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         WorkoutInfo workoutInfo           = workoutGenerator.getWorkoutInfo();
         maxValue                          = workoutInfo.getMax();
 
-        wrapper.createWorkoutHistory(
-                new WorkoutHistoryInfo(
-                        workout.getWorkoutValue(0),
-                        workout.getWorkoutValue(1),
-                        workout.getWorkoutValue(2),
-                        workout.getWorkoutValue(3),
-                        workout.getWorkoutValue(4),
-                        maxValue
-                ),
-                workoutInfo.getId()
+        // Create history entry with duration (null if outlier/invalid)
+        WorkoutHistoryInfo historyInfo = new WorkoutHistoryInfo(
+                workout.getWorkoutValue(0),
+                workout.getWorkoutValue(1),
+                workout.getWorkoutValue(2),
+                workout.getWorkoutValue(3),
+                workout.getWorkoutValue(4),
+                maxValue,
+                System.currentTimeMillis() / 1000,
+                durationSeconds
         );
+        wrapper.createWorkoutHistory(historyInfo, workoutInfo.getId());
+        
+        android.util.Log.d("WorkoutFinish", "Saved history with duration: " + durationSeconds + "s");
 
         workoutInfo.setMax((workoutInfo.getMax() + PROG_INC_NEUTRAL));
         workoutInfo.setProgress((workoutInfo.getProgress() + 1));

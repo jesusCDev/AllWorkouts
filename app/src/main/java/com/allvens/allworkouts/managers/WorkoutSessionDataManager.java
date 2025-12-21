@@ -104,7 +104,16 @@ public class WorkoutSessionDataManager extends BaseDataManager {
      * Handle session completion navigation
      */
     public void handleSessionCompletion() {
-        android.util.Log.d("WorkoutSession", "DataManager.handleSessionCompletion() called");
+        handleSessionCompletion(0, false);
+    }
+    
+    /**
+     * Handle session completion navigation with duration tracking
+     * @param durationSeconds Duration of the workout in seconds
+     * @param isValidDuration Whether the duration is valid (not an outlier)
+     */
+    public void handleSessionCompletion(long durationSeconds, boolean isValidDuration) {
+        android.util.Log.d("WorkoutSession", "DataManager.handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration);
         try {
             Intent intent = new Intent(getContext(), WorkoutSessionFinishActivity.class);
             // Pass the workout name as string, not the Workout object
@@ -115,6 +124,12 @@ public class WorkoutSessionDataManager extends BaseDataManager {
             if (sessionStartWorkout != null) {
                 intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
                 android.util.Log.d("WorkoutSession", "Added session start workout to intent: " + sessionStartWorkout);
+            }
+            
+            // Pass duration if valid
+            if (isValidDuration && durationSeconds > 0) {
+                intent.putExtra(Constants.DURATION_SECONDS_KEY, durationSeconds);
+                android.util.Log.d("WorkoutSession", "Added valid duration to intent: " + durationSeconds + "s");
             }
             
             // Use activity callback for navigation - cast to BaseUICallback

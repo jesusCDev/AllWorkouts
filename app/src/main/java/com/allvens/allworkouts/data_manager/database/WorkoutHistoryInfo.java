@@ -15,12 +15,17 @@ public class WorkoutHistoryInfo {
 
     private int max_value;
     private long completionDate; // Unix timestamp in seconds
+    private Long durationSeconds; // Duration of workout in seconds (nullable for legacy/outlier entries)
 
     public WorkoutHistoryInfo(int first_value, int second_value, int third_value, int forth_value, int fifth_value, int max_value){
-        this(first_value, second_value, third_value, forth_value, fifth_value, max_value, System.currentTimeMillis() / 1000);
+        this(first_value, second_value, third_value, forth_value, fifth_value, max_value, System.currentTimeMillis() / 1000, null);
     }
 
     public WorkoutHistoryInfo(int first_value, int second_value, int third_value, int forth_value, int fifth_value, int max_value, long completionDate){
+        this(first_value, second_value, third_value, forth_value, fifth_value, max_value, completionDate, null);
+    }
+
+    public WorkoutHistoryInfo(int first_value, int second_value, int third_value, int forth_value, int fifth_value, int max_value, long completionDate, Long durationSeconds){
         this.first_value  = first_value;
         this.second_value = second_value;
         this.third_value  = third_value;
@@ -28,6 +33,7 @@ public class WorkoutHistoryInfo {
         this.fifth_value    = fifth_value;
         this.max_value      = max_value;
         this.completionDate = completionDate;
+        this.durationSeconds = durationSeconds;
     }
 
     public long getId() {
@@ -96,5 +102,20 @@ public class WorkoutHistoryInfo {
 
     public void setCompletionDate(long completionDate) {
         this.completionDate = completionDate;
+    }
+
+    public Long getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(Long durationSeconds) {
+        this.durationSeconds = durationSeconds;
+    }
+
+    /**
+     * Check if this entry has a valid duration recorded
+     */
+    public boolean hasValidDuration() {
+        return durationSeconds != null && durationSeconds > 0;
     }
 }

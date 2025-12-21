@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.base.BaseInterfaces;
+import com.allvens.allworkouts.data_manager.WorkoutDurationTracker;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.gesture.SkipWorkoutGestureHandler;
 import com.allvens.allworkouts.managers.WorkoutSessionController;
@@ -28,6 +29,7 @@ public class WorkoutSessionActivity extends AppCompatActivity
     private WorkoutSessionDataManager dataManager;
     private WorkoutSessionController sessionController;
     private SkipWorkoutGestureHandler gestureHandler;
+    private WorkoutDurationTracker durationTracker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,10 +40,14 @@ public class WorkoutSessionActivity extends AppCompatActivity
         uiManager = new WorkoutSessionActivityUIManager(this, this);
         dataManager = new WorkoutSessionDataManager(this, this);
         sessionController = new WorkoutSessionController(this, this);
+        durationTracker = new WorkoutDurationTracker(this);
         
         // Setup UI
         uiManager.initializeViews();
         uiManager.setupMediaControls();
+        
+        // Start duration tracking
+        durationTracker.startTracking();
         
         // Initialize session with data from intent
         String sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
@@ -59,6 +65,9 @@ public class WorkoutSessionActivity extends AppCompatActivity
         super.onResume();
         uiManager.onResume();
         sessionController.resumeSession();
+        if (durationTracker != null) {
+            durationTracker.onResume();
+        }
     }
 
     @Override
@@ -66,6 +75,9 @@ public class WorkoutSessionActivity extends AppCompatActivity
         super.onPause();
         uiManager.onPause();
         sessionController.pauseSession();
+        if (durationTracker != null) {
+            durationTracker.onPause();
+        }
     }
     
     @Override
@@ -214,8 +226,18 @@ public class WorkoutSessionActivity extends AppCompatActivity
     @Override
     public void onSessionComplete() {
         android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() called");
-        dataManager.handleSessionCompletion();
-        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() - handleSessionCompletion() called");
+        
+        // Get duration and pass to data manager for session completion
+        long durationSeconds = 0;
+        boolean isValidDuration = false;
+        if (durationTracker != null && durationTracker.isTracking()) {
+            durationSeconds = durationTracker.getActiveDurationSeconds();
+            isValidDuration = durationTracker.isValidDuration(dataManager.getWorkoutInfo().getId());
+            durationTracker.stopTracking();
+        }
+        
+        dataManager.handleSessionCompletion(durationSeconds, isValidDuration);
+        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() - handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration);
     }
     
     @Override

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.allvens.allworkouts.assets.Constants;
 import com.allvens.allworkouts.assets.StartWorkoutSession;
+import com.allvens.allworkouts.data_manager.WorkoutTimeEstimator;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.managers.WorkoutSelectionManager;
@@ -30,6 +31,12 @@ public class MainActivity extends AppCompatActivity
     private TextView tvStatCurrentStreak;
     private TextView tvStatMaxStreak;
     private TextView tvTodayCompletion;
+    private android.view.View llTimeEstimate;
+    private TextView tvTimeEstimateDuration;
+    private TextView tvTimeEstimateCompletion;
+    
+    // Time estimator
+    private WorkoutTimeEstimator timeEstimator;
 
     /* ====================================================================== */
     /*  LIFECYCLE                                                             */
@@ -63,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         
         // Update stats
         updateWorkoutStats();
+        
+        // Update time estimate
+        updateTimeEstimate();
     }
 
     /* ====================================================================== */
@@ -72,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     private void initializeManagers() {
         uiManager = new MainActivityUIManager(this);
         workoutManager = new WorkoutSelectionManager(this);
+        timeEstimator = new WorkoutTimeEstimator(this);
         
         // Set up event listeners
         uiManager.setEventListener(this);
@@ -88,6 +99,9 @@ public class MainActivity extends AppCompatActivity
         tvStatCurrentStreak = findViewById(R.id.tv_stat_current_streak);
         tvStatMaxStreak = findViewById(R.id.tv_stat_max_streak);
         tvTodayCompletion = findViewById(R.id.tv_today_completion);
+        llTimeEstimate = findViewById(R.id.ll_time_estimate);
+        tvTimeEstimateDuration = findViewById(R.id.tv_time_estimate_duration);
+        tvTimeEstimateCompletion = findViewById(R.id.tv_time_estimate_completion);
     }
     
     private void loadInitialData() {
@@ -148,12 +162,18 @@ public class MainActivity extends AppCompatActivity
         // Handle updated workout list - ensure valid selection, preferring uncompleted workouts
         java.util.Set<String> completedToday = getCompletedWorkoutsToday();
         workoutManager.ensureValidSelection(completedToday);
+        
+        // Update time estimate when workouts refresh
+        updateTimeEstimate();
     }
     
     @Override
     public void onWorkoutSelectionChanged(String workout) {
         // Handle workout selection from data manager
         uiManager.updateSelectedWorkout(workout);
+        
+        // Time estimate doesn't change on single workout selection,
+        // since we show total session time
     }
     
     @Override
@@ -368,5 +388,44 @@ public class MainActivity extends AppCompatActivity
         }
         
         return completedWorkouts;
+    }
+    
+    /**
+     * Calculate and display estimated total session time for all enabled workouts
+     */
+    private void updateTimeEstimate() {
+        if (llTimeEstimate == null || timeEstimator == null) return;
+        
+        try {
+            // Get all enabled workouts
+            String[] enabledWorkouts = workoutManager.getAvailableWorkouts();
+            
+            if (enabledWorkouts == null || enabledWorkouts.length == 0) {
+                llTimeEstimate.setVisibility(android.view.View.GONE);
+                return;
+            }
+            
+            // Calculate total session time estimate
+            long totalSeconds = timeEstimator.estimateTotalSessionDuration(enabledWorkouts);
+            
+            if (totalSeconds <= 0) {
+                llTimeEstimate.setVisibility(android.view.View.GONE);
+                return;
+            }
+            
+            // Format and display separately
+            String durationText = timeEstimator.formatDuration(totalSeconds);
+            String completionText = timeEstimator.formatCompletionTime(totalSeconds);
+            
+            tvTimeEstimateDuration.setText(durationText);
+            tvTimeEstimateCompletion.setText(completionText);
+            llTimeEstimate.setVisibility(android.view.View.VISIBLE);
+            
+            android.util.Log.d("MainActivity", "Time estimate: " + durationText + " - " + completionText);
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error updating time estimate", e);
+            llTimeEstimate.setVisibility(android.view.View.GONE);
+        }
     }
 }

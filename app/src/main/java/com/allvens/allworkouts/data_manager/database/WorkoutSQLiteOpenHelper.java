@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class WorkoutSQLiteOpenHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "workouts.db";
-    private static final int VERSION_NUMBER   = 3;
+    private static final int VERSION_NUMBER   = 4;
 
     public WorkoutSQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
@@ -28,6 +28,10 @@ public class WorkoutSQLiteOpenHelper extends SQLiteOpenHelper{
         if (oldVersion < 3) {
             // Add completion_date column to workout_history table
             sqLiteDatabase.execSQL(WorkoutContract.ALTER_TABLE_ADD_COMPLETION_DATE);
+        }
+        if (oldVersion < 4) {
+            // Add duration_seconds column to workout_history table for time tracking
+            sqLiteDatabase.execSQL(WorkoutContract.ALTER_TABLE_ADD_DURATION_SECONDS);
         }
     }
 }

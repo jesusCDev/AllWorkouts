@@ -44,11 +44,16 @@ final class WorkoutContract {
                     WorkoutHistory_Entry.COLUMN_FIFTH + " INTEGER NOT NULL, " +
                     WorkoutHistory_Entry.COLUMN_MAX + " INTEGER NOT NULL, " +
                     WorkoutHistory_Entry.COLUMN_COMPLETION_DATE + " INTEGER NOT NULL, " +
+                    WorkoutHistory_Entry.COLUMN_DURATION_SECONDS + " INTEGER, " +
                     "UNIQUE ( " + WorkoutHistory_Entry._ID + ") ON CONFLICT REPLACE )";
 
     static final String ALTER_TABLE_ADD_COMPLETION_DATE =
             "ALTER TABLE " + WorkoutHistory_Entry.TABLE_NAME + " ADD COLUMN " +
                     WorkoutHistory_Entry.COLUMN_COMPLETION_DATE + " INTEGER DEFAULT " + (System.currentTimeMillis() / 1000);
+
+    static final String ALTER_TABLE_ADD_DURATION_SECONDS =
+            "ALTER TABLE " + WorkoutHistory_Entry.TABLE_NAME + " ADD COLUMN " +
+                    WorkoutHistory_Entry.COLUMN_DURATION_SECONDS + " INTEGER DEFAULT NULL";
 
     public static class Workout_Entry implements BaseColumns{
         public static final String TABLE_NAME         = "workout_info";
@@ -59,7 +64,7 @@ final class WorkoutContract {
         public static final String COLUMN_DIFFICULTY_RATING = "difficulty_rating";
     }
     
-    public static class WorkoutHistory_Entry implements BaseColumns{
+public static class WorkoutHistory_Entry implements BaseColumns{
         public static final String TABLE_NAME            = "workout_history";
         public static final String COLUMN_WORKOUT_ID     = "id";
         public static final String COLUMN_FIRST          = "first_value";
@@ -69,6 +74,7 @@ final class WorkoutContract {
         public static final String COLUMN_FIFTH          = "fifth_value";
         public static final String COLUMN_MAX            = "max_value";
         public static final String COLUMN_COMPLETION_DATE = "completion_date";
+        public static final String COLUMN_DURATION_SECONDS = "duration_seconds";
     }
 
 }

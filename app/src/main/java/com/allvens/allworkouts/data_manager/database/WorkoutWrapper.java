@@ -133,6 +133,14 @@ public class WorkoutWrapper {
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH, workoutHistory.getFifth_value());
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX, workoutHistory.getMax_value());
         values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_COMPLETION_DATE, workoutHistory.getCompletionDate());
+        
+        // Duration can be null for legacy entries or outliers
+        if (workoutHistory.getDurationSeconds() != null) {
+            values.put(WorkoutContract.WorkoutHistory_Entry.COLUMN_DURATION_SECONDS, workoutHistory.getDurationSeconds());
+        } else {
+            values.putNull(WorkoutContract.WorkoutHistory_Entry.COLUMN_DURATION_SECONDS);
+        }
+        
         database.insert(WorkoutContract.WorkoutHistory_Entry.TABLE_NAME, null, values);
     }
 
@@ -150,6 +158,9 @@ public class WorkoutWrapper {
                     completionDate = cursor.getLong(dateColumnIndex);
                 }
                 
+                // Get duration, which can be null
+                Long durationSeconds = getLongNullable(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_DURATION_SECONDS);
+                
                 WorkoutHistoryInfo workoutHistory_info = new WorkoutHistoryInfo(
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND),
@@ -157,7 +168,8 @@ public class WorkoutWrapper {
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH),
                         getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX),
-                        completionDate);
+                        completionDate,
+                        durationSeconds);
 
                 workoutHistory_info.setId(getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry._ID));
                 workouts.add(workoutHistory_info);
@@ -279,5 +291,60 @@ public class WorkoutWrapper {
             return cursor.getInt(columnIndex);
         }
         return 0; // or appropriate default value
+    }
+    
+    /**
+     * Safely get nullable Long value from cursor
+     */
+    private Long getLongNullable(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if (columnIndex != -1 && !cursor.isNull(columnIndex)) {
+            return cursor.getLong(columnIndex);
+        }
+        return null;
+    }
+    
+    /**
+     * Get recent workout history entries with valid duration for a specific workout
+     * Used for time estimation calculations
+     * @param workoutID The workout ID to get history for
+     * @param limit Maximum number of entries to return
+     * @return List of WorkoutHistoryInfo with valid durations, ordered by most recent first
+     */
+    public List<WorkoutHistoryInfo> getRecentValidDurations(long workoutID, int limit) {
+        List<WorkoutHistoryInfo> workouts = new ArrayList<>();
+        String selectQuery = "SELECT * FROM workout_history WHERE id = ? AND duration_seconds IS NOT NULL AND duration_seconds > 0 ORDER BY completion_date DESC LIMIT ?";
+        Cursor cursor = database.rawQuery(selectQuery, new String[]{String.valueOf(workoutID), String.valueOf(limit)});
+        
+        try {
+            while (cursor.moveToNext()) {
+                long completionDate = 0;
+                int dateColumnIndex = cursor.getColumnIndex(WorkoutContract.WorkoutHistory_Entry.COLUMN_COMPLETION_DATE);
+                if (dateColumnIndex != -1) {
+                    completionDate = cursor.getLong(dateColumnIndex);
+                }
+                
+                Long durationSeconds = getLongNullable(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_DURATION_SECONDS);
+                
+                WorkoutHistoryInfo workoutHistory_info = new WorkoutHistoryInfo(
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIRST),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_SECOND),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_THIRD),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FORTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_FIFTH),
+                        getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry.COLUMN_MAX),
+                        completionDate,
+                        durationSeconds);
+                
+                workoutHistory_info.setId(getIntSafely(cursor, WorkoutContract.WorkoutHistory_Entry._ID));
+                workouts.add(workoutHistory_info);
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        
+        return workouts;
     }
 }
