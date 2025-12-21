@@ -9,12 +9,15 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 
 /**
  * Handles media control functionality for workout sessions
@@ -25,7 +28,10 @@ public class WorkoutMediaController {
     private final Context context;
     private AudioManager audioManager;
     private ImageButton playPauseButton;
+    private ImageButton previousButton;
+    private ImageButton nextButton;
     private TextView trackInfoTextView;
+    private View trackInfoSection;
     private boolean isPlaying = false;
     private Handler handler;
     private Runnable stateUpdateRunnable;
@@ -33,8 +39,10 @@ public class WorkoutMediaController {
     private static final long DEBOUNCE_DELAY = 300; // 300ms debounce
     private static final long STATE_UPDATE_DELAY = 150; // 150ms delay before checking state
     private static final long PERIODIC_UPDATE_INTERVAL = 2000; // 2 seconds
+    private static final long FEEDBACK_DURATION = 150; // 150ms visual feedback
     private Runnable periodicUpdateRunnable;
     private MediaSessionManager mediaSessionManager;
+    private boolean showSongTitle = false;
     
     public WorkoutMediaController(Context context) {
         this.context             = context;
@@ -48,13 +56,25 @@ public class WorkoutMediaController {
      */
     public void setupMediaControls(ImageButton previousButton, ImageButton playPauseButton, 
                                  ImageButton nextButton, TextView trackInfoTextView) {
+        this.previousButton = previousButton;
         this.playPauseButton = playPauseButton;
+        this.nextButton = nextButton;
         this.trackInfoTextView = trackInfoTextView;
+        
+        // Get track info section (parent LinearLayout containing the music icon and text)
+        if (trackInfoTextView != null && trackInfoTextView.getParent() != null) {
+            this.trackInfoSection = (View) trackInfoTextView.getParent();
+        }
+        
+        // Load show song title preference
+        SettingsPrefsManager prefsManager = new SettingsPrefsManager(context);
+        showSongTitle = prefsManager.getPrefSetting(PreferencesValues.SHOW_SONG_TITLE, false);
         
         // Set up click listeners for media control buttons
         previousButton.setOnClickListener(v -> {
             sendMediaButtonEvent(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
             performHapticFeedback(v);
+            showButtonFeedback(previousButton, null);
         });
         
         playPauseButton.setOnClickListener(v -> {
@@ -72,15 +92,19 @@ public class WorkoutMediaController {
             // Provide immediate visual feedback by toggling icon
             togglePlayPauseIcon();
             
-            // Schedule a delayed state check to sync with actual playback state
-            scheduleStateUpdate();
+            // Show visual feedback
+            showButtonFeedback(playPauseButton, null);
             
             performHapticFeedback(v);
+            
+            // Sync state after a longer delay (let media app respond)
+            handler.postDelayed(this::refreshPlaybackState, 500);
         });
         
         nextButton.setOnClickListener(v -> {
             sendMediaButtonEvent(KeyEvent.KEYCODE_MEDIA_NEXT);
             performHapticFeedback(v);
+            showButtonFeedback(nextButton, null);
         });
         
         // Initialize play/pause button state
@@ -88,6 +112,9 @@ public class WorkoutMediaController {
         isPlaying = audioManager != null && audioManager.isMusicActive();
 
         updatePlayPauseIcon();
+        
+        // Update track info section visibility based on setting
+        updateTrackInfoVisibility();
         
         // Use a delay to double-check and refresh state
         handler.postDelayed(() -> {
@@ -97,6 +124,53 @@ public class WorkoutMediaController {
         
         // Set up periodic refresh of track info
         startPeriodicTrackInfoUpdate();
+    }
+    
+    /**
+     * Show visual feedback when a button is pressed
+     */
+    private void showButtonFeedback(ImageButton button, String feedbackText) {
+        // Animate the specific button with a glow/pulse effect
+        if (button != null) {
+            pulseButtonWithGlow(button);
+        }
+    }
+    
+    /**
+     * Pulse animation with glow effect for a button
+     */
+    private void pulseButtonWithGlow(ImageButton button) {
+        // Create a subtle glow by animating alpha and scale
+        // First, brighten the button
+        button.setAlpha(1.0f);
+        
+        // Scale up smoothly
+        button.animate()
+            .scaleX(1.2f)
+            .scaleY(1.2f)
+            .alpha(0.7f)
+            .setDuration(150)
+            .setInterpolator(new android.view.animation.DecelerateInterpolator())
+            .withEndAction(() -> {
+                // Scale back down with a gentle bounce
+                button.animate()
+                    .scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .alpha(1.0f)
+                    .setDuration(250)
+                    .setInterpolator(new android.view.animation.OvershootInterpolator(1.5f))
+                    .start();
+            })
+            .start();
+    }
+    
+    /**
+     * Update track info section visibility based on setting
+     */
+    private void updateTrackInfoVisibility() {
+        if (trackInfoSection != null) {
+            trackInfoSection.setVisibility(showSongTitle ? View.VISIBLE : View.GONE);
+        }
     }
     
     /**

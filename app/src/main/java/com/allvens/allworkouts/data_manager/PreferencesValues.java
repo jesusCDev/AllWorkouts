@@ -25,6 +25,7 @@ public interface PreferencesValues {
     String NOTIFICATION_TIME_MINUTE = "notification_time_min";   // int minute
     String NOTIFICATION_DAYS        = "notification_days";       // String 1 and 0 for on off for days.
     String MEDIA_CONTROLS_ON        = "media_controls_pref";     // boolean
+    String SHOW_SONG_TITLE          = "show_song_title";         // boolean - default false
     
     /********** Backup Keys **********/
     String AUTO_BACKUP_ENABLED       = "auto_backup_enabled";     // boolean

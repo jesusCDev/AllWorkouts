@@ -50,6 +50,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private Switch sSound;
     private Switch sNotification;
     private Switch sMediaControls;
+    private Switch sShowSongTitle;
+    private View llShowSongTitleContainer;
     
     // Display settings switches
     private Switch sShowTimeEstimate;
@@ -74,13 +76,25 @@ public class SettingsActivityUIManager extends BaseUIManager {
      */
     public void refreshSettingsValues() {
         // Setup settings values using the existing SettingsManager
-        settingsManager.set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls);
+        settingsManager.set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls, sShowSongTitle);
         settingsManager.setUp_WorkoutsAndPositions(llWorkoutPositions);
         settingsManager.setUp_TimeDisplay(tvTimeDisplay);
         settingsManager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
         
         // Setup display settings (default to true if not set)
         settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards);
+        
+        // Show/hide song title sub-setting based on media controls state
+        updateSongTitleSettingVisibility(sMediaControls.isChecked());
+    }
+    
+    /**
+     * Update visibility of song title setting based on media controls state
+     */
+    private void updateSongTitleSettingVisibility(boolean mediaControlsEnabled) {
+        if (llShowSongTitleContainer != null) {
+            llShowSongTitleContainer.setVisibility(mediaControlsEnabled ? View.VISIBLE : View.GONE);
+        }
     }
     
     @Override
@@ -94,9 +108,14 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sMediaControls.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Save the preference
             settingsManager.update_PrefSettings(PreferencesValues.MEDIA_CONTROLS_ON).onCheckedChanged(buttonView, isChecked);
+            // Show/hide song title sub-setting
+            updateSongTitleSettingVisibility(isChecked);
             // Notify activity to handle permission if enabling
             notifyMediaControlsToggled(isChecked);
         });
+        
+        // Show song title setting
+        sShowSongTitle.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_SONG_TITLE));
         
         // Display settings listeners
         sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
@@ -109,7 +128,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
     public void showNotificationListenerPermissionDialog(Runnable onOpenSettings) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
         builder.setTitle("Permission Required")
-                .setMessage("To show the current song name, this app needs Notification Access permission.\n\nWould you like to grant it now?")
+                .setMessage("To show the current song name, this app needs Notification Access permission.\n\nAfter granting permission, restart the app for changes to take effect.")
                 .setPositiveButton("Open Settings", (dialog, which) -> {
                     if (onOpenSettings != null) onOpenSettings.run();
                 })
@@ -141,6 +160,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sSound = ((android.app.Activity) getContext()).findViewById(R.id.s_settings_Sound);
         sNotification = ((android.app.Activity) getContext()).findViewById(R.id.s_settings_Notification);
         sMediaControls = ((android.app.Activity) getContext()).findViewById(R.id.s_settings_MediaControls);
+        sShowSongTitle = ((android.app.Activity) getContext()).findViewById(R.id.s_show_song_title);
+        llShowSongTitleContainer = ((android.app.Activity) getContext()).findViewById(R.id.ll_show_song_title_container);
         
         // Workout positions container
         llWorkoutPositions = ((android.app.Activity) getContext()).findViewById(R.id.ll_settings_WorkoutPositions);

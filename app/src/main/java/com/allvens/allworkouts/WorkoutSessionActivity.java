@@ -153,10 +153,18 @@ public class WorkoutSessionActivity extends AppCompatActivity
                     if (sessionController != null) {
                         sessionController.skipToNextSet();
                     }
+                    // Reset gesture state so it can be used again
+                    if (gestureHandler != null) {
+                        gestureHandler.resetGestureState();
+                    }
                 },
-                // On cancel - just log
+                // On cancel - reset gesture state
                 () -> {
                     android.util.Log.d("WorkoutSession", "Skip cancelled by user");
+                    // Reset gesture state so it can be used again
+                    if (gestureHandler != null) {
+                        gestureHandler.resetGestureState();
+                    }
                 }
             );
         });

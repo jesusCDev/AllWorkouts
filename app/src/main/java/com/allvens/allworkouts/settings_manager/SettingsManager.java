@@ -60,6 +60,12 @@ public class SettingsManager {
         sMediaControls.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
     }
     
+    public void set_SettingsValues(Switch sVibrate, Switch sSound, Switch sNotification, Switch sMediaControls, Switch sShowSongTitle) {
+        set_SettingsValues(sVibrate, sSound, sNotification, sMediaControls);
+        // Default to false for show song title (requires extra permission)
+        sShowSongTitle.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_SONG_TITLE, false));
+    }
+    
     /**
      * Setup display settings switches (default to true if not set)
      */

@@ -423,6 +423,24 @@ public class BackupManager {
             json.put("preferences", prefsJson);
         }
         
+        // Save workout positions
+        if (backup.getWorkoutPositions() != null) {
+            JSONObject posJson = new JSONObject();
+            for (Map.Entry<String, Integer> entry : backup.getWorkoutPositions().entrySet()) {
+                posJson.put(entry.getKey(), entry.getValue());
+            }
+            json.put("workoutPositions", posJson);
+        }
+        
+        // Save workout enabled status
+        if (backup.getWorkoutEnabled() != null) {
+            JSONObject enabledJson = new JSONObject();
+            for (Map.Entry<String, Boolean> entry : backup.getWorkoutEnabled().entrySet()) {
+                enabledJson.put(entry.getKey(), entry.getValue());
+            }
+            json.put("workoutEnabled", enabledJson);
+        }
+        
         return json;
     }
     
@@ -517,6 +535,32 @@ public class BackupManager {
             backup.setPreferences(prefs);
         }
         
+        // Restore workout positions
+        if (json.has("workoutPositions")) {
+            JSONObject posJson = json.getJSONObject("workoutPositions");
+            Map<String, Integer> positions = new HashMap<>();
+            
+            java.util.Iterator<String> keys = posJson.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                positions.put(key, posJson.getInt(key));
+            }
+            backup.setWorkoutPositions(positions);
+        }
+        
+        // Restore workout enabled status
+        if (json.has("workoutEnabled")) {
+            JSONObject enabledJson = json.getJSONObject("workoutEnabled");
+            Map<String, Boolean> enabled = new HashMap<>();
+            
+            java.util.Iterator<String> keys = enabledJson.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                enabled.put(key, enabledJson.getBoolean(key));
+            }
+            backup.setWorkoutEnabled(enabled);
+        }
+        
         return backup;
     }
     
@@ -591,6 +635,7 @@ public class BackupManager {
         prefs.put(PreferencesValues.SOUND_ON, prefsManager.getPrefSetting(PreferencesValues.SOUND_ON));
         prefs.put(PreferencesValues.SCREEN_ON, prefsManager.getPrefSetting(PreferencesValues.SCREEN_ON));
         prefs.put(PreferencesValues.MEDIA_CONTROLS_ON, prefsManager.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON));
+        prefs.put(PreferencesValues.SHOW_SONG_TITLE, prefsManager.getPrefSetting(PreferencesValues.SHOW_SONG_TITLE, false));
         prefs.put(PreferencesValues.NOTIFICATION_ON, prefsManager.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
         prefs.put(PreferencesValues.SHOW_TIME_ESTIMATE, prefsManager.getPrefSetting(PreferencesValues.SHOW_TIME_ESTIMATE, true));
         prefs.put(PreferencesValues.SHOW_STATS_CARDS, prefsManager.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true));

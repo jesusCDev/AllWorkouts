@@ -27,6 +27,7 @@ public class SkipWorkoutGestureHandler {
     
     // Long-press tracking
     private boolean isLongPressing = false;
+    private boolean isGestureActive = false; // Tracks if gesture detection is currently active
     private Handler longPressHandler;
     private Runnable longPressRunnable;
     private View currentView;
@@ -56,6 +57,12 @@ public class SkipWorkoutGestureHandler {
             // Handle long press detection
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    // If a gesture just completed, reset state
+                    if (isGestureActive) {
+                        android.util.Log.d(TAG, "Previous gesture still active - resetting");
+                        resetGestureState();
+                    }
+                    
                     // Check if touch is on a clickable child (button)
                     if (isTouchOnClickableView(v, event)) {
                         android.util.Log.d(TAG, "Touch on button - ignoring");
@@ -85,6 +92,18 @@ public class SkipWorkoutGestureHandler {
             
             return false;
         });
+    }
+    
+    /**
+     * Reset gesture state - call this after skip is complete or cancelled
+     */
+    public void resetGestureState() {
+        isLongPressing = false;
+        isGestureActive = false;
+        if (longPressRunnable != null && longPressHandler != null) {
+            longPressHandler.removeCallbacks(longPressRunnable);
+        }
+        android.util.Log.d(TAG, "Gesture state reset");
     }
     
     /**
@@ -134,6 +153,7 @@ public class SkipWorkoutGestureHandler {
      */
     private void startLongPressDetection(View view) {
         isLongPressing = false;
+        isGestureActive = true;
         
         longPressRunnable = () -> {
             // Long press threshold reached
@@ -156,10 +176,11 @@ public class SkipWorkoutGestureHandler {
      * Cancel long press detection
      */
     private void cancelLongPressDetection() {
-        if (longPressRunnable != null) {
+        if (longPressRunnable != null && longPressHandler != null) {
             longPressHandler.removeCallbacks(longPressRunnable);
         }
         isLongPressing = false;
+        isGestureActive = false;
     }
     
     
