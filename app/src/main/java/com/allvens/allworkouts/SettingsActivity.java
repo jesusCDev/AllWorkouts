@@ -241,9 +241,9 @@ public class SettingsActivity extends AppCompatActivity
                 for (int i = 0; i < indices.length; i++) indices[i] = i;
                 java.util.Arrays.sort(indices, (a, b) -> Long.compare(times.get(b), times.get(a)));
                 
-                // Build sorted display items + options at bottom
+                // Build sorted display items
                 int backupCount = docIds.size();
-                String[] displayItems = new String[backupCount + 2]; // +2 for Change Folder and Select File
+                String[] displayItems = new String[backupCount];
                 final String[] sortedDocIds = new String[backupCount];
                 
                 for (int i = 0; i < backupCount; i++) {
@@ -255,26 +255,15 @@ public class SettingsActivity extends AppCompatActivity
                     displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + timeStr;
                 }
                 
-                // Add options at bottom
-                displayItems[backupCount] = "━━━━━━━━━━━━━━━━━━━━\n📂  Change Folder...";
-                displayItems[backupCount + 1] = "━━━━━━━━━━━━━━━━━━━━\n📄  Select Backup File...";
-                
-                // Show selection dialog
+                // Show selection dialog with buttons at bottom
                 new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
                     .setTitle("Select Backup to Import")
                     .setItems(displayItems, (dialog, which) -> {
-                        if (which < backupCount) {
-                            // Selected a backup
-                            Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
-                            importBackupFromUri(fileUri);
-                        } else if (which == backupCount) {
-                            // Change folder
-                            onBrowseForBackupFolder();
-                        } else {
-                            // Select file
-                            onBrowseForBackupFile();
-                        }
+                        Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, sortedDocIds[which]);
+                        importBackupFromUri(fileUri);
                     })
+                    .setPositiveButton("Change Folder", (dialog, which) -> onBrowseForBackupFolder())
+                    .setNeutralButton("Browse File", (dialog, which) -> onBrowseForBackupFile())
                     .setNegativeButton("Cancel", null)
                     .show();
             }

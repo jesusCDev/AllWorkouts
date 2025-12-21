@@ -218,32 +218,22 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Sort by date descending (newest first) - backupFiles should already be sorted but ensure it
         java.util.Arrays.sort(backupFiles, (f1, f2) -> Long.compare(f2.lastModified(), f1.lastModified()));
         
-        // Add browse options at the end of the list
-        String[] displayItems = new String[backupFiles.length + 2];
+        // Build display items for backups only
+        String[] displayItems = new String[backupFiles.length];
         for (int i = 0; i < backupFiles.length; i++) {
             long lastModified = backupFiles[i].lastModified();
             String date = android.text.format.DateFormat.format("EEE, MMM dd yyyy", lastModified).toString();
             String time = android.text.format.DateFormat.format("hh:mm a", lastModified).toString();
             displayItems[i] = "━━━━━━━━━━━━━━━━━━━━\n" + date + "  •  " + time;
         }
-        // Add browse options with separator
-        displayItems[backupFiles.length] = "━━━━━━━━━━━━━━━━━━━━\n📂  Select Backup Folder...";
-        displayItems[backupFiles.length + 1] = "━━━━━━━━━━━━━━━━━━━━\n📄  Select Backup File...";
         
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
         builder.setTitle("Select Backup to Import")
                 .setItems(displayItems, (dialog, which) -> {
-                    if (which < backupFiles.length) {
-                        // Selected a backup file from list
-                        showImportConfirmationDialog(backupFiles[which]);
-                    } else if (which == backupFiles.length) {
-                        // Select Backup Folder
-                        notifyBrowseForBackupFolder();
-                    } else {
-                        // Select Backup File
-                        notifyBrowseForBackupFile();
-                    }
+                    showImportConfirmationDialog(backupFiles[which]);
                 })
+                .setPositiveButton("Select Folder", (dialog, which) -> notifyBrowseForBackupFolder())
+                .setNeutralButton("Browse File", (dialog, which) -> notifyBrowseForBackupFile())
                 .setNegativeButton("Cancel", null)
                 .show();
     }
