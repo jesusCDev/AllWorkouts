@@ -78,26 +78,27 @@ public class LogBusinessController {
             List<WorkoutHistoryInfo> historyData = dataManager.getWorkoutHistory();
             int currentMax = dataManager.getCurrentMax();
             int currentType = dataManager.getCurrentType();
-            
+
             // Update UI through LogUIManager
             logUIManager.update_Graph(chartData);
-            logUIManager.update_SetList(historyData);
             logUIManager.update_CurrentMax(currentMax);
+            // Update type BEFORE average stats so correct display format is used
             logUIManager.update_CurrentType(currentType);
-            
+            logUIManager.update_AverageStats(historyData);
+
         } catch (Exception e) {
             callback.onErrorOccurred("Failed to update UI: " + e.getMessage());
         }
     }
-    
+
     /**
      * Update UI when no workout data is available
      */
     private void updateUIWithNoWorkout() {
         try {
             logUIManager.reset_GraphToZero();
-            logUIManager.reset_SetList();
             logUIManager.update_CurrentMax(0);
+            logUIManager.update_AverageStats(null);
         } catch (Exception e) {
             callback.onErrorOccurred("Failed to reset UI: " + e.getMessage());
         }

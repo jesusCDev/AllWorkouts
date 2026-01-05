@@ -72,7 +72,14 @@ public class WorkoutSessionController {
         
         // Set up timer
         timer = new Timer(workoutSessionUIManager);
-        
+
+        // Set up extra break callback
+        workoutSessionUIManager.setExtraBreakCallback(seconds -> {
+            if (timer != null && timer.get_TimerRunning()) {
+                timer.addExtraTime(seconds);
+            }
+        });
+
         // Start with workout screen
         startWorkoutScreen();
     }
@@ -276,6 +283,16 @@ public class WorkoutSessionController {
      */
     public WorkoutInfo getWorkoutInfo() {
         return workoutInfo;
+    }
+
+    /**
+     * Get the pre-selected difficulty from the break slider
+     */
+    public int getPreSelectedDifficulty() {
+        if (workoutSessionUIManager != null) {
+            return workoutSessionUIManager.getSelectedDifficulty();
+        }
+        return com.allvens.allworkouts.data_manager.DifficultyRatingManager.FEEDBACK_JUST_RIGHT;
     }
     
     /**

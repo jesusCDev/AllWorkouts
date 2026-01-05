@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.allvens.allworkouts.R;
@@ -35,6 +37,7 @@ public class WorkoutCalendarView extends View {
     private int colorTextSecondary;
     private int colorTodayStroke;
     private int colorSelectedStroke;
+    private int colorRestDay;
     
     // Calendar data
     private Calendar calendar;
@@ -69,6 +72,11 @@ public class WorkoutCalendarView extends View {
     // Calendar grid
     private static final String[] DAYS = {"S", "M", "T", "W", "T", "F", "S"};
     private int weeksToShow = 5; // Will be calculated dynamically
+
+    // Gesture detection for swipe navigation
+    private GestureDetector gestureDetector;
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
     
     public WorkoutCalendarView(Context context) {
         super(context);
@@ -98,6 +106,7 @@ public class WorkoutCalendarView extends View {
         colorTextSecondary = context.getResources().getColor(R.color.text_secondary);
         colorTodayStroke = context.getResources().getColor(R.color.text_primary);
         colorSelectedStroke = context.getResources().getColor(R.color.accent_primary);
+        colorRestDay = context.getResources().getColor(R.color.rest_day);
         
         // Load modern dimensions
         cellSize = context.getResources().getDimensionPixelSize(R.dimen.heat_cell_size);
@@ -135,9 +144,88 @@ public class WorkoutCalendarView extends View {
         strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.stroke_standard));
-        
+
+        // Initialize gesture detector for swipe navigation
+        gestureDetector = new GestureDetector(context, new SwipeGestureListener());
+
         // Load workout data
         loadWorkoutData();
+    }
+
+    /**
+     * Handle touch events for swipe gesture detection
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
+    }
+
+    /**
+     * Gesture listener for detecting horizontal swipes
+     */
+    private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true; // Required to receive other gesture events
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1 == null || e2 == null) return false;
+
+            float diffX = e2.getX() - e1.getX();
+            float diffY = e2.getY() - e1.getY();
+
+            // Check if horizontal swipe (more horizontal than vertical)
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        // Swipe right -> previous month
+                        previousMonth();
+                    } else {
+                        // Swipe left -> next month
+                        nextMonth();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Navigate to the previous month
+     */
+    public void previousMonth() {
+        calendar.add(Calendar.MONTH, -1);
+        updateCalendarData();
+        loadWorkoutData();
+        requestLayout();
+        invalidate();
+        Log.d(TAG, "Navigated to previous month: " + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
+    }
+
+    /**
+     * Navigate to the next month
+     */
+    public void nextMonth() {
+        calendar.add(Calendar.MONTH, 1);
+        updateCalendarData();
+        loadWorkoutData();
+        requestLayout();
+        invalidate();
+        Log.d(TAG, "Navigated to next month: " + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
+    }
+
+    /**
+     * Navigate to the current month (today)
+     */
+    public void goToCurrentMonth() {
+        calendar = Calendar.getInstance();
+        updateCalendarData();
+        loadWorkoutData();
+        requestLayout();
+        invalidate();
     }
     
     @Override
@@ -183,31 +271,58 @@ public class WorkoutCalendarView extends View {
     
     private void loadWorkoutData() {
         workoutCounts.clear();
-        
+
         WorkoutWrapper workoutWrapper = new WorkoutWrapper(getContext());
         try {
             workoutWrapper.open();
-            
-            // For each day in the current month, count workouts
+
+            // Get actual number of workout types from database
+            List<com.allvens.allworkouts.data_manager.database.WorkoutInfo> allWorkouts =
+                workoutWrapper.getAllWorkouts();
+            totalWorkoutTypes = Math.max(allWorkouts.size(), 1); // At least 1 to avoid division by zero
+
+            // For each day in the current month, count UNIQUE workout types completed
             Calendar dayCalendar = (Calendar) calendar.clone();
-            
+
             for (int day = 1; day <= daysInMonth; day++) {
                 dayCalendar.set(Calendar.DAY_OF_MONTH, day);
-                int workoutCount = getWorkoutCountForDay(workoutWrapper, dayCalendar);
-                if (workoutCount > 0) {
-                    workoutCounts.put(day, workoutCount);
-                    Log.d(TAG, "Day " + day + ": " + workoutCount + " workouts");
+                int uniqueWorkoutCount = getUniqueWorkoutCountForDay(workoutWrapper, dayCalendar);
+                if (uniqueWorkoutCount > 0) {
+                    workoutCounts.put(day, uniqueWorkoutCount);
+                    Log.d(TAG, "Day " + day + ": " + uniqueWorkoutCount + "/" + totalWorkoutTypes + " workout types");
                 }
             }
-            
+
             // Calculate streaks
             calculateStreaks();
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error loading workout data", e);
         } finally {
             workoutWrapper.close();
         }
+    }
+
+    /**
+     * Get the count of unique workout types completed on a specific day
+     */
+    private int getUniqueWorkoutCountForDay(WorkoutWrapper wrapper, Calendar day) {
+        // Get start and end timestamps for the day (in seconds)
+        Calendar dayStart = (Calendar) day.clone();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
+        long startTimestamp = dayStart.getTimeInMillis() / 1000;
+
+        Calendar dayEnd = (Calendar) day.clone();
+        dayEnd.set(Calendar.HOUR_OF_DAY, 23);
+        dayEnd.set(Calendar.MINUTE, 59);
+        dayEnd.set(Calendar.SECOND, 59);
+        dayEnd.set(Calendar.MILLISECOND, 999);
+        long endTimestamp = dayEnd.getTimeInMillis() / 1000;
+
+        return wrapper.getUniqueWorkoutIdsForDay(startTimestamp, endTimestamp).size();
     }
     
     /**
@@ -249,26 +364,7 @@ public class WorkoutCalendarView extends View {
         
         Log.d(TAG, "Current streak: " + currentStreak + ", Max streak: " + maxStreak);
     }
-    
-    private int getWorkoutCountForDay(WorkoutWrapper wrapper, Calendar day) {
-        // Get start and end timestamps for the day (in seconds)
-        Calendar dayStart = (Calendar) day.clone();
-        dayStart.set(Calendar.HOUR_OF_DAY, 0);
-        dayStart.set(Calendar.MINUTE, 0);
-        dayStart.set(Calendar.SECOND, 0);
-        dayStart.set(Calendar.MILLISECOND, 0);
-        long startTimestamp = dayStart.getTimeInMillis() / 1000;
-        
-        Calendar dayEnd = (Calendar) day.clone();
-        dayEnd.set(Calendar.HOUR_OF_DAY, 23);
-        dayEnd.set(Calendar.MINUTE, 59);
-        dayEnd.set(Calendar.SECOND, 59);
-        dayEnd.set(Calendar.MILLISECOND, 999);
-        long endTimestamp = dayEnd.getTimeInMillis() / 1000;
-        
-        return wrapper.getWorkoutCountForDay(startTimestamp, endTimestamp);
-    }
-    
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -393,20 +489,27 @@ public class WorkoutCalendarView extends View {
         // Calculate cell position
         float cellX = gridStartX + (dayOfWeek * (cellSize + cellGap));
         float cellY = gridStartY + (week * (cellSize + cellGap));
-        
+
         // Get workout intensity for this day
         Integer workoutCount = workoutCounts.get(day);
         int count = (workoutCount != null) ? workoutCount : 0;
         int intensityLevel = getIntensityLevel(count);
-        
+
+        // Check if this is a rest day (first non-workout day after a workout day)
+        boolean isRest = isRestDay(day);
+
         // Draw subtle shadow for depth (modern effect)
-        if (intensityLevel > 0) {
+        if (intensityLevel > 0 || isRest) {
             cellPaint.setColor(0x20000000); // Subtle shadow
             canvas.drawRoundRect(cellX + 2, cellY + 2, cellX + cellSize + 2, cellY + cellSize + 2, cellRadius, cellRadius, cellPaint);
         }
-        
+
         // Draw the heat cell background with modern colors
-        cellPaint.setColor(heatColors[intensityLevel]);
+        if (isRest) {
+            cellPaint.setColor(colorRestDay); // Blue for rest days
+        } else {
+            cellPaint.setColor(heatColors[intensityLevel]);
+        }
         canvas.drawRoundRect(cellX, cellY, cellX + cellSize, cellY + cellSize, cellRadius, cellRadius, cellPaint);
         
         // Draw today's outline (ring)
@@ -429,7 +532,9 @@ public class WorkoutCalendarView extends View {
         float textY = cellY + (cellSize / 2f) + (textBounds.height() / 2f);
         
         // Use optimal contrast text color based on intensity
-        if (intensityLevel == 0) {
+        if (isRest) {
+            textPaint.setColor(colorTextPrimary); // White text on blue rest day
+        } else if (intensityLevel == 0) {
             textPaint.setColor(colorTextSecondary); // Gray text on empty cells
         } else if (intensityLevel >= 4) { // Max intensity (100% lime)
             textPaint.setColor(getResources().getColor(R.color.on_accent_primary)); // Dark text on bright lime
@@ -444,21 +549,75 @@ public class WorkoutCalendarView extends View {
     
     /**
      * Map workout count to intensity level for heat-map colors
-     * @param count Number of workouts completed (0-4)
+     * Based on percentage of total workout types completed
+     * @param count Number of unique workout types completed
      * @return Intensity level index (0-4) for heatColors array
      */
     private int getIntensityLevel(int count) {
-        if (count == 0) {
+        if (count == 0 || totalWorkoutTypes == 0) {
             return 0; // Empty - gray
-        } else if (count == 1) {
-            return 1; // Low - 15% lime
-        } else if (count == 2) {
-            return 2; // Medium - 30% lime
-        } else if (count == 3) {
-            return 3; // High - 60% lime
-        } else {
-            return 4; // Max - 100% lime (all workouts)
         }
+
+        // Calculate percentage of workout types completed
+        float percentage = (float) count / totalWorkoutTypes;
+
+        if (percentage >= 1.0f) {
+            return 4; // 100% - all workouts complete
+        } else if (percentage >= 0.75f) {
+            return 3; // 75-99%
+        } else if (percentage >= 0.5f) {
+            return 2; // 50-74%
+        } else if (percentage > 0) {
+            return 1; // 1-49%
+        } else {
+            return 0; // Empty
+        }
+    }
+
+    /**
+     * Check if a day is a "rest day" - first non-workout day after a workout day
+     * Only the first consecutive day without workouts is considered a rest day.
+     * Subsequent consecutive days without workouts are "skip days" (shown as empty).
+     *
+     * Rules:
+     * - Must be a past day (not today or future)
+     * - Must have no workouts
+     * - Previous day must have had workouts
+     *
+     * @param day The day of month to check
+     * @return true if this is a rest day
+     */
+    private boolean isRestDay(int day) {
+        // Can't be a rest day if it's today or in the future
+        if (todayDay > 0 && day >= todayDay) {
+            return false;
+        }
+
+        // Must have no workouts on this day
+        Integer count = workoutCounts.get(day);
+        if (count != null && count > 0) {
+            return false; // Has workouts, not a rest day
+        }
+
+        // Check the previous day
+        if (day == 1) {
+            // First day of month - check if previous month's last day had workouts
+            // For simplicity, we'll consider day 1 as a potential rest day if there's
+            // workout history (could enhance to check previous month)
+            return hasAnyWorkoutHistory();
+        }
+
+        // Check if previous day had workouts
+        Integer previousDayCount = workoutCounts.get(day - 1);
+        return previousDayCount != null && previousDayCount > 0;
+    }
+
+    /**
+     * Check if there's any workout history in the current month
+     * Used to determine if the first day could be a rest day
+     */
+    private boolean hasAnyWorkoutHistory() {
+        return !workoutCounts.isEmpty();
     }
     
     /**
@@ -468,6 +627,69 @@ public class WorkoutCalendarView extends View {
         updateCalendarData();
         loadWorkoutData();
         invalidate(); // Trigger redraw
+    }
+
+    /**
+     * Count total complete sessions (days where ALL workouts were completed)
+     * Scans all history, not just current month
+     * @return Number of days with all workouts completed
+     */
+    public int getCompleteSessions() {
+        int completeSessions = 0;
+        WorkoutWrapper workoutWrapper = new WorkoutWrapper(getContext());
+
+        try {
+            workoutWrapper.open();
+
+            // Get the number of workout types that exist in the database
+            List<com.allvens.allworkouts.data_manager.database.WorkoutInfo> allWorkouts =
+                workoutWrapper.getAllWorkouts();
+            int workoutTypeCount = allWorkouts.size();
+
+            if (workoutTypeCount == 0) {
+                workoutWrapper.close();
+                return 0;
+            }
+
+            // Collect all unique dates with unique workout IDs
+            Map<String, java.util.Set<Long>> dateToWorkoutIds = new HashMap<>();
+
+            for (com.allvens.allworkouts.data_manager.database.WorkoutInfo workout : allWorkouts) {
+                List<com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo> history =
+                    workoutWrapper.getHistoryForWorkout(workout.getId());
+
+                for (com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo entry : history) {
+                    long completionDate = entry.getCompletionDate();
+                    if (completionDate > 0) {
+                        // Convert to date key (YYYY-MM-DD)
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(completionDate * 1000);
+                        String dateKey = cal.get(Calendar.YEAR) + "-" +
+                                        cal.get(Calendar.MONTH) + "-" +
+                                        cal.get(Calendar.DAY_OF_MONTH);
+
+                        if (!dateToWorkoutIds.containsKey(dateKey)) {
+                            dateToWorkoutIds.put(dateKey, new java.util.HashSet<>());
+                        }
+                        dateToWorkoutIds.get(dateKey).add(workout.getId());
+                    }
+                }
+            }
+
+            // Count days where all workout types were completed
+            for (java.util.Set<Long> workoutIds : dateToWorkoutIds.values()) {
+                if (workoutIds.size() >= workoutTypeCount) {
+                    completeSessions++;
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error counting complete sessions", e);
+        } finally {
+            workoutWrapper.close();
+        }
+
+        return completeSessions;
     }
     
     /**

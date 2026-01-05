@@ -32,12 +32,13 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private String sessionStartWorkout; // The workout that started this session
     private Long durationSeconds; // Duration of the workout session (null if invalid/outlier)
 
-    private final static int PROG_INC_NEUTRAL = 1;
-    private final static int PROG_INC_EASY    = 2;
-    private final static int PROG_INC_HARD    = -2;
+    // Old fixed progression constants (DEPRECATED - kept for reference)
+    // private final static int PROG_INC_NEUTRAL = 1;
+    // private final static int PROG_INC_EASY    = 2;
+    // private final static int PROG_INC_HARD    = -2;
 
-    // Keep old constants for backward compatibility with max value adjustments
-    // New system will use DifficultyRatingManager for intelligent progression
+    // New system uses DifficultyRatingManager.calculateNewMax() for percentage-based progression
+    // This provides safer, research-based progressive overload
 
     private WorkoutWrapper wrapper;
     private Button lastButtonSelected;
@@ -97,15 +98,21 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         wrapper = new WorkoutWrapper(this);
 
         wrapper.open();
-        
+
         // Debug logging for workout completion
         boolean isReal = isRealWorkoutCompletion();
         System.out.println("[DEBUG] onCreate: isRealWorkout=" + isReal + ", currentWorkout=" + currentChoiceWorkout);
-        
+
         setNextWorkout(nextWorkoutButton);
-        
+
         // Set up progress indicator
         updateProgressIndicator();
+
+        // Initialize button colors
+        initializeDifficultyButtons();
+
+        // Apply pre-selected difficulty from break slider
+        applyPreSelectedDifficulty();
 
         WorkoutGenerator workoutGenerator = new WorkoutGenerator(wrapper.getWorkout(currentChoiceWorkout));
         Workout workout                   = workoutGenerator.getWorkout();
@@ -124,10 +131,21 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
                 durationSeconds
         );
         wrapper.createWorkoutHistory(historyInfo, workoutInfo.getId());
-        
+
         android.util.Log.d("WorkoutFinish", "Saved history with duration: " + durationSeconds + "s");
 
-        workoutInfo.setMax((workoutInfo.getMax() + PROG_INC_NEUTRAL));
+        // NEW PROGRESSION SYSTEM: Don't automatically increase max every workout
+        // Instead, max only changes based on explicit user feedback (Easy/Hard buttons)
+        // The difficulty rating handles fine-tuning within the current max level
+        // Auto-increase only happens if difficulty rating indicates consistent good performance
+        int autoIncrease = DifficultyRatingManager.calculateAutoIncrease(
+                workoutInfo.getMax(), workoutInfo.getDifficultyRating());
+        if (autoIncrease > 0) {
+            workoutInfo.setMax(workoutInfo.getMax() + autoIncrease);
+            android.util.Log.d("WorkoutFinish", "Auto-increased max by " + autoIncrease +
+                    " (rating: " + workoutInfo.getDifficultyRating() + ")");
+        }
+
         workoutInfo.setProgress((workoutInfo.getProgress() + 1));
         wrapper.updateWorkout(workoutInfo);
     }
@@ -313,90 +331,160 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         nextWorkoutButton.setVisibility(View.VISIBLE);
     }
 
-    private void updateWorkoutProgress(int progress){
+    private void updateWorkoutProgress(int feedbackType){
         WorkoutInfo workout = wrapper.getWorkout(currentChoiceWorkout);
-        
-        // Update max value using old system for compatibility
-        int value = maxValue + progress;
-        if(value <= 0) {
-            value = 1;
-        }
-        workout.setMax(value);
-        
-        // Update difficulty rating using new Elo-like system
-        updateDifficultyRating(workout, progress);
-        
-        wrapper.updateWorkout(workout);
-    }
-    
-    /**
-     * Updates difficulty rating based on user feedback using Elo-like algorithm
-     */
-    private void updateDifficultyRating(WorkoutInfo workout, int progressFeedback) {
-        int currentRating = workout.getDifficultyRating();
+        int oldMax = workout.getMax();
+
+        // Convert legacy feedback type to new system
         int feedback;
-        
-        // Convert old progress values to new feedback system
-        if (progressFeedback == PROG_INC_EASY) {
+        if (feedbackType > 0) {
             feedback = DifficultyRatingManager.FEEDBACK_TOO_EASY;
-        } else if (progressFeedback == PROG_INC_HARD) {
+        } else if (feedbackType < 0) {
             feedback = DifficultyRatingManager.FEEDBACK_TOO_HARD;
         } else {
             feedback = DifficultyRatingManager.FEEDBACK_JUST_RIGHT;
         }
-        
-        int newRating = DifficultyRatingManager.calculateNewRating(currentRating, feedback);
-        workout.setDifficultyRating(newRating);
-        
-        // Log the rating change for debugging
-        DifficultyRatingManager.logRatingChange(
-            workout.getWorkout(), 
-            currentRating, 
-            newRating, 
-            feedback
-        );
-    }
 
+        // Use new percentage-based progression system
+        int newMax = DifficultyRatingManager.calculateNewMax(oldMax, feedback);
+        workout.setMax(newMax);
+
+        // Update difficulty rating
+        int oldRating = workout.getDifficultyRating();
+        int newRating = DifficultyRatingManager.calculateNewRating(oldRating, feedback);
+        workout.setDifficultyRating(newRating);
+
+        // Log the changes
+        String progressDesc = DifficultyRatingManager.getProgressionDescription(feedback, oldMax, newMax);
+        android.util.Log.d("WorkoutFinish", "Progression update: " + progressDesc +
+                ", Rating: " + oldRating + " -> " + newRating);
+
+        DifficultyRatingManager.logRatingChange(workout.getWorkout(), oldRating, newRating, feedback);
+
+        wrapper.updateWorkout(workout);
+    }
+    
     public void setDifficulty(View view) {
         // Reset previous selection to secondary style
         if (lastButtonSelected != null) {
             setButtonStyle(lastButtonSelected, false);
         }
-        
+
         // Set current selection to primary style
         Button currentButton = (Button) view;
         setButtonStyle(currentButton, true);
         lastButtonSelected = currentButton;
 
+        // Use feedback types that map to new system:
+        // Positive = Easy, Zero = Neutral, Negative = Hard
         int viewId = view.getId();
         if (viewId == R.id.btn_workoutFinish_LevelHard) {
-            updateWorkoutProgress(PROG_INC_HARD);
+            updateWorkoutProgress(-1); // Maps to FEEDBACK_TOO_HARD
         } else if (viewId == R.id.btn_workoutFinish_LevelNeutral) {
-            updateWorkoutProgress(PROG_INC_NEUTRAL);
+            updateWorkoutProgress(0);  // Maps to FEEDBACK_JUST_RIGHT
         } else if (viewId == R.id.btn_workoutFinish_LevelEasy) {
-            updateWorkoutProgress(PROG_INC_EASY);
+            updateWorkoutProgress(1);  // Maps to FEEDBACK_TOO_EASY
         }
     }
     
+    /**
+     * Initialize all difficulty buttons with their color-coded styling
+     */
+    private void initializeDifficultyButtons() {
+        Button easyBtn = findViewById(R.id.btn_workoutFinish_LevelEasy);
+        Button normalBtn = findViewById(R.id.btn_workoutFinish_LevelNeutral);
+        Button hardBtn = findViewById(R.id.btn_workoutFinish_LevelHard);
+
+        // Set all buttons to unselected state initially
+        setButtonStyle(easyBtn, false);
+        setButtonStyle(normalBtn, false);
+        setButtonStyle(hardBtn, false);
+    }
+
     private void setButtonStyle(Button button, boolean isSelected) {
         if (button == null) {
             return;
         }
-        
+
+        int buttonId = button.getId();
+
         if (isSelected) {
-            // Selected state - primary style
-            button.setBackgroundResource(R.drawable.bg_button_primary);
-            if (getResources() != null) {
-                button.setTextColor(getResources().getColor(R.color.background_dark));
+            // Selected state - apply difficulty-specific color
+            if (buttonId == R.id.btn_workoutFinish_LevelEasy) {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_easy)));
+            } else if (buttonId == R.id.btn_workoutFinish_LevelHard) {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_hard)));
+            } else {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_normal)));
             }
+            button.setTextColor(getResources().getColor(R.color.background_dark));
             button.setElevation(8f);
         } else {
-            // Unselected state - secondary style  
-            button.setBackgroundResource(R.drawable.bg_button_secondary);
-            if (getResources() != null) {
-                button.setTextColor(getResources().getColor(R.color.selectedButton));
+            // Unselected state - secondary style with subtle color hint
+            if (buttonId == R.id.btn_workoutFinish_LevelEasy) {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_easy_bg)));
+                button.setTextColor(getResources().getColor(R.color.difficulty_easy));
+            } else if (buttonId == R.id.btn_workoutFinish_LevelHard) {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_hard_bg)));
+                button.setTextColor(getResources().getColor(R.color.difficulty_hard));
+            } else {
+                button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        getResources().getColor(R.color.difficulty_normal_bg)));
+                button.setTextColor(getResources().getColor(R.color.difficulty_normal));
             }
             button.setElevation(2f);
+        }
+    }
+
+    /**
+     * Apply the pre-selected difficulty from the break slider
+     * This selects the appropriate button and applies the workout progress update
+     */
+    private void applyPreSelectedDifficulty() {
+        int preSelectedDifficulty = getIntent().getIntExtra(
+                Constants.PRE_SELECTED_DIFFICULTY,
+                DifficultyRatingManager.FEEDBACK_JUST_RIGHT);
+
+        android.util.Log.d("WorkoutFinish", "Applying pre-selected difficulty: " + preSelectedDifficulty);
+
+        Button targetButton;
+        int feedbackType;
+
+        switch (preSelectedDifficulty) {
+            case DifficultyRatingManager.FEEDBACK_TOO_EASY:
+                targetButton = findViewById(R.id.btn_workoutFinish_LevelEasy);
+                feedbackType = 1;
+                break;
+            case DifficultyRatingManager.FEEDBACK_TOO_HARD:
+                targetButton = findViewById(R.id.btn_workoutFinish_LevelHard);
+                feedbackType = -1;
+                break;
+            case DifficultyRatingManager.FEEDBACK_JUST_RIGHT:
+            default:
+                targetButton = findViewById(R.id.btn_workoutFinish_LevelNeutral);
+                feedbackType = 0;
+                break;
+        }
+
+        if (targetButton != null) {
+            // Reset previous selection
+            if (lastButtonSelected != null) {
+                setButtonStyle(lastButtonSelected, false);
+            }
+
+            // Set new selection
+            setButtonStyle(targetButton, true);
+            lastButtonSelected = targetButton;
+
+            // Apply the workout progress update
+            updateWorkoutProgress(feedbackType);
+
+            android.util.Log.d("WorkoutFinish", "Pre-selected button applied: " + targetButton.getText());
         }
     }
 

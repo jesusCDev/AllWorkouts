@@ -11,9 +11,12 @@ import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.data_manager.DifficultyRatingManager;
 import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
@@ -35,6 +38,18 @@ public class WorkoutSessionUIManager {
     private TextView[] aTvWorkoutValues = new TextView[5];
     private TextView tvFront;
     private TextView tvBack;
+
+    // Break-only UI elements
+    private LinearLayout llDifficultySlider;
+    private SeekBar seekbarDifficulty;
+    private Button btnExtraBreak;
+    private int extraBreaksRemaining = 3;
+    private int selectedDifficulty = DifficultyRatingManager.FEEDBACK_JUST_RIGHT; // Default: normal
+    private ExtraBreakCallback extraBreakCallback;
+
+    public interface ExtraBreakCallback {
+        void onExtraBreakRequested(int seconds);
+    }
 
     boolean soundOn;
     boolean vibrateOn;
@@ -75,7 +90,84 @@ public class WorkoutSessionUIManager {
 
         this.workout = workout;
 
+        // Find break-only UI elements
+        Activity activity = (Activity) context;
+        llDifficultySlider = activity.findViewById(R.id.ll_difficulty_slider);
+        seekbarDifficulty = activity.findViewById(R.id.seekbar_difficulty);
+        btnExtraBreak = activity.findViewById(R.id.btn_extra_break);
+
+        // Setup difficulty slider listener
+        if (seekbarDifficulty != null) {
+            seekbarDifficulty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // 0 = easier (TOO_EASY), 1 = normal (JUST_RIGHT), 2 = harder (TOO_HARD)
+                    switch (progress) {
+                        case 0:
+                            selectedDifficulty = DifficultyRatingManager.FEEDBACK_TOO_EASY;
+                            break;
+                        case 2:
+                            selectedDifficulty = DifficultyRatingManager.FEEDBACK_TOO_HARD;
+                            break;
+                        default:
+                            selectedDifficulty = DifficultyRatingManager.FEEDBACK_JUST_RIGHT;
+                            break;
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+        }
+
+        // Setup extra break button listener
+        if (btnExtraBreak != null) {
+            updateExtraBreakButton();
+            btnExtraBreak.setOnClickListener(v -> {
+                if (extraBreaksRemaining > 0 && extraBreakCallback != null) {
+                    extraBreaksRemaining--;
+                    extraBreakCallback.onExtraBreakRequested(30);
+                    updateExtraBreakButton();
+                }
+            });
+        }
+
         updateWorkoutValuesTextViews();
+    }
+
+    /**
+     * Set callback for extra break requests
+     */
+    public void setExtraBreakCallback(ExtraBreakCallback callback) {
+        this.extraBreakCallback = callback;
+    }
+
+    /**
+     * Update extra break button text and state
+     */
+    private void updateExtraBreakButton() {
+        if (btnExtraBreak != null) {
+            if (extraBreaksRemaining > 0) {
+                btnExtraBreak.setText("+30s Extra Break (" + extraBreaksRemaining + " left)");
+                btnExtraBreak.setEnabled(true);
+                btnExtraBreak.setAlpha(1.0f);
+            } else {
+                btnExtraBreak.setText("No Extra Breaks Left");
+                btnExtraBreak.setEnabled(false);
+                btnExtraBreak.setAlpha(0.5f);
+            }
+        }
+    }
+
+    /**
+     * Get the selected difficulty from the slider
+     * @return DifficultyRatingManager feedback constant
+     */
+    public int getSelectedDifficulty() {
+        return selectedDifficulty;
     }
 
     /****************************************
@@ -140,6 +232,9 @@ public class WorkoutSessionUIManager {
 
                 setVisibilityImageView(ivWorkoutImageHolder, true);
                 ivWorkoutImageHolder.setImageResource(workout.get_WorkoutImage(progress));
+
+                // Hide break-only UI elements
+                hideBreakOnlyElements();
             }
         });
     }
@@ -162,8 +257,35 @@ public class WorkoutSessionUIManager {
 
                 updateWorkoutValuesLastValue();
                 updateWorkoutValuesNextValue();
+
+                // Show break-only UI elements
+                showBreakOnlyElements();
             }
         });
+    }
+
+    /**
+     * Show break-only UI elements (difficulty slider and extra break button)
+     */
+    private void showBreakOnlyElements() {
+        if (llDifficultySlider != null) {
+            llDifficultySlider.setVisibility(View.VISIBLE);
+        }
+        if (btnExtraBreak != null && extraBreaksRemaining > 0) {
+            btnExtraBreak.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Hide break-only UI elements
+     */
+    private void hideBreakOnlyElements() {
+        if (llDifficultySlider != null) {
+            llDifficultySlider.setVisibility(View.GONE);
+        }
+        if (btnExtraBreak != null) {
+            btnExtraBreak.setVisibility(View.GONE);
+        }
     }
 
     /********** Styling Method **********/

@@ -38,6 +38,16 @@ public class MainActivity extends AppCompatActivity
     private TextView tvTimeEstimateDuration;
     private TextView tvTimeEstimateCompletion;
     private android.view.View llQuickStats;
+
+    // Goals views
+    private android.view.View llGoalsSection;
+    private TextView tvGoalIcon;
+    private TextView tvGoalText;
+    private TextView tvGoalProgress;
+    private android.widget.ProgressBar progressGoal;
+
+    // Static goal milestones
+    private static final int[] GOAL_MILESTONES = {10, 25, 50, 100, 150, 200, 300, 500, 750, 1000};
     
     // Time estimator
     private WorkoutTimeEstimator timeEstimator;
@@ -78,13 +88,16 @@ public class MainActivity extends AppCompatActivity
         
         // Update stats visibility based on settings
         updateStatsVisibility();
-        
+
         // Update stats
         updateWorkoutStats();
-        
+
         // Update time estimate
         updateTimeEstimate();
-        
+
+        // Update progressive goals
+        updateProgressiveGoals();
+
         // Check if we should prompt user to enable backup
         checkBackupPrompt();
     }
@@ -118,6 +131,33 @@ public class MainActivity extends AppCompatActivity
         tvTimeEstimateDuration = findViewById(R.id.tv_time_estimate_duration);
         tvTimeEstimateCompletion = findViewById(R.id.tv_time_estimate_completion);
         llQuickStats = findViewById(R.id.ll_quick_stats);
+
+        // Bind goals views
+        llGoalsSection = findViewById(R.id.ll_goals_section);
+        tvGoalIcon = findViewById(R.id.tv_goal_icon);
+        tvGoalText = findViewById(R.id.tv_goal_text);
+        tvGoalProgress = findViewById(R.id.tv_goal_progress);
+        progressGoal = findViewById(R.id.progress_goal);
+
+        // Setup calendar navigation buttons
+        android.widget.ImageButton btnCalendarPrev = findViewById(R.id.btn_calendar_prev);
+        android.widget.ImageButton btnCalendarNext = findViewById(R.id.btn_calendar_next);
+
+        if (btnCalendarPrev != null) {
+            btnCalendarPrev.setOnClickListener(v -> {
+                if (workoutCalendar != null) {
+                    workoutCalendar.previousMonth();
+                }
+            });
+        }
+
+        if (btnCalendarNext != null) {
+            btnCalendarNext.setOnClickListener(v -> {
+                if (workoutCalendar != null) {
+                    workoutCalendar.nextMonth();
+                }
+            });
+        }
     }
     
     private void loadInitialData() {
@@ -166,7 +206,9 @@ public class MainActivity extends AppCompatActivity
         // Handle chooser toggle request - delegate to UI manager with current workout data and completion status
         String[] availableWorkouts = workoutManager.getAvailableWorkouts();
         java.util.Set<String> completedToday = getCompletedWorkoutsToday();
-        uiManager.toggleWorkoutChooser(availableWorkouts, completedToday);
+        java.util.Set<String> maxDayWorkouts = workoutManager.getMaxDayWorkouts();
+        java.util.Set<String> maxSoonWorkouts = workoutManager.getMaxSoonWorkouts();
+        uiManager.toggleWorkoutChooser(availableWorkouts, completedToday, maxDayWorkouts, maxSoonWorkouts);
     }
     
     /* ====================================================================== */
@@ -186,8 +228,10 @@ public class MainActivity extends AppCompatActivity
         if (uiManager.isChooserOpen()) {
             uiManager.closeWorkoutChooser();
             // Re-open with updated workout list after a brief delay
+            java.util.Set<String> maxDayWorkouts = workoutManager.getMaxDayWorkouts();
+            java.util.Set<String> maxSoonWorkouts = workoutManager.getMaxSoonWorkouts();
             workoutCalendar.postDelayed(() -> {
-                uiManager.toggleWorkoutChooser(workouts, completedToday);
+                uiManager.toggleWorkoutChooser(workouts, completedToday, maxDayWorkouts, maxSoonWorkouts);
             }, 100);
         }
     }
@@ -219,29 +263,24 @@ public class MainActivity extends AppCompatActivity
         WorkoutWrapper workoutWrapper = new WorkoutWrapper(this);
         try {
             workoutWrapper.open();
-            
+
             // Get all workouts
             List<WorkoutInfo> allWorkouts = workoutWrapper.getAllWorkouts();
-            
-            // Count total workout sessions across all workout types
-            int totalSessions = 0;
-            for (WorkoutInfo workout : allWorkouts) {
-                List<com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo> history = 
-                    workoutWrapper.getHistoryForWorkout(workout.getId());
-                totalSessions += history.size();
-            }
-            
+
+            // Get complete sessions count from calendar (which already tracks this)
+            int completeSessions = workoutCalendar.getCompleteSessions();
+
             // Calculate streaks based on actual completion dates
             int[] streaks = calculateStreaks(workoutWrapper);
             int currentStreak = streaks[0];
             int maxStreak = streaks[1];
-            
+
             // Calculate today's completion
             String todayCompletion = calculateTodayCompletion(workoutWrapper, allWorkouts.size());
-            
+
             // Update UI
             if (tvStatMonth != null) {
-                tvStatMonth.setText(String.valueOf(totalSessions));
+                tvStatMonth.setText(String.valueOf(completeSessions));
             }
             
             if (tvStatCurrentStreak != null) {
@@ -249,7 +288,7 @@ public class MainActivity extends AppCompatActivity
             }
             
             if (tvStatMaxStreak != null) {
-                tvStatMaxStreak.setText("• 🔥 " + maxStreak + " best");
+                tvStatMaxStreak.setText("/" + maxStreak);
             }
             
             if (tvTodayCompletion != null && todayCompletion != null && !todayCompletion.isEmpty()) {
@@ -265,7 +304,7 @@ public class MainActivity extends AppCompatActivity
             workoutWrapper.close();
         }
     }
-    
+
     /**
      * Calculate current and max streak from workout history dates
      * @return int array [currentStreak, maxStreak]
@@ -586,8 +625,95 @@ public class MainActivity extends AppCompatActivity
      */
     private void updateStatsVisibility() {
         if (llQuickStats == null) return;
-        
+
         boolean showStatsCards = prefsManager.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true);
         llQuickStats.setVisibility(showStatsCards ? android.view.View.VISIBLE : android.view.View.GONE);
+    }
+
+    /* ====================================================================== */
+    /*  PROGRESSIVE GOALS                                                      */
+    /* ====================================================================== */
+
+    /**
+     * Update progressive goals display based on total sessions completed
+     */
+    private void updateProgressiveGoals() {
+        if (llGoalsSection == null || workoutCalendar == null) return;
+
+        // Check if goals should be shown (separate setting from stats cards)
+        boolean showGoals = prefsManager.getPrefSetting(PreferencesValues.SHOW_GOALS, true);
+        if (!showGoals) {
+            llGoalsSection.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        int completeSessions = workoutCalendar.getCompleteSessions();
+
+        // Find the next goal milestone
+        int nextGoal = findNextGoal(completeSessions);
+        int previousGoal = findPreviousGoal(completeSessions);
+
+        if (nextGoal == -1) {
+            // User has completed all goals!
+            tvGoalIcon.setText("🏆");
+            tvGoalText.setText("All goals achieved!");
+            tvGoalProgress.setText(completeSessions + " sessions");
+            progressGoal.setProgress(100);
+            llGoalsSection.setVisibility(android.view.View.VISIBLE);
+            return;
+        }
+
+        // Calculate progress towards next goal
+        int progressTowardNext = completeSessions - previousGoal;
+        int goalRange = nextGoal - previousGoal;
+        int progressPercent = goalRange > 0 ? (progressTowardNext * 100) / goalRange : 0;
+
+        // Update UI
+        tvGoalIcon.setText(getGoalIcon(nextGoal));
+        tvGoalText.setText("Next goal: " + nextGoal + " sessions");
+        tvGoalProgress.setText(completeSessions + "/" + nextGoal);
+        progressGoal.setProgress(progressPercent);
+
+        llGoalsSection.setVisibility(android.view.View.VISIBLE);
+    }
+
+    /**
+     * Find the next goal milestone after the current session count
+     */
+    private int findNextGoal(int currentSessions) {
+        for (int goal : GOAL_MILESTONES) {
+            if (goal > currentSessions) {
+                return goal;
+            }
+        }
+        return -1; // All goals completed
+    }
+
+    /**
+     * Find the previous goal milestone (or 0 if none)
+     */
+    private int findPreviousGoal(int currentSessions) {
+        int previousGoal = 0;
+        for (int goal : GOAL_MILESTONES) {
+            if (goal <= currentSessions) {
+                previousGoal = goal;
+            } else {
+                break;
+            }
+        }
+        return previousGoal;
+    }
+
+    /**
+     * Get an appropriate icon for the goal milestone
+     */
+    private String getGoalIcon(int goal) {
+        if (goal <= 10) return "🎯";
+        if (goal <= 25) return "⭐";
+        if (goal <= 50) return "🔥";
+        if (goal <= 100) return "💪";
+        if (goal <= 200) return "🏅";
+        if (goal <= 500) return "🥇";
+        return "👑";
     }
 }

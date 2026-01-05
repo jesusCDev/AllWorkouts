@@ -78,4 +78,15 @@ public class Timer {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Add extra time to the running timer
+     * @param extraSeconds seconds to add
+     */
+    public void addExtraTime(int extraSeconds) {
+        if (timerRunning) {
+            // Move the start time backwards to effectively add more time
+            startTime -= (extraSeconds * 1000);
+        }
+    }
 }

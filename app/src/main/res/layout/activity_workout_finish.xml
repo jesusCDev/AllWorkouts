@@ -169,51 +169,60 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <!-- 📊 Progress Section -->
-    <LinearLayout
+    <!-- 📊 Progress Section - Higher Visual Importance -->
+    <android.support.v7.widget.CardView
         android:id="@+id/progress_section"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_3"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_3"
-        android:background="@drawable/bg_button_secondary"
+        app:cardBackgroundColor="@color/ink_850"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
         app:layout_constraintTop_toBottomOf="@id/difficulty_card"
         app:layout_constraintBottom_toTopOf="@id/btn_WorkoutFinish_NextWorkout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Session Progress"
-            android:textColor="@color/selectedButton"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="@dimen/spacing_1" />
-
-        <!-- Progress Bar -->
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_marginBottom="@dimen/spacing_1"
-            android:progressTint="@color/colorAccent"
-            android:max="100"
-            android:progress="50" />
-
-        <TextView
-            android:id="@+id/tv_progress_text"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="2 of 4 workouts completed"
-            android:textColor="@color/selectedButton"
-            android:textSize="12sp"
-            android:alpha="0.8" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_4">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Session Progress"
+                android:textColor="@color/vermilion"
+                android:textSize="@dimen/text_size_title"
+                android:fontFamily="@font/fraunces"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_2" />
+
+            <!-- Progress Bar - Larger and More Visible -->
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginBottom="@dimen/spacing_2"
+                android:progressTint="@color/vermilion"
+                android:progressBackgroundTint="@color/ink_line"
+                android:max="100"
+                android:progress="50" />
+
+            <TextView
+                android:id="@+id/tv_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="2 of 4 workouts completed"
+                android:textColor="@color/bone_100"
+                android:textSize="@dimen/text_size_body"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     
     <!-- 🚀 Complete Session Button -->
     <Button

@@ -75,6 +75,14 @@ public class SettingsManager {
         sShowStatsCards.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true));
     }
 
+    /**
+     * Setup display settings switches including goals (default to true if not set)
+     */
+    public void set_DisplaySettingsValues(Switch sShowTimeEstimate, Switch sShowStatsCards, Switch sShowGoals) {
+        set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards);
+        sShowGoals.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_GOALS, true));
+    }
+
     /********** Notification Settings **********/
 
     public void setUp_TimeDisplay(TextView tvTime) {

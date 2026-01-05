@@ -56,6 +56,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
     // Display settings switches
     private Switch sShowTimeEstimate;
     private Switch sShowStatsCards;
+    private Switch sShowGoals;
     
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
@@ -82,7 +83,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
         settingsManager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
         
         // Setup display settings (default to true if not set)
-        settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards);
+        settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals);
         
         // Show/hide song title sub-setting based on media controls state
         updateSongTitleSettingVisibility(sMediaControls.isChecked());
@@ -120,6 +121,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Display settings listeners
         sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
         sShowStatsCards.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_STATS_CARDS));
+        sShowGoals.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_GOALS));
     }
     
     /**
@@ -185,6 +187,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Display settings switches
         sShowTimeEstimate = ((android.app.Activity) getContext()).findViewById(R.id.s_show_time_estimate);
         sShowStatsCards = ((android.app.Activity) getContext()).findViewById(R.id.s_show_stats_cards);
+        sShowGoals = ((android.app.Activity) getContext()).findViewById(R.id.s_show_goals);
     }
     
     /**

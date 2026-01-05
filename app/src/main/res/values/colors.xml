@@ -126,4 +126,15 @@
     <color name="heat_high">#BFFF432C</color>                    <!-- High intensity -->
     <color name="heat_max">@color/vermilion</color>              <!-- 100% intensity -->
 
+    <!-- Difficulty Button Colors -->
+    <color name="difficulty_easy">@color/jade</color>            <!-- Easy - green -->
+    <color name="difficulty_easy_bg">#2021C48E</color>           <!-- Easy background -->
+    <color name="difficulty_normal">@color/vermilion</color>     <!-- Normal - vermilion -->
+    <color name="difficulty_normal_bg">#20FF432C</color>         <!-- Normal background -->
+    <color name="difficulty_hard">#FF6B4A</color>                <!-- Hard - orange-red -->
+    <color name="difficulty_hard_bg">#20FF6B4A</color>           <!-- Hard background -->
+
+    <!-- Calendar Rest Day Color -->
+    <color name="rest_day">#5099CCFF</color>                     <!-- Blue with 30% alpha for rest days -->
+
 </resources>

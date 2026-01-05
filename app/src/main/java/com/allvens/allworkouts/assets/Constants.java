@@ -15,6 +15,7 @@ public interface Constants {
     String CHOSEN_WORKOUT_EXTRA_KEY  = "chosen_workout";
     String SESSION_START_WORKOUT_KEY = "session_start_workout"; // Tracks which workout started the session for circular progression
     String DURATION_SECONDS_KEY      = "duration_seconds"; // Duration of workout session in seconds
+    String PRE_SELECTED_DIFFICULTY   = "pre_selected_difficulty"; // Pre-selected difficulty from break slider
     String WORKOUT_TYPE_KEY          = "mix_or_simple_workout";
     String UPDATING_MAX_IN_SETTINGS  = "update_max_value";
 

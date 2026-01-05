@@ -47,7 +47,11 @@ public class Workout {
     public void create_BreakTimes(){
         workoutBreakTime = new int[4];
         for(int i = 0; i < 4; i++){
-            workoutBreakTime[i] = (10000 * (int)(Math.round(10 * difficultyValues[i])));
+            // Break times between sets: 30-60 seconds based on difficulty
+            // Lower difficulty (easier sets) = 30s, higher difficulty (harder sets) = 60s
+            // Formula: 30 + (difficulty * 30) seconds, converted to milliseconds
+            int breakSeconds = 30 + (int)(difficultyValues[i] * 30);
+            workoutBreakTime[i] = breakSeconds * 1000;
         }
     }
 

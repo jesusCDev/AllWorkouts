@@ -673,11 +673,15 @@ public class BackupManager {
         if (settings != null) {
             prefsManager.update_PrefSetting(PreferencesValues.NOTIFICATION_ON, settings.isEnabled());
             prefsManager.update_NotificationTime(settings.getHour(), settings.getMinute());
-            
+
+            // Restore notification days - set each day to the backed-up value
             boolean[] days = settings.getDaysOfWeek();
             for (int i = 0; i < Math.min(days.length, 7); i++) {
-                prefsManager.update_NotificationDay(i);
+                prefsManager.set_NotificationDay(i, days[i]);
             }
+
+            Log.d(TAG, "Notification settings restored - enabled: " + settings.isEnabled() +
+                      ", time: " + settings.getHour() + ":" + settings.getMinute());
         }
     }
     

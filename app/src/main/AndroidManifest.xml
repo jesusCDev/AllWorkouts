@@ -71,6 +71,16 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <!-- Poweramp Broadcast Receiver for direct track updates -->
+        <receiver android:name=".media.PowerampReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.maxmpz.audioplayer.TRACK_CHANGED" />
+                <action android:name="com.maxmpz.audioplayer.STATUS_CHANGED" />
+                <action android:name="com.maxmpz.audioplayer.PLAYING_MODE_CHANGED" />
+            </intent-filter>
+        </receiver>
         
         <meta-data
             android:name="preloaded_fonts"

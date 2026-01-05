@@ -30,15 +30,14 @@ public class WorkoutMediaController {
     private ImageButton playPauseButton;
     private ImageButton previousButton;
     private ImageButton nextButton;
-    private TextView trackInfoTextView;
-    private View trackInfoSection;
+    private TextView trackTitleTextView;
     private boolean isPlaying = false;
     private Handler handler;
     private Runnable stateUpdateRunnable;
     private long lastClickTime = 0;
     private static final long DEBOUNCE_DELAY = 300; // 300ms debounce
     private static final long STATE_UPDATE_DELAY = 150; // 150ms delay before checking state
-    private static final long PERIODIC_UPDATE_INTERVAL = 2000; // 2 seconds
+    private static final long PERIODIC_UPDATE_INTERVAL = 1000; // 1 second (faster updates)
     private static final long FEEDBACK_DURATION = 150; // 150ms visual feedback
     private Runnable periodicUpdateRunnable;
     private MediaSessionManager mediaSessionManager;
@@ -54,22 +53,17 @@ public class WorkoutMediaController {
     /**
      * Set up media control buttons with click listeners
      */
-    public void setupMediaControls(ImageButton previousButton, ImageButton playPauseButton, 
-                                 ImageButton nextButton, TextView trackInfoTextView) {
+    public void setupMediaControls(ImageButton previousButton, ImageButton playPauseButton,
+                                 ImageButton nextButton, TextView trackTitleTextView) {
         this.previousButton = previousButton;
         this.playPauseButton = playPauseButton;
         this.nextButton = nextButton;
-        this.trackInfoTextView = trackInfoTextView;
-        
-        // Get track info section (parent LinearLayout containing the music icon and text)
-        if (trackInfoTextView != null && trackInfoTextView.getParent() != null) {
-            this.trackInfoSection = (View) trackInfoTextView.getParent();
-        }
-        
+        this.trackTitleTextView = trackTitleTextView;
+
         // Load show song title preference
         SettingsPrefsManager prefsManager = new SettingsPrefsManager(context);
         showSongTitle = prefsManager.getPrefSetting(PreferencesValues.SHOW_SONG_TITLE, false);
-        
+
         // Set up click listeners for media control buttons
         previousButton.setOnClickListener(v -> {
             sendMediaButtonEvent(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
@@ -112,9 +106,9 @@ public class WorkoutMediaController {
         isPlaying = audioManager != null && audioManager.isMusicActive();
 
         updatePlayPauseIcon();
-        
-        // Update track info section visibility based on setting
-        updateTrackInfoVisibility();
+
+        // Update track title visibility based on setting
+        updateTrackTitleVisibility();
         
         // Use a delay to double-check and refresh state
         handler.postDelayed(() -> {
@@ -165,11 +159,11 @@ public class WorkoutMediaController {
     }
     
     /**
-     * Update track info section visibility based on setting
+     * Update track title visibility based on setting
      */
-    private void updateTrackInfoVisibility() {
-        if (trackInfoSection != null) {
-            trackInfoSection.setVisibility(showSongTitle ? View.VISIBLE : View.GONE);
+    private void updateTrackTitleVisibility() {
+        if (trackTitleTextView != null) {
+            trackTitleTextView.setVisibility(showSongTitle ? View.VISIBLE : View.GONE);
         }
     }
     
@@ -238,80 +232,56 @@ public class WorkoutMediaController {
      * Update track information display with current playing track
      */
     public void updateTrackInfo() {
-        if (trackInfoTextView == null) {
+        if (trackTitleTextView == null) {
             return;
         }
-        
-        String trackInfo = getCurrentTrackInfo();
-        trackInfoTextView.setText(trackInfo);
-    }
-    
-    /**
-     * Get current track information from active media sessions
-     */
-    private String getCurrentTrackInfo() {
-        // First, check MediaSessionTracker for track info from notification listener service
+
         MediaSessionTracker tracker = MediaSessionTracker.getInstance();
-        String trackInfo = tracker.getFormattedTrackInfo();
-        
-        if (trackInfo != null && !trackInfo.isEmpty()) {
-            android.util.Log.d("WorkoutMediaController", "Got track info from tracker: " + trackInfo);
-            return trackInfo;
+        String title = tracker.getCurrentTitle();
+
+        // Try MediaSessionManager fallback if no title from tracker
+        if (title == null || title.isEmpty()) {
+            title = getTrackTitleFromMediaSessions();
         }
-        
-        // Second, try to get track info from MediaSessionManager if available (legacy fallback)
-        trackInfo = getTrackInfoFromMediaSessions();
-        if (trackInfo != null && !trackInfo.equals("Music Controls")) {
-            android.util.Log.d("WorkoutMediaController", "Got track info from MediaSession: " + trackInfo);
-            return trackInfo;
-        }
-        
-        // Fallback to showing contextual message based on playback state
-        boolean musicActive = audioManager != null && audioManager.isMusicActive();
-        android.util.Log.d("WorkoutMediaController", "Music active: " + musicActive);
-        
-        if (musicActive) {
-            return "♪ Playing";
+
+        // Update title
+        if (title != null && !title.isEmpty()) {
+            trackTitleTextView.setText(title);
+            // Enable marquee scrolling for long titles
+            trackTitleTextView.setSelected(true);
         } else {
-            return "♪ Ready to Play";
+            // Fallback based on playback state
+            boolean musicActive = audioManager != null && audioManager.isMusicActive();
+            trackTitleTextView.setText(musicActive ? "Playing" : "Ready to Play");
         }
     }
-    
+
     /**
-     * Try to get track information from active media sessions
-     * This is a best-effort approach that may not work on all devices/apps
+     * Get track title from MediaSessions
+     * @return Track title or null
      */
-    private String getTrackInfoFromMediaSessions() {
+    private String getTrackTitleFromMediaSessions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mediaSessionManager != null) {
             try {
-                // Try to get active sessions without requiring notification listener permission
-                // This might work on some devices where the permission check is more lenient
                 List<MediaController> controllers = mediaSessionManager.getActiveSessions(null);
-                        
+
                 for (MediaController controller : controllers) {
                     if (controller != null && controller.getMetadata() != null) {
                         MediaMetadata metadata = controller.getMetadata();
                         String title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE);
-                        String artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST);
-                        
+
                         if (title != null && !title.trim().isEmpty()) {
-                            if (artist != null && !artist.trim().isEmpty()) {
-                                return title + " • " + artist;
-                            } else {
-                                return title;
-                            }
+                            return title;
                         }
                     }
                 }
             } catch (SecurityException e) {
-                // Expected - no permission to access media sessions
-                android.util.Log.d("WorkoutMediaController", "No permission to access media sessions (this is normal)");
+                // Expected - no permission
             } catch (Exception e) {
                 android.util.Log.w("WorkoutMediaController", "Error getting track info: " + e.getMessage());
             }
         }
-        
-        return "Music Controls"; // Fallback
+        return null;
     }
     
     /**
@@ -389,9 +359,9 @@ public class WorkoutMediaController {
                 handler.removeCallbacks(periodicUpdateRunnable);
             }
         }
-        
+
         playPauseButton = null;
-        trackInfoTextView = null;
+        trackTitleTextView = null;
         audioManager = null;
         handler = null;
         stateUpdateRunnable = null;

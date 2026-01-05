@@ -2,7 +2,12 @@ package com.allvens.allworkouts.managers;
 
 import android.content.Context;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
+import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
+import com.allvens.allworkouts.data_manager.database.WorkoutWrapper;
 import com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages workout selection logic and data operations:
@@ -18,6 +23,8 @@ public class WorkoutSelectionManager {
     
     // Current state
     private String[] availableWorkouts = new String[0];
+    private java.util.Set<String> maxDayWorkouts = new java.util.HashSet<>();
+    private java.util.Set<String> maxSoonWorkouts = new java.util.HashSet<>();
     private String currentSelectedWorkout = null;
     
     // Callback interface for data events
@@ -44,21 +51,58 @@ public class WorkoutSelectionManager {
     /**
      * Refresh the list of available workouts from preferences
      * This should be called in onResume to get latest data
+     * Sorts workouts so maxing workouts (progress >= 8) appear first
      */
     public void refreshAvailableWorkouts() {
         try {
+            // Create a fresh prefsChecker to ensure we get the latest data
+            // (WorkoutBasicsPrefsChecker caches data in its constructor)
+            prefsChecker = new WorkoutBasicsPrefsChecker(context);
             WorkoutPosAndStatus[] workoutPositions = prefsChecker.getWorkoutPositions(false);
-            
-            availableWorkouts = new String[workoutPositions.length];
-            for (int i = 0; i < workoutPositions.length; i++) {
-                availableWorkouts[i] = workoutPositions[i].getName();
+
+            // Get workout progress info from database
+            WorkoutWrapper wrapper = new WorkoutWrapper(context);
+            wrapper.open();
+            List<WorkoutInfo> allWorkoutInfo = wrapper.getAllWorkouts();
+            wrapper.close();
+
+            // Separate into maxing and non-maxing workouts while preserving order
+            List<String> maxingWorkouts = new ArrayList<>();
+            List<String> normalWorkouts = new ArrayList<>();
+            maxDayWorkouts.clear();
+            maxSoonWorkouts.clear();
+
+            for (WorkoutPosAndStatus pos : workoutPositions) {
+                String workoutName = pos.getName();
+                boolean isMaxDay = isWorkoutMaxDay(workoutName, allWorkoutInfo);
+                boolean isMaxSoon = isWorkoutMaxSoon(workoutName, allWorkoutInfo);
+
+                if (isMaxDay) {
+                    maxingWorkouts.add(workoutName);
+                    maxDayWorkouts.add(workoutName);
+                } else {
+                    normalWorkouts.add(workoutName);
+                    if (isMaxSoon) {
+                        maxSoonWorkouts.add(workoutName);
+                    }
+                }
             }
-            
+
+            // Combine: maxing workouts first, then normal workouts
+            availableWorkouts = new String[maxingWorkouts.size() + normalWorkouts.size()];
+            int index = 0;
+            for (String workout : maxingWorkouts) {
+                availableWorkouts[index++] = workout;
+            }
+            for (String workout : normalWorkouts) {
+                availableWorkouts[index++] = workout;
+            }
+
             // Notify listener of updated workout list
             if (eventListener != null) {
                 eventListener.onWorkoutsRefreshed(availableWorkouts);
             }
-            
+
         } catch (Exception e) {
             // Handle error and notify listener
             if (eventListener != null) {
@@ -66,12 +110,65 @@ public class WorkoutSelectionManager {
             }
         }
     }
+
+    /**
+     * Check if a workout is on a max day (progress >= 8)
+     */
+    private boolean isWorkoutMaxDay(String workoutName, List<WorkoutInfo> allWorkouts) {
+        for (WorkoutInfo info : allWorkouts) {
+            if (info.getWorkout().equalsIgnoreCase(workoutName)) {
+                return info.getProgress() >= 8;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a workout is close to max day (progress 6-7)
+     */
+    private boolean isWorkoutMaxSoon(String workoutName, List<WorkoutInfo> allWorkouts) {
+        for (WorkoutInfo info : allWorkouts) {
+            if (info.getWorkout().equalsIgnoreCase(workoutName)) {
+                int progress = info.getProgress();
+                return progress >= 6 && progress < 8;
+            }
+        }
+        return false;
+    }
     
     /**
      * Get the currently available workouts
      */
     public String[] getAvailableWorkouts() {
         return availableWorkouts.clone(); // Return defensive copy
+    }
+
+    /**
+     * Get the set of workouts that are on max day (progress >= 8)
+     */
+    public java.util.Set<String> getMaxDayWorkouts() {
+        return new java.util.HashSet<>(maxDayWorkouts); // Return defensive copy
+    }
+
+    /**
+     * Check if a specific workout is on max day
+     */
+    public boolean isMaxDay(String workoutName) {
+        return maxDayWorkouts.contains(workoutName);
+    }
+
+    /**
+     * Get the set of workouts that are close to max day (progress 6-7)
+     */
+    public java.util.Set<String> getMaxSoonWorkouts() {
+        return new java.util.HashSet<>(maxSoonWorkouts); // Return defensive copy
+    }
+
+    /**
+     * Check if a specific workout is close to max day
+     */
+    public boolean isMaxSoon(String workoutName) {
+        return maxSoonWorkouts.contains(workoutName);
     }
     
     /**

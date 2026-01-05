@@ -53,6 +53,77 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <!-- Average Time Card -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/avg_time_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_3"
+        app:cardBackgroundColor="@color/ink_850"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/elevation_card"
+        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_3"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Average Duration"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption" />
+
+                <TextView
+                    android:id="@+id/tv_log_avg_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_half"
+                    android:text="--"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sessions Tracked"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption" />
+
+                <TextView
+                    android:id="@+id/tv_log_session_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_half"
+                    android:text="0"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
     <!-- Chart Card -->
     <android.support.v7.widget.CardView
         android:id="@+id/chart_card"
@@ -62,7 +133,7 @@
         app:cardBackgroundColor="@color/ink_850"
         app:cardCornerRadius="@dimen/corner_radius_large"
         app:cardElevation="@dimen/elevation_card"
-        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintTop_toBottomOf="@id/avg_time_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -133,7 +204,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Current Maximum"
+                        android:text="Last Maximum"
                         android:textColor="@color/unSelectedButton"
                         android:textSize="@dimen/text_size_caption"
                         android:textStyle="normal" />
@@ -216,48 +287,6 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <!-- Workout History Card -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/history_card"
-        android:layout_width="0dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="@dimen/spacing_3"
-        app:cardBackgroundColor="@color/ink_850"
-        app:cardCornerRadius="@dimen/corner_radius_large"
-        app:cardElevation="@dimen/elevation_card"
-        app:layout_constraintTop_toBottomOf="@id/settings_card"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_3">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_2"
-                android:text="Workout History"
-                android:textColor="@color/selectedButton"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_log_ShowAllWorkoutSets"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="true"
-                android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical"
-                android:paddingTop="@dimen/spacing_1"
-                android:paddingBottom="@dimen/spacing_1"
-                android:layoutAnimation="@null" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
     <!-- Danger Reset Button -->
     <Button
         android:id="@+id/button12"
@@ -270,7 +299,7 @@
         android:text="Reset Workout"
         android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/history_card"
+        app:layout_constraintTop_toBottomOf="@id/settings_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

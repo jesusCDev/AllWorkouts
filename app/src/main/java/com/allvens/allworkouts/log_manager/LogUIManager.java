@@ -1,9 +1,6 @@
 package com.allvens.allworkouts.log_manager;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
@@ -12,24 +9,37 @@ import com.allvens.allworkouts.log_manager.log_chart.LineChartDataEntry;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class LogUIManager {
 
     private Context context;
     private String chosenWorkout;
-    private RecyclerView rvShowAllWorkoutSets;
     private TextView tvCurrentMax;
     private TextView tvType;
+    private TextView tvAvgDuration;
+    private TextView tvSessionCount;
     private LogChartManager logChart_manager;
 
-    public LogUIManager(Context context, String chosenWorkout, RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
+    // Workout type constants
+    public static final int WORKOUT_TYPE_SIMPLE = 0;
+    public static final int WORKOUT_TYPE_MIX = 1;
+
+    // Current workout type (for average duration display)
+    private int currentWorkoutType = WORKOUT_TYPE_SIMPLE;
+
+    // Legacy constructor for backward compatibility
+    public LogUIManager(Context context, String chosenWorkout, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType) {
+        this(context, chosenWorkout, lcShowWorkoutProgress, tvCurrentMax, tvType, null, null);
+    }
+
+    public LogUIManager(Context context, String chosenWorkout, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType, TextView tvAvgDuration, TextView tvSessionCount) {
         this.context              = context;
         this.chosenWorkout        = chosenWorkout;
-        this.rvShowAllWorkoutSets = rvShowAllWorkoutSets;
         this.tvCurrentMax         = tvCurrentMax;
         this.tvType               = tvType;
+        this.tvAvgDuration        = tvAvgDuration;
+        this.tvSessionCount       = tvSessionCount;
         logChart_manager          = new LogChartManager(context, lcShowWorkoutProgress);
     }
 
@@ -40,6 +50,7 @@ public class LogUIManager {
     }
 
     public void update_CurrentType(int type) {
+        this.currentWorkoutType = type;
         String sType = "Simple";
 
         if(type == 1) {
@@ -47,6 +58,93 @@ public class LogUIManager {
         }
 
         tvType.setText(sType);
+    }
+
+    /**
+     * Update average duration and session count stats
+     * For Mix workouts: shows average per workout and total
+     * For Simple workouts: shows single workout average
+     * @param historyList The workout history list
+     */
+    public void update_AverageStats(List<WorkoutHistoryInfo> historyList) {
+        if (tvAvgDuration == null || tvSessionCount == null) {
+            return;
+        }
+
+        if (historyList == null || historyList.isEmpty()) {
+            tvAvgDuration.setText("--");
+            tvSessionCount.setText("0");
+            return;
+        }
+
+        // Update session count
+        tvSessionCount.setText(String.valueOf(historyList.size()));
+
+        // Count sessions with valid duration and calculate average
+        long totalDurationSeconds = 0;
+        int validDurationCount = 0;
+
+        for (WorkoutHistoryInfo history : historyList) {
+            if (history.hasValidDuration()) {
+                totalDurationSeconds += history.getDurationSeconds();
+                validDurationCount++;
+            }
+        }
+
+        if (validDurationCount == 0) {
+            tvAvgDuration.setText("--");
+            return;
+        }
+
+        long avgSeconds = totalDurationSeconds / validDurationCount;
+
+        if (currentWorkoutType == WORKOUT_TYPE_MIX) {
+            // For Mix mode: show per-workout average and total session average
+            // Get the most recent workout's duration for reference
+            WorkoutHistoryInfo lastWorkout = getLastValidDurationWorkout(historyList);
+            if (lastWorkout != null) {
+                String lastDuration = formatDuration(lastWorkout.getDurationSeconds());
+                String avgDuration = formatDuration(avgSeconds);
+                tvAvgDuration.setText(lastDuration + " (avg: " + avgDuration + ")");
+            } else {
+                tvAvgDuration.setText(formatDuration(avgSeconds));
+            }
+        } else {
+            // For Simple mode: show single average
+            tvAvgDuration.setText(formatDuration(avgSeconds));
+        }
+    }
+
+    /**
+     * Get the most recent workout with valid duration
+     */
+    private WorkoutHistoryInfo getLastValidDurationWorkout(List<WorkoutHistoryInfo> historyList) {
+        // List is typically oldest first, so iterate from end
+        for (int i = historyList.size() - 1; i >= 0; i--) {
+            WorkoutHistoryInfo history = historyList.get(i);
+            if (history.hasValidDuration()) {
+                return history;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Format duration in seconds to a human-readable string
+     */
+    private String formatDuration(long seconds) {
+        if (seconds <= 0) {
+            return "--";
+        }
+
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
+
+        if (minutes > 0) {
+            return String.format("%dm %ds", minutes, remainingSeconds);
+        } else {
+            return String.format("%ds", remainingSeconds);
+        }
     }
 
     public void update_Graph(ArrayList<LineChartDataEntry> totalSets) {
@@ -57,66 +155,5 @@ public class LogUIManager {
 
     public void reset_GraphToZero(){
         logChart_manager.reset_Chart();
-    }
-
-    public void update_SetList(List<WorkoutHistoryInfo> historyForWorkout) {
-        Collections.reverse(historyForWorkout);
-
-        ArrayList<WorkoutHistoryInfo> list = new ArrayList<>();
-        list.addAll(historyForWorkout);
-
-        // Set up layout manager with proper configuration
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        layoutManager.setAutoMeasureEnabled(true);
-        rvShowAllWorkoutSets.setLayoutManager(layoutManager);
-        
-        // Configure RecyclerView for better performance and layout
-        rvShowAllWorkoutSets.setHasFixedSize(false);
-        rvShowAllWorkoutSets.setNestedScrollingEnabled(true);
-        
-        // Disable item animator to prevent layout issues
-        rvShowAllWorkoutSets.setItemAnimator(null);
-        
-        // Set adapter and force immediate layout
-        SetListRecyclerViewAdapter adapter = new SetListRecyclerViewAdapter(context, list);
-        rvShowAllWorkoutSets.setAdapter(adapter);
-        
-        // Multiple approaches to force proper layout and prevent squishing
-        // Approach 1: Immediate layout request
-        rvShowAllWorkoutSets.requestLayout();
-        
-        // Approach 2: Post-layout fixes
-        rvShowAllWorkoutSets.post(() -> {
-            if (rvShowAllWorkoutSets.getAdapter() != null && rvShowAllWorkoutSets.getAdapter().getItemCount() > 0) {
-                // Force proper measurement and layout
-                rvShowAllWorkoutSets.getLayoutManager().requestLayout();
-                rvShowAllWorkoutSets.requestLayout();
-                rvShowAllWorkoutSets.invalidate();
-                
-                // Scroll to top to trigger proper layout calculation
-                rvShowAllWorkoutSets.scrollToPosition(0);
-            }
-        });
-        
-        // Approach 3: Additional passes with delays to ensure proper rendering
-        rvShowAllWorkoutSets.postDelayed(() -> {
-            if (rvShowAllWorkoutSets.getAdapter() != null && rvShowAllWorkoutSets.getAdapter().getItemCount() > 0) {
-                rvShowAllWorkoutSets.getLayoutManager().requestLayout();
-                rvShowAllWorkoutSets.requestLayout();
-                // Force remeasure of first visible items
-                for (int i = 0; i < Math.min(3, rvShowAllWorkoutSets.getAdapter().getItemCount()); i++) {
-                    rvShowAllWorkoutSets.getLayoutManager().findViewByPosition(i);
-                }
-            }
-        }, 100);
-        
-        // Approach 4: Final safety net - force layout after a longer delay
-        rvShowAllWorkoutSets.postDelayed(() -> {
-            rvShowAllWorkoutSets.requestLayout();
-        }, 200);
-    }
-
-    public void reset_SetList(){
-        rvShowAllWorkoutSets.setVisibility(View.INVISIBLE);
     }
 }

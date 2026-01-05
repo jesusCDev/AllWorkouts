@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,24 +41,43 @@ public class LogManager {
         wrapper.close();
     }
 
-    public void setUp_UIManager(RecyclerView rvShowAllWorkoutSets, LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType){
-        log_ui_manager = new LogUIManager(context, chosenWorkout, rvShowAllWorkoutSets, lcShowWorkoutProgress, tvCurrentMax, tvType);
+    public void setUp_UIManager(LineChart lcShowWorkoutProgress, TextView tvCurrentMax, TextView tvType){
+        log_ui_manager = new LogUIManager(context, chosenWorkout, lcShowWorkoutProgress, tvCurrentMax, tvType);
     }
 
     public void update_Screen(){
         if(workout != null) {
             wrapper.open();
-            log_ui_manager.update_Graph(get_GraphData_TotalReps(wrapper.getHistoryForWorkout(workout.getId())));
-            log_ui_manager.update_SetList(wrapper.getHistoryForWorkout(workout.getId()));
-            log_ui_manager.update_CurrentMax(workout.getMax());
+            List<WorkoutHistoryInfo> historyList = wrapper.getHistoryForWorkout(workout.getId());
+            log_ui_manager.update_Graph(get_GraphData_TotalReps(historyList));
+            // Show the max from the most recent workout session (last max achieved)
+            int lastMax = getLastSessionMax(historyList, workout.getMax());
+            log_ui_manager.update_CurrentMax(lastMax);
+            // Update type BEFORE average stats so the correct display format is used
             log_ui_manager.update_CurrentType(workout.getType());
+            log_ui_manager.update_AverageStats(historyList);
             wrapper.close();
         }
         else{
             log_ui_manager.reset_GraphToZero();
-            log_ui_manager.reset_SetList();
             log_ui_manager.update_CurrentMax(0);
+            log_ui_manager.update_AverageStats(null);
         }
+    }
+
+    /**
+     * Get the max value from the most recent workout session
+     * @param historyList List of workout history entries (oldest first)
+     * @param defaultMax Default max to return if no history exists
+     * @return The max from the last session, or defaultMax if no history
+     */
+    private int getLastSessionMax(List<WorkoutHistoryInfo> historyList, int defaultMax) {
+        if (historyList == null || historyList.isEmpty()) {
+            return defaultMax;
+        }
+        // History list is typically ordered oldest to newest, so get the last item
+        WorkoutHistoryInfo lastSession = historyList.get(historyList.size() - 1);
+        return lastSession.getMax_value();
     }
 
     public void reset_Workout(){

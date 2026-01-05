@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
@@ -34,11 +33,12 @@ public class LogActivityUIManager extends BaseUIManager {
     private LogUIManager logUIManager;
     
     // UI Elements
-    private RecyclerView rvShowAllWorkoutSets;
     private LineChart lcShowWorkoutProgress;
     private TextView tvCurrentMax;
     private TextView tvType;
     private TextView tvWorkoutName;
+    private TextView tvAvgDuration;
+    private TextView tvSessionCount;
     private String chosenWorkout;
     
     public LogActivityUIManager(Context context, LogUICallback callback) {
@@ -58,13 +58,14 @@ public class LogActivityUIManager extends BaseUIManager {
     @Override
     protected void initializeViews() {
         Activity activity = (Activity) context;
-        
+
         // Find all UI elements
-        rvShowAllWorkoutSets = activity.findViewById(R.id.rv_log_ShowAllWorkoutSets);
         lcShowWorkoutProgress = activity.findViewById(R.id.lc_log_ShowWorkoutProgression);
         tvCurrentMax = activity.findViewById(R.id.tv_log_CurrentMaxContainer);
         tvType = activity.findViewById(R.id.tv_log_type);
         tvWorkoutName = activity.findViewById(R.id.tv_log_workout_name);
+        tvAvgDuration = activity.findViewById(R.id.tv_log_avg_duration);
+        tvSessionCount = activity.findViewById(R.id.tv_log_session_count);
     }
     
     @Override
@@ -73,28 +74,29 @@ public class LogActivityUIManager extends BaseUIManager {
         if (chosenWorkout != null && tvWorkoutName != null) {
             tvWorkoutName.setText(chosenWorkout + " Log");
         }
-        
-        // Initialize the LogUIManager with the UI elements
+
+        // Initialize the LogUIManager with the UI elements (no RecyclerView - chart only)
         if (chosenWorkout != null) {
-            logUIManager = new LogUIManager(context, chosenWorkout, 
-                                           rvShowAllWorkoutSets, lcShowWorkoutProgress, 
-                                           tvCurrentMax, tvType);
+            logUIManager = new LogUIManager(context, chosenWorkout,
+                                           lcShowWorkoutProgress, tvCurrentMax, tvType,
+                                           tvAvgDuration, tvSessionCount);
         }
     }
-    
+
     @Override
     protected void setupListeners() {
         // Listeners are handled through dialog methods and callbacks
     }
-    
+
     @Override
     protected void cleanupViews() {
         logUIManager = null;
-        rvShowAllWorkoutSets = null;
         lcShowWorkoutProgress = null;
         tvCurrentMax = null;
         tvType = null;
         tvWorkoutName = null;
+        tvAvgDuration = null;
+        tvSessionCount = null;
     }
     
     /**

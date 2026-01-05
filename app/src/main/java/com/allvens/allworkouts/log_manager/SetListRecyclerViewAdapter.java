@@ -34,17 +34,44 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvMax.setText("Max: " + history_info.get(position).getMax_value());
+        WorkoutHistoryInfo historyInfo = history_info.get(position);
+        
+        holder.tvMax.setText("Max: " + historyInfo.getMax_value());
         holder.tvTotalSet.setText("Total Set: " + get_TotalSetAmount(position));
-        holder.tvSet1.setText(Integer.toString(history_info.get(position).getFirst_value()));
-        holder.tvSet2.setText(Integer.toString(history_info.get(position).getSecond_value()));
-        holder.tvSet3.setText(Integer.toString(history_info.get(position).getThird_value()));
-        holder.tvSet4.setText(Integer.toString(history_info.get(position).getForth_value()));
-        holder.tvSet5.setText(Integer.toString(history_info.get(position).getFifth_value()));
+        holder.tvSet1.setText(Integer.toString(historyInfo.getFirst_value()));
+        holder.tvSet2.setText(Integer.toString(historyInfo.getSecond_value()));
+        holder.tvSet3.setText(Integer.toString(historyInfo.getThird_value()));
+        holder.tvSet4.setText(Integer.toString(historyInfo.getForth_value()));
+        holder.tvSet5.setText(Integer.toString(historyInfo.getFifth_value()));
+        
+        // Display duration if available
+        if (historyInfo.hasValidDuration()) {
+            holder.tvDuration.setText("Duration: " + formatDuration(historyInfo.getDurationSeconds()));
+        } else {
+            holder.tvDuration.setText("Duration: N/A");
+        }
     }
 
     private int get_TotalSetAmount(int pos){
         return history_info.get(pos).get_TotalReps();
+    }
+    
+    /**
+     * Format duration in seconds to a human-readable string
+     */
+    private String formatDuration(Long durationSeconds) {
+        if (durationSeconds == null || durationSeconds <= 0) {
+            return "N/A";
+        }
+        
+        long minutes = durationSeconds / 60;
+        long seconds = durationSeconds % 60;
+        
+        if (minutes > 0) {
+            return String.format("%dm %ds", minutes, seconds);
+        } else {
+            return String.format("%ds", seconds);
+        }
     }
 
     @Override
@@ -55,6 +82,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvMax;
         TextView tvTotalSet;
+        TextView tvDuration;
         TextView tvSet1;
         TextView tvSet2;
         TextView tvSet3;
@@ -66,6 +94,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
             tvMax      = itemView.findViewById(R.id.tv_log_listset_Max);
             tvTotalSet = itemView.findViewById(R.id.tv_log_listset_TotalSet);
+            tvDuration = itemView.findViewById(R.id.tv_log_listset_Duration);
             tvSet1     = itemView.findViewById(R.id.tv_log_listset_Value1);
             tvSet2     = itemView.findViewById(R.id.tv_log_listset_Value2);
             tvSet3     = itemView.findViewById(R.id.tv_log_listset_Value3);

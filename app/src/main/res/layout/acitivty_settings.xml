@@ -615,13 +615,52 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Total workouts and streak info on home screen"
+                            android:text="Sessions and streak info on home screen"
                             android:textColor="@color/unSelectedButton"
                             android:textSize="@dimen/text_size_caption" />
                     </LinearLayout>
 
                     <Switch
                         android:id="@+id/s_show_stats_cards"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Show Goals -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Goals Progress"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Session milestones on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_goals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_2"

@@ -91,6 +91,22 @@ public class SettingsPrefsManager {
         edit.commit();
     }
 
+    /**
+     * Set a notification day to a specific enabled/disabled state (used for backup restore)
+     * @param i Day index (0-6, Sunday to Saturday)
+     * @param enabled true to enable notifications for this day, false to disable
+     */
+    public void set_NotificationDay(int i, boolean enabled) {
+        // Refresh the array first to ensure we have the latest values
+        notification_days = prefs.getString(PreferencesValues.NOTIFICATION_DAYS, "-1,-1,-1,-1,-1,-1,-1").split(",");
+
+        // Set the value directly: 1 for enabled, -1 for disabled
+        notification_days[i] = enabled ? "1" : "-1";
+
+        edit.putString(PreferencesValues.NOTIFICATION_DAYS, convert_ArrayToString(notification_days));
+        edit.commit();
+    }
+
     private String convert_ArrayToString(String[] notification_days){
         StringBuilder sb = new StringBuilder();
 

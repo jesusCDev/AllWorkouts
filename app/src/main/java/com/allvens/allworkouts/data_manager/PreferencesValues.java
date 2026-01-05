@@ -35,4 +35,5 @@ public interface PreferencesValues {
     /********** Display Settings **********/
     String SHOW_TIME_ESTIMATE        = "show_time_estimate";      // boolean - default true
     String SHOW_STATS_CARDS          = "show_stats_cards";        // boolean - default true
+    String SHOW_GOALS                = "show_goals";              // boolean - default true
 }

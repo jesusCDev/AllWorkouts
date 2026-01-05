@@ -39,20 +39,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- ─── Calendar ──────────── -->
-    <com.allvens.allworkouts.ui.WorkoutCalendarView
-        android:id="@+id/calendar_workout_activity"
+    <!-- ─── Calendar with Navigation ──────────── -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/calendar_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_3"
         android:layout_marginTop="@dimen/spacing_4"
         android:layout_marginEnd="@dimen/spacing_3"
-        android:background="@drawable/bg_card_glass_premium"
-        android:padding="@dimen/spacing_3"
-        android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_app_header" />
+        app:layout_constraintTop_toBottomOf="@id/tv_app_header">
+
+        <!-- Previous Month Button -->
+        <ImageButton
+            android:id="@+id/btn_calendar_prev"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_chevron_left_24dp"
+            android:tint="@color/text_secondary"
+            android:contentDescription="Previous month"
+            android:scaleType="centerInside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Calendar -->
+        <com.allvens.allworkouts.ui.WorkoutCalendarView
+            android:id="@+id/calendar_workout_activity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_1"
+            android:layout_marginEnd="@dimen/spacing_1"
+            android:background="@drawable/bg_card_glass_premium"
+            android:padding="@dimen/spacing_3"
+            android:elevation="@dimen/elevation_card"
+            app:layout_constraintEnd_toStartOf="@id/btn_calendar_next"
+            app:layout_constraintStart_toEndOf="@id/btn_calendar_prev"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Next Month Button -->
+        <ImageButton
+            android:id="@+id/btn_calendar_next"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_chevron_right_24dp"
+            android:tint="@color/text_secondary"
+            android:contentDescription="Next month"
+            android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <!-- ─── Middle Section (Stats - fills available space, scrollable) ──────────── -->
     <ScrollView
@@ -61,7 +102,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/calendar_workout_activity"
+        app:layout_constraintTop_toBottomOf="@id/calendar_container"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -152,7 +193,7 @@
                     style="@style/TextAppearance.App.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="total"
+                    android:text="sessions"
                     android:textColor="@color/text_secondary"
                     android:alpha="0.8" />
             </LinearLayout>
@@ -175,26 +216,82 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/accent_primary"
-                    android:layout_marginEnd="4dp" />
-
-                <TextView
-                    style="@style/TextAppearance.App.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="day"
-                    android:textColor="@color/text_secondary"
-                    android:alpha="0.8"
-                    android:layout_marginEnd="@dimen/spacing_1" />
+                    android:layout_marginEnd="2dp" />
 
                 <TextView
                     android:id="@+id/tv_stat_max_streak"
                     style="@style/TextAppearance.App.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• 🔥 0 best"
+                    android:text="/0"
                     android:textColor="@color/text_secondary"
-                    android:alpha="0.7" />
+                    android:alpha="0.7"
+                    android:layout_marginEnd="@dimen/spacing_1" />
+
+                <TextView
+                    style="@style/TextAppearance.App.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="day streak"
+                    android:textColor="@color/text_secondary"
+                    android:alpha="0.8" />
             </LinearLayout>
+        </LinearLayout>
+
+        <!-- Progressive Goals Section -->
+        <LinearLayout
+            android:id="@+id/ll_goals_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_3"
+            android:background="@drawable/bg_dropdown"
+            android:padding="@dimen/spacing_3"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/spacing_2">
+
+                <TextView
+                    android:id="@+id/tv_goal_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎯"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="@dimen/spacing_2" />
+
+                <TextView
+                    android:id="@+id/tv_goal_text"
+                    style="@style/TextAppearance.App.Body"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Next goal: 10 sessions"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:id="@+id/tv_goal_progress"
+                    style="@style/TextAppearance.App.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5/10"
+                    android:textColor="@color/accent_primary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_goal"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:progressTint="@color/jade"
+                android:progressBackgroundTint="@color/ink_line"
+                android:max="100"
+                android:progress="50" />
         </LinearLayout>
         </LinearLayout>
     </ScrollView>

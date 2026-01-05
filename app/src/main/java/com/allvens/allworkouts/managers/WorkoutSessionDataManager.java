@@ -113,25 +113,39 @@ public class WorkoutSessionDataManager extends BaseDataManager {
      * @param isValidDuration Whether the duration is valid (not an outlier)
      */
     public void handleSessionCompletion(long durationSeconds, boolean isValidDuration) {
-        android.util.Log.d("WorkoutSession", "DataManager.handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration);
+        handleSessionCompletion(durationSeconds, isValidDuration, com.allvens.allworkouts.data_manager.DifficultyRatingManager.FEEDBACK_JUST_RIGHT);
+    }
+
+    /**
+     * Handle session completion navigation with duration tracking and pre-selected difficulty
+     * @param durationSeconds Duration of the workout in seconds
+     * @param isValidDuration Whether the duration is valid (not an outlier)
+     * @param preSelectedDifficulty Pre-selected difficulty from break slider
+     */
+    public void handleSessionCompletion(long durationSeconds, boolean isValidDuration, int preSelectedDifficulty) {
+        android.util.Log.d("WorkoutSession", "DataManager.handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration + ", difficulty: " + preSelectedDifficulty);
         try {
             Intent intent = new Intent(getContext(), WorkoutSessionFinishActivity.class);
             // Pass the workout name as string, not the Workout object
             intent.putExtra(Constants.CHOSEN_WORKOUT_EXTRA_KEY, getWorkoutName());
             android.util.Log.d("WorkoutSession", "Intent created for WorkoutSessionFinishActivity with workout: " + getWorkoutName());
-            
+
             // Thread the session start workout to WorkoutSessionFinishActivity
             if (sessionStartWorkout != null) {
                 intent.putExtra(Constants.SESSION_START_WORKOUT_KEY, sessionStartWorkout);
                 android.util.Log.d("WorkoutSession", "Added session start workout to intent: " + sessionStartWorkout);
             }
-            
+
             // Pass duration if valid
             if (isValidDuration && durationSeconds > 0) {
                 intent.putExtra(Constants.DURATION_SECONDS_KEY, durationSeconds);
                 android.util.Log.d("WorkoutSession", "Added valid duration to intent: " + durationSeconds + "s");
             }
-            
+
+            // Pass pre-selected difficulty
+            intent.putExtra(Constants.PRE_SELECTED_DIFFICULTY, preSelectedDifficulty);
+            android.util.Log.d("WorkoutSession", "Added pre-selected difficulty to intent: " + preSelectedDifficulty);
+
             // Use activity callback for navigation - cast to BaseUICallback
             if (getCallback() instanceof com.allvens.allworkouts.base.BaseInterfaces.BaseUICallback) {
                 android.util.Log.d("WorkoutSession", "Calling onNavigationRequested to WorkoutSessionFinishActivity");
@@ -140,7 +154,7 @@ public class WorkoutSessionDataManager extends BaseDataManager {
             } else {
                 android.util.Log.e("WorkoutSession", "Callback is not an instance of BaseUICallback!");
             }
-            
+
         } catch (Exception e) {
             android.util.Log.e("WorkoutSession", "Exception in handleSessionCompletion: " + e.getMessage());
             notifyDataError("Failed to handle session completion: " + e.getMessage());

@@ -211,7 +211,7 @@ public class MediaNotificationListenerService extends NotificationListenerServic
                                          android.app.Notification.CATEGORY_SERVICE.equals(category);
             
             // Also check common music app packages
-            boolean isMusicApp = packageName.contains("music") || 
+            boolean isMusicApp = packageName.contains("music") ||
                                 packageName.contains("spotify") ||
                                 packageName.contains("youtube") ||
                                 packageName.contains("pandora") ||
@@ -220,7 +220,9 @@ public class MediaNotificationListenerService extends NotificationListenerServic
                                 packageName.contains("tidal") ||
                                 packageName.contains("amazon") ||
                                 packageName.contains("apple") ||
-                                packageName.contains("google.android.apps.youtube");
+                                packageName.contains("google.android.apps.youtube") ||
+                                packageName.contains("maxmpz") ||  // Poweramp
+                                packageName.contains("audioplayer");  // Poweramp alternate
             
             if (!isMediaNotification && !isMusicApp) {
                 return;

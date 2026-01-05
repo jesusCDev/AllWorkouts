@@ -101,15 +101,15 @@ public class WorkoutSessionActivityUIManager {
             // Initialize media controller
             mediaController = new WorkoutMediaController(context);
             
-            // Find media control buttons and track info
+            // Find media control buttons and track title
             ImageButton btnPrevious = mediaControlsLayout.findViewById(R.id.btn_media_previous);
             ImageButton btnPlayPause = mediaControlsLayout.findViewById(R.id.btn_media_play_pause);
             ImageButton btnNext = mediaControlsLayout.findViewById(R.id.btn_media_next);
-            TextView tvTrackInfo = mediaControlsLayout.findViewById(R.id.tv_track_info);
-            
+            TextView tvTrackTitle = mediaControlsLayout.findViewById(R.id.tv_track_title);
+
             // Set up media control functionality
-            if (btnPrevious != null && btnPlayPause != null && btnNext != null && tvTrackInfo != null) {
-                mediaController.setupMediaControls(btnPrevious, btnPlayPause, btnNext, tvTrackInfo);
+            if (btnPrevious != null && btnPlayPause != null && btnNext != null && tvTrackTitle != null) {
+                mediaController.setupMediaControls(btnPrevious, btnPlayPause, btnNext, tvTrackTitle);
             }
         } else {
             // Hide media controls

@@ -78,12 +78,27 @@ public class MainActivityUIManager {
      * Toggle the workout chooser open/closed state
      */
     public void toggleWorkoutChooser(String[] availableWorkouts, java.util.Set<String> completedToday) {
+        toggleWorkoutChooser(availableWorkouts, completedToday, null, null);
+    }
+
+    /**
+     * Toggle the workout chooser open/closed state with max day info
+     */
+    public void toggleWorkoutChooser(String[] availableWorkouts, java.util.Set<String> completedToday, java.util.Set<String> maxDayWorkouts) {
+        toggleWorkoutChooser(availableWorkouts, completedToday, maxDayWorkouts, null);
+    }
+
+    /**
+     * Toggle the workout chooser open/closed state with max day and max soon info
+     */
+    public void toggleWorkoutChooser(String[] availableWorkouts, java.util.Set<String> completedToday,
+                                     java.util.Set<String> maxDayWorkouts, java.util.Set<String> maxSoonWorkouts) {
         if (chooserIsOpen) {
             closeWorkoutChooser();
         } else {
-            openWorkoutChooser(availableWorkouts, completedToday);
+            openWorkoutChooser(availableWorkouts, completedToday, maxDayWorkouts, maxSoonWorkouts);
         }
-        
+
         // Note: chooserIsOpen state is updated within open/close methods to prevent race conditions
     }
     
@@ -129,46 +144,49 @@ public class MainActivityUIManager {
         }
     }
     
-    private void openWorkoutChooser(String[] workouts, java.util.Set<String> completedToday) {
+    private void openWorkoutChooser(String[] workouts, java.util.Set<String> completedToday,
+                                     java.util.Set<String> maxDayWorkouts, java.util.Set<String> maxSoonWorkouts) {
         if (chooserIsOpen) return; // Prevent multiple simultaneous openings
-        
+
         // Update state immediately
         chooserIsOpen = true;
-        
+
         // Cancel any existing animations
         workoutChooser.animate().cancel();
-        
+
         // Clear any existing workout buttons first
         workoutChooser.removeAllViews();
-        
+
         // Update arrow to expanded state
         workoutSelectorArrow.setImageResource(R.drawable.ic_expand_more_black_24dp);
-        
+
         // Create buttons for each workout before showing
         for (String workoutName : workouts) {
             boolean isCompleted = completedToday != null && completedToday.contains(workoutName);
-            Button button = createWorkoutButton(workoutName, isCompleted);
+            boolean isMaxDay = maxDayWorkouts != null && maxDayWorkouts.contains(workoutName);
+            boolean isMaxSoon = maxSoonWorkouts != null && maxSoonWorkouts.contains(workoutName);
+            Button button = createWorkoutButton(workoutName, isCompleted, isMaxDay, isMaxSoon);
             button.setOnClickListener(v -> {
                 // Disable button to prevent double clicks
                 v.setEnabled(false);
-                
+
                 // Notify listener of workout selection
                 if (eventListener != null) {
                     eventListener.onWorkoutSelected(workoutName);
                 }
-                
+
                 // Add haptic feedback
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                     v.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
                 }
-                
+
                 // Close chooser after selection
                 closeWorkoutChooser();
             });
-            
+
             workoutChooser.addView(button);
         }
-        
+
         // Show chooser with animation
         workoutChooser.setVisibility(View.VISIBLE);
         workoutChooser.setAlpha(0f);
@@ -179,64 +197,96 @@ public class MainActivityUIManager {
     }
     
     private Button createWorkoutButton(String name, boolean isCompleted) {
+        return createWorkoutButton(name, isCompleted, false, false);
+    }
+
+    private Button createWorkoutButton(String name, boolean isCompleted, boolean isMaxDay) {
+        return createWorkoutButton(name, isCompleted, isMaxDay, false);
+    }
+
+    private Button createWorkoutButton(String name, boolean isCompleted, boolean isMaxDay, boolean isMaxSoon) {
         Button button = new Button(context);
-        button.setText(name);
-        
+
+        // Add indicator based on workout status
+        if (isMaxDay) {
+            button.setText("MAX  " + name);
+        } else if (isMaxSoon) {
+            button.setText("MAX SOON  " + name);
+        } else {
+            button.setText(name);
+        }
+
         // Apply styling
-        styleChooserButton(button, isCompleted);
-        
+        styleChooserButton(button, isCompleted, isMaxDay, isMaxSoon);
+
         // Set layout parameters
-        LinearLayoutCompat.LayoutParams layoutParams = 
+        LinearLayoutCompat.LayoutParams layoutParams =
                 new LinearLayoutCompat.LayoutParams(
                         LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                         LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         layoutParams.topMargin = context.getResources().getDimensionPixelSize(R.dimen.spacing_2);
         button.setLayoutParams(layoutParams);
-        
+
         // Accessibility
-        String description = isCompleted ? 
+        String description = isCompleted ?
                 "Completed: " + context.getString(R.string.select_workout_type, name) :
-                context.getString(R.string.select_workout_type, name);
+                (isMaxDay ? "Max day: " : (isMaxSoon ? "Max soon: " : "")) + context.getString(R.string.select_workout_type, name);
         button.setContentDescription(description);
-        
+
         return button;
     }
     
     private void styleChooserButton(Button button, boolean isCompleted) {
+        styleChooserButton(button, isCompleted, false, false);
+    }
+
+    private void styleChooserButton(Button button, boolean isCompleted, boolean isMaxDay) {
+        styleChooserButton(button, isCompleted, isMaxDay, false);
+    }
+
+    private void styleChooserButton(Button button, boolean isCompleted, boolean isMaxDay, boolean isMaxSoon) {
         // Apply all style attributes programmatically for dynamic buttons
         if (isCompleted) {
             // Grey out completed workouts
             button.setTextColor(context.getResources().getColor(R.color.text_secondary));
             button.setAlpha(0.5f);
+        } else if (isMaxDay) {
+            // Accent color for max day workouts
+            button.setTextColor(context.getResources().getColor(R.color.accent_primary));
+            button.setAlpha(1.0f);
+        } else if (isMaxSoon) {
+            // Warning color for max soon workouts (approaching max)
+            button.setTextColor(context.getResources().getColor(R.color.vermilion));
+            button.setAlpha(1.0f);
         } else {
             button.setTextColor(context.getResources().getColor(R.color.selectedButton));
             button.setAlpha(1.0f);
         }
-        
-        button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, 
+
+        button.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,
                 context.getResources().getDimensionPixelSize(R.dimen.text_size_body));
         button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
         button.setAllCaps(false);
-        
+
         // Left align text
         button.setGravity(android.view.Gravity.START | android.view.Gravity.CENTER_VERTICAL);
-        
+
         // Set background drawable
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             button.setBackground(context.getDrawable(R.drawable.bg_chooser_item));
         } else {
             button.setBackground(context.getResources().getDrawable(R.drawable.bg_chooser_item));
         }
-        
+
         // Set padding
         int paddingVertical = context.getResources().getDimensionPixelSize(R.dimen.spacing_3);
         int paddingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.spacing_3);
         button.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
-        
+
         // Set proper touch target size
         int minTouchSize = context.getResources().getDimensionPixelSize(R.dimen.touch_target_min);
         button.setMinHeight(minTouchSize);
-        
+
         // Remove default button appearance
         button.setStateListAnimator(null);
     }

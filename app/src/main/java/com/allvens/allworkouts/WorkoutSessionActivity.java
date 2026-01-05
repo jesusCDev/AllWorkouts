@@ -234,7 +234,7 @@ public class WorkoutSessionActivity extends AppCompatActivity
     @Override
     public void onSessionComplete() {
         android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() called");
-        
+
         // Get duration and pass to data manager for session completion
         long durationSeconds = 0;
         boolean isValidDuration = false;
@@ -243,9 +243,12 @@ public class WorkoutSessionActivity extends AppCompatActivity
             isValidDuration = durationTracker.isValidDuration(dataManager.getWorkoutInfo().getId());
             durationTracker.stopTracking();
         }
-        
-        dataManager.handleSessionCompletion(durationSeconds, isValidDuration);
-        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() - handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration);
+
+        // Get pre-selected difficulty from break slider
+        int preSelectedDifficulty = sessionController.getPreSelectedDifficulty();
+
+        dataManager.handleSessionCompletion(durationSeconds, isValidDuration, preSelectedDifficulty);
+        android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() - handleSessionCompletion() called with duration: " + durationSeconds + "s, valid: " + isValidDuration + ", difficulty: " + preSelectedDifficulty);
     }
     
     @Override

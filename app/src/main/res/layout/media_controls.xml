@@ -12,33 +12,23 @@
     android:elevation="@dimen/elevation_button"
     tools:visibility="visible">
     
-    <!-- Track info section -->
-    <LinearLayout
+    <!-- Track title -->
+    <TextView
+        android:id="@+id/tv_track_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/spacing_2"
+        android:text=""
+        android:textSize="@dimen/text_size_body"
+        android:textColor="@color/accent_primary"
+        android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/spacing_3">
-        
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_music_note_24dp"
-            android:tint="@color/selectedButton"
-            android:alpha="0.7"
-            android:layout_marginEnd="@dimen/spacing_1"
-            android:contentDescription="@string/music_icon" />
-        
-        <TextView
-            android:id="@+id/tv_track_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Music Controls"
-            android:textSize="@dimen/text_size_caption"
-            android:textColor="@color/selectedButton"
-            android:alpha="0.7" />
-            
-    </LinearLayout>
+        android:maxLines="1"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
     
     <!-- Control buttons section -->
     <LinearLayout
