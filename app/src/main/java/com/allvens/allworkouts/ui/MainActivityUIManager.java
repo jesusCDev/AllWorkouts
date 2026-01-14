@@ -207,11 +207,9 @@ public class MainActivityUIManager {
     private Button createWorkoutButton(String name, boolean isCompleted, boolean isMaxDay, boolean isMaxSoon) {
         Button button = new Button(context);
 
-        // Add indicator based on workout status
+        // Add indicator only for actual max day (not max soon)
         if (isMaxDay) {
             button.setText("MAX  " + name);
-        } else if (isMaxSoon) {
-            button.setText("MAX SOON  " + name);
         } else {
             button.setText(name);
         }
@@ -230,7 +228,7 @@ public class MainActivityUIManager {
         // Accessibility
         String description = isCompleted ?
                 "Completed: " + context.getString(R.string.select_workout_type, name) :
-                (isMaxDay ? "Max day: " : (isMaxSoon ? "Max soon: " : "")) + context.getString(R.string.select_workout_type, name);
+                (isMaxDay ? "Max day: " : "") + context.getString(R.string.select_workout_type, name);
         button.setContentDescription(description);
 
         return button;
@@ -251,12 +249,8 @@ public class MainActivityUIManager {
             button.setTextColor(context.getResources().getColor(R.color.text_secondary));
             button.setAlpha(0.5f);
         } else if (isMaxDay) {
-            // Accent color for max day workouts
-            button.setTextColor(context.getResources().getColor(R.color.accent_primary));
-            button.setAlpha(1.0f);
-        } else if (isMaxSoon) {
-            // Warning color for max soon workouts (approaching max)
-            button.setTextColor(context.getResources().getColor(R.color.vermilion));
+            // Yellow color for max day workouts
+            button.setTextColor(context.getResources().getColor(R.color.max_day_yellow));
             button.setAlpha(1.0f);
         } else {
             button.setTextColor(context.getResources().getColor(R.color.selectedButton));

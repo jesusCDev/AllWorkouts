@@ -136,5 +136,8 @@
 
     <!-- Calendar Rest Day Color -->
     <color name="rest_day">#5099CCFF</color>                     <!-- Blue with 30% alpha for rest days -->
+    
+    <!-- Max Workout Day Color -->
+    <color name="max_day_yellow">#FFC107</color>                 <!-- Amber/yellow for max workout indicators -->
 
 </resources>

@@ -85,8 +85,8 @@ public class Timer {
      */
     public void addExtraTime(int extraSeconds) {
         if (timerRunning) {
-            // Move the start time backwards to effectively add more time
-            startTime -= (extraSeconds * 1000);
+            // Move the start time forward to effectively add more time
+            startTime += (extraSeconds * 1000);
         }
     }
 }

@@ -90,6 +90,36 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
     
+    public void btnAction_AlignMax(View view) {
+        showAlignMaxDialog();
+    }
+    
+    /**
+     * Show dialog to align all max workouts to same day
+     */
+    private void showAlignMaxDialog() {
+        final String[] options = {"Tomorrow", "2 days", "3 days", "4 days", "5 days", "6 days", "7 days"};
+        final int[] daysFromToday = {1, 2, 3, 4, 5, 6, 7};
+        
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this, R.style.DarkAlertDialog);
+        builder.setTitle("Align Max Workouts")
+               .setMessage("Set all workouts to reach MAX on the same day:")
+               .setItems(options, (dialog, which) -> {
+                   int days = daysFromToday[which];
+                   // Use WorkoutSelectionManager to align
+                   com.allvens.allworkouts.managers.WorkoutSelectionManager workoutManager = 
+                       new com.allvens.allworkouts.managers.WorkoutSelectionManager(this);
+                   if (workoutManager.alignMaxWorkouts(days)) {
+                       String message = "All workouts aligned to reach MAX in " + days + " day" + (days > 1 ? "s" : "") + "!";
+                       android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_LONG).show();
+                   } else {
+                       android.widget.Toast.makeText(this, "Failed to align workouts", android.widget.Toast.LENGTH_SHORT).show();
+                   }
+               })
+               .setNegativeButton("Cancel", null)
+               .show();
+    }
+    
     /****************************************
      /**** INTERFACE IMPLEMENTATIONS
      ****************************************/

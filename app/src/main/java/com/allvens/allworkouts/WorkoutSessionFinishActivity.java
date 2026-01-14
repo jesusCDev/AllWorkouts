@@ -148,6 +148,28 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         workoutInfo.setProgress((workoutInfo.getProgress() + 1));
         wrapper.updateWorkout(workoutInfo);
+        
+        // Check if tomorrow is a max day for this workout
+        showMaxTomorrowIfApplicable(workoutInfo);
+    }
+    
+    /**
+     * Check if tomorrow is a max day and show indicator if so
+     */
+    private void showMaxTomorrowIfApplicable(WorkoutInfo workoutInfo) {
+        try {
+            // After incrementing progress, check if we're one away from max (progress 7 means tomorrow is 8)
+            int newProgress = workoutInfo.getProgress();
+            if (newProgress == 7) {
+                // Tomorrow will be max day!
+                TextView tvMaxTomorrow = findViewById(R.id.tv_max_tomorrow);
+                if (tvMaxTomorrow != null) {
+                    tvMaxTomorrow.setVisibility(android.view.View.VISIBLE);
+                }
+            }
+        } catch (Exception e) {
+            android.util.Log.e("WorkoutFinish", "Error checking max tomorrow: " + e.getMessage());
+        }
     }
 
     private void setNextWorkout(Button nextWorkoutButton) {

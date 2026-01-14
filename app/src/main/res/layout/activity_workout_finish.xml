@@ -51,6 +51,18 @@
             android:textSize="@dimen/text_size_headline"
             android:textStyle="bold"
             android:alpha="0.8" />
+            
+        <!-- Max Tomorrow Indicator -->
+        <TextView
+            android:id="@+id/tv_max_tomorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_2"
+            android:text="🔥 MAX TOMORROW!"
+            android:textColor="@color/max_day_yellow"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- 🎨 How was your workout? Section -->

@@ -268,10 +268,15 @@ public class WorkoutSessionUIManager {
      * Show break-only UI elements (difficulty slider and extra break button)
      */
     private void showBreakOnlyElements() {
-        if (llDifficultySlider != null) {
+        // Check settings preferences
+        SettingsPrefsManager prefs = new SettingsPrefsManager(context);
+        boolean showDifficultySlider = prefs.getPrefSetting(PreferencesValues.SHOW_DIFFICULTY_SLIDER, true);
+        boolean showExtraBreak = prefs.getPrefSetting(PreferencesValues.SHOW_EXTRA_BREAK, true);
+        
+        if (llDifficultySlider != null && showDifficultySlider) {
             llDifficultySlider.setVisibility(View.VISIBLE);
         }
-        if (btnExtraBreak != null && extraBreaksRemaining > 0) {
+        if (btnExtraBreak != null && showExtraBreak && extraBreaksRemaining > 0) {
             btnExtraBreak.setVisibility(View.VISIBLE);
         }
     }

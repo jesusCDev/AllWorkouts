@@ -82,6 +82,15 @@ public class SettingsManager {
         set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards);
         sShowGoals.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_GOALS, true));
     }
+    
+    /**
+     * Setup workout session settings switches (default to true if not set)
+     */
+    public void set_WorkoutSessionSettingsValues(Switch sShowDifficultySlider, Switch sShowExtraBreak) {
+        // Default to true for workout session settings
+        sShowDifficultySlider.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_DIFFICULTY_SLIDER, true));
+        sShowExtraBreak.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_EXTRA_BREAK, true));
+    }
 
     /********** Notification Settings **********/
 

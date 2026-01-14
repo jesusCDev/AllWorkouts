@@ -58,6 +58,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private Switch sShowStatsCards;
     private Switch sShowGoals;
     
+    // Workout session settings switches
+    private Switch sShowDifficultySlider;
+    private Switch sShowExtraBreak;
+    
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
     private TextView tvTimeDisplay;
@@ -84,6 +88,9 @@ public class SettingsActivityUIManager extends BaseUIManager {
         
         // Setup display settings (default to true if not set)
         settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals);
+        
+        // Setup workout session settings (default to true if not set)
+        settingsManager.set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak);
         
         // Show/hide song title sub-setting based on media controls state
         updateSongTitleSettingVisibility(sMediaControls.isChecked());
@@ -122,6 +129,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
         sShowStatsCards.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_STATS_CARDS));
         sShowGoals.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_GOALS));
+        
+        // Workout session settings listeners
+        sShowDifficultySlider.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_DIFFICULTY_SLIDER));
+        sShowExtraBreak.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_EXTRA_BREAK));
     }
     
     /**
@@ -188,6 +199,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sShowTimeEstimate = ((android.app.Activity) getContext()).findViewById(R.id.s_show_time_estimate);
         sShowStatsCards = ((android.app.Activity) getContext()).findViewById(R.id.s_show_stats_cards);
         sShowGoals = ((android.app.Activity) getContext()).findViewById(R.id.s_show_goals);
+        
+        // Workout session settings switches
+        sShowDifficultySlider = ((android.app.Activity) getContext()).findViewById(R.id.s_show_difficulty_slider);
+        sShowExtraBreak = ((android.app.Activity) getContext()).findViewById(R.id.s_show_extra_break);
     }
     
     /**

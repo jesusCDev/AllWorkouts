@@ -321,4 +321,43 @@ public class WorkoutSelectionManager {
         
         return -1;
     }
+    
+    /**
+     * Align all workouts to reach max on the same day (days from today)
+     * @param daysFromToday How many days from today should all workouts reach max
+     * @return true if successful, false otherwise
+     */
+    public boolean alignMaxWorkouts(int daysFromToday) {
+        if (daysFromToday < 0) return false;
+        
+        WorkoutWrapper wrapper = new WorkoutWrapper(context);
+        try {
+            wrapper.open();
+            List<WorkoutInfo> allWorkouts = wrapper.getAllWorkouts();
+            
+            // For each workout, calculate what progress it needs to reach max in daysFromToday days
+            // Max is at progress 8
+            // If we want max in N days, and we assume today's workout completes (progress+1),
+            // then we need: (progress+1) + N = 8, so progress = 7 - N
+            int targetProgress = 7 - daysFromToday;
+            
+            if (targetProgress < 0) {
+                // Can't go back in progress, max day already passed
+                return false;
+            }
+            
+            // Update all workouts to this progress
+            for (WorkoutInfo workout : allWorkouts) {
+                workout.setProgress(targetProgress);
+                wrapper.updateWorkout(workout);
+            }
+            
+            return true;
+        } catch (Exception e) {
+            android.util.Log.e("WorkoutSelection", "Error aligning max workouts: " + e.getMessage());
+            return false;
+        } finally {
+            wrapper.close();
+        }
+    }
 }

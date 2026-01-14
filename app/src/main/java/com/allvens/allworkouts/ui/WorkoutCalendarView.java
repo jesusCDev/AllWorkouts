@@ -38,10 +38,13 @@ public class WorkoutCalendarView extends View {
     private int colorTodayStroke;
     private int colorSelectedStroke;
     private int colorRestDay;
+    private int colorMaxDayStroke;
     
     // Calendar data
     private Calendar calendar;
     private Map<Integer, Integer> workoutCounts; // day -> workout count
+    private Map<Integer, Boolean> maxWorkoutDays; // day -> is max workout day
+    private Map<Integer, java.util.List<String>> maxWorkoutNames; // day -> list of workout names with max
     private int daysInMonth;
     private int firstDayOfWeek;
     private int totalWorkoutTypes = 4; // Pull-ups, Push-ups, Sit-ups, Squats
@@ -107,6 +110,7 @@ public class WorkoutCalendarView extends View {
         colorTodayStroke = context.getResources().getColor(R.color.text_primary);
         colorSelectedStroke = context.getResources().getColor(R.color.accent_primary);
         colorRestDay = context.getResources().getColor(R.color.rest_day);
+        colorMaxDayStroke = context.getResources().getColor(R.color.max_day_yellow); // Yellow for max days
         
         // Load modern dimensions
         cellSize = context.getResources().getDimensionPixelSize(R.dimen.heat_cell_size);
@@ -116,6 +120,8 @@ public class WorkoutCalendarView extends View {
         // Initialize calendar
         calendar = Calendar.getInstance();
         workoutCounts = new HashMap<>();
+        maxWorkoutDays = new HashMap<>();
+        maxWorkoutNames = new HashMap<>();
         updateCalendarData();
         
         // Initialize modern paints
@@ -153,11 +159,94 @@ public class WorkoutCalendarView extends View {
     }
 
     /**
-     * Handle touch events for swipe gesture detection
+     * Handle touch events for swipe gesture detection and cell clicks
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // Handle tap events for max day cells
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            handleCellClick(event.getX(), event.getY());
+        }
         return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
+    }
+    
+    /**
+     * Handle click on a calendar cell
+     */
+    private void handleCellClick(float x, float y) {
+        // Check if click is within the grid
+        if (gridStartX <= 0 || gridStartY <= 0) return;
+        
+        // Calculate which cell was clicked
+        float relativeX = x - gridStartX;
+        float relativeY = y - gridStartY;
+        
+        if (relativeX < 0 || relativeY < 0) return;
+        
+        int dayOfWeek = (int) (relativeX / (cellSize + cellGap));
+        int week = (int) (relativeY / (cellSize + cellGap));
+        
+        if (dayOfWeek < 0 || dayOfWeek >= 7 || week < 0 || week >= weeksToShow) return;
+        
+        // Calculate which day this corresponds to
+        int day = calculateDayFromCell(week, dayOfWeek);
+        
+        if (day > 0 && day <= daysInMonth) {
+            // Check if this day has max workouts
+            java.util.List<String> workouts = maxWorkoutNames.get(day);
+            if (workouts != null && !workouts.isEmpty()) {
+                showMaxWorkoutDialog(day, workouts);
+            }
+        }
+    }
+    
+    /**
+     * Calculate which day of month a cell represents
+     */
+    private int calculateDayFromCell(int week, int dayOfWeek) {
+        int currentDay = 1;
+        
+        for (int w = 0; w < weeksToShow; w++) {
+            for (int d = 0; d < 7; d++) {
+                if (w == 0 && d < firstDayOfWeek) {
+                    continue; // Empty cell before first day
+                }
+                
+                if (currentDay > daysInMonth) {
+                    return -1; // Past end of month
+                }
+                
+                if (w == week && d == dayOfWeek) {
+                    return currentDay;
+                }
+                
+                currentDay++;
+            }
+        }
+        
+        return -1;
+    }
+    
+    /**
+     * Show dialog with max workout information for a specific day
+     */
+    private void showMaxWorkoutDialog(int day, java.util.List<String> workouts) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext(), R.style.DarkAlertDialog);
+        
+        String title = "Max Workout" + (workouts.size() > 1 ? "s" : "") + " on Day " + day;
+        StringBuilder message = new StringBuilder();
+        
+        for (int i = 0; i < workouts.size(); i++) {
+            message.append(workouts.get(i));
+            if (i < workouts.size() - 1) {
+                message.append("\n");
+            }
+        }
+        
+        builder.setTitle(title)
+               .setMessage(message.toString())
+               .setPositiveButton("OK", null)
+               .show();
     }
 
     /**
@@ -295,11 +384,73 @@ public class WorkoutCalendarView extends View {
 
             // Calculate streaks
             calculateStreaks();
+            
+            // Calculate upcoming max workout days
+            calculateMaxWorkoutDays(workoutWrapper, allWorkouts);
 
         } catch (Exception e) {
             Log.e(TAG, "Error loading workout data", e);
         } finally {
             workoutWrapper.close();
+        }
+    }
+    
+    /**
+     * Calculate which future days will have max workouts
+     * Assumes today's workout will be completed, so calculations start from tomorrow
+     */
+    private void calculateMaxWorkoutDays(WorkoutWrapper wrapper, List<com.allvens.allworkouts.data_manager.database.WorkoutInfo> allWorkouts) {
+        maxWorkoutDays.clear();
+        maxWorkoutNames.clear();
+        
+        // Only calculate if we're viewing the current month
+        if (todayDay <= 0) {
+            return;
+        }
+        
+        try {
+            // For each workout type, calculate when max day would occur
+            for (com.allvens.allworkouts.data_manager.database.WorkoutInfo workout : allWorkouts) {
+                int progress = workout.getProgress();
+                
+                // Assume today's workout will be completed (progress + 1)
+                int projectedProgress = progress + 1;
+                
+                // Max day is at progress 8
+                // Calculate how many more sessions needed after today
+                int sessionsUntilMax = 8 - projectedProgress;
+                
+                if (sessionsUntilMax > 0 && sessionsUntilMax <= daysInMonth - todayDay) {
+                    // Calculate which day this would be (starting from tomorrow)
+                    // todayDay + 1 = tomorrow, + sessionsUntilMax for the actual max day
+                    int maxDay = todayDay + sessionsUntilMax;
+                    
+                    // Only mark if it's within this month and in the future (not today)
+                    if (maxDay > todayDay && maxDay <= daysInMonth) {
+                        maxWorkoutDays.put(maxDay, true);
+                        // Add workout name to the list for this day
+                        if (!maxWorkoutNames.containsKey(maxDay)) {
+                            maxWorkoutNames.put(maxDay, new java.util.ArrayList<String>());
+                        }
+                        maxWorkoutNames.get(maxDay).add(workout.getWorkout());
+                        Log.d(TAG, workout.getWorkout() + " max day would be on day " + maxDay + " (" + sessionsUntilMax + " sessions away after today)");
+                    }
+                } else if (sessionsUntilMax == 0) {
+                    // Tomorrow is max day
+                    int maxDay = todayDay + 1;
+                    if (maxDay <= daysInMonth) {
+                        maxWorkoutDays.put(maxDay, true);
+                        // Add workout name to the list for this day
+                        if (!maxWorkoutNames.containsKey(maxDay)) {
+                            maxWorkoutNames.put(maxDay, new java.util.ArrayList<String>());
+                        }
+                        maxWorkoutNames.get(maxDay).add(workout.getWorkout());
+                        Log.d(TAG, workout.getWorkout() + " max day is tomorrow (day " + maxDay + ")");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error calculating max workout days", e);
         }
     }
 
@@ -516,6 +667,15 @@ public class WorkoutCalendarView extends View {
         if (day == todayDay) {
             strokePaint.setColor(colorTodayStroke);
             canvas.drawRoundRect(cellX - 1, cellY - 1, cellX + cellSize + 1, cellY + cellSize + 1, cellRadius, cellRadius, strokePaint);
+        }
+        
+        // Draw max workout day outline (yellow/orange border)
+        Boolean isMaxDay = maxWorkoutDays.get(day);
+        if (isMaxDay != null && isMaxDay) {
+            strokePaint.setColor(colorMaxDayStroke);
+            strokePaint.setStrokeWidth(getResources().getDimensionPixelSize(R.dimen.stroke_standard) * 2); // Thicker border
+            canvas.drawRoundRect(cellX - 2, cellY - 2, cellX + cellSize + 2, cellY + cellSize + 2, cellRadius, cellRadius, strokePaint);
+            strokePaint.setStrokeWidth(getResources().getDimensionPixelSize(R.dimen.stroke_standard)); // Reset
         }
         
         // Draw selected outline (if interactive selection is implemented)
