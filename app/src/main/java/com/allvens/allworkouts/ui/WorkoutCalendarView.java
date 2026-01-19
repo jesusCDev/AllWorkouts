@@ -163,11 +163,16 @@ public class WorkoutCalendarView extends View {
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // Let gesture detector handle the event first
+        boolean handled = gestureDetector.onTouchEvent(event);
+
         // Handle tap events for max day cells
         if (event.getAction() == MotionEvent.ACTION_UP) {
             handleCellClick(event.getX(), event.getY());
         }
-        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
+
+        // Must return true for ACTION_DOWN to receive subsequent events
+        return handled || event.getAction() == MotionEvent.ACTION_DOWN || super.onTouchEvent(event);
     }
     
     /**

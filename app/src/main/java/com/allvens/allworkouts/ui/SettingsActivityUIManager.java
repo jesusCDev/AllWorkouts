@@ -52,6 +52,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private Switch sMediaControls;
     private Switch sShowSongTitle;
     private View llShowSongTitleContainer;
+    private Switch sShowMediaBackground;
+    private View llShowMediaBackgroundContainer;
     
     // Display settings switches
     private Switch sShowTimeEstimate;
@@ -61,6 +63,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
     // Workout session settings switches
     private Switch sShowDifficultySlider;
     private Switch sShowExtraBreak;
+    private Switch sCompleteButtonTop;
     
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
@@ -85,23 +88,29 @@ public class SettingsActivityUIManager extends BaseUIManager {
         settingsManager.setUp_WorkoutsAndPositions(llWorkoutPositions);
         settingsManager.setUp_TimeDisplay(tvTimeDisplay);
         settingsManager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
-        
+
         // Setup display settings (default to true if not set)
         settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals);
-        
-        // Setup workout session settings (default to true if not set)
-        settingsManager.set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak);
-        
+
+        // Setup workout session settings (default to true if not set, complete button top defaults to false)
+        settingsManager.set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak, sCompleteButtonTop);
+
+        // Setup media sub-settings
+        settingsManager.set_MediaSubSettings(sShowMediaBackground);
+
         // Show/hide song title sub-setting based on media controls state
         updateSongTitleSettingVisibility(sMediaControls.isChecked());
     }
     
     /**
-     * Update visibility of song title setting based on media controls state
+     * Update visibility of media sub-settings based on media controls state
      */
     private void updateSongTitleSettingVisibility(boolean mediaControlsEnabled) {
         if (llShowSongTitleContainer != null) {
             llShowSongTitleContainer.setVisibility(mediaControlsEnabled ? View.VISIBLE : View.GONE);
+        }
+        if (llShowMediaBackgroundContainer != null) {
+            llShowMediaBackgroundContainer.setVisibility(mediaControlsEnabled ? View.VISIBLE : View.GONE);
         }
     }
     
@@ -133,6 +142,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Workout session settings listeners
         sShowDifficultySlider.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_DIFFICULTY_SLIDER));
         sShowExtraBreak.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_EXTRA_BREAK));
+        sCompleteButtonTop.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.COMPLETE_BUTTON_TOP));
+
+        // Media background setting listener
+        sShowMediaBackground.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_MEDIA_BACKGROUND));
     }
     
     /**
@@ -175,6 +188,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sMediaControls = ((android.app.Activity) getContext()).findViewById(R.id.s_settings_MediaControls);
         sShowSongTitle = ((android.app.Activity) getContext()).findViewById(R.id.s_show_song_title);
         llShowSongTitleContainer = ((android.app.Activity) getContext()).findViewById(R.id.ll_show_song_title_container);
+        sShowMediaBackground = ((android.app.Activity) getContext()).findViewById(R.id.s_show_media_background);
+        llShowMediaBackgroundContainer = ((android.app.Activity) getContext()).findViewById(R.id.ll_show_media_background_container);
         
         // Workout positions container
         llWorkoutPositions = ((android.app.Activity) getContext()).findViewById(R.id.ll_settings_WorkoutPositions);
@@ -203,6 +218,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Workout session settings switches
         sShowDifficultySlider = ((android.app.Activity) getContext()).findViewById(R.id.s_show_difficulty_slider);
         sShowExtraBreak = ((android.app.Activity) getContext()).findViewById(R.id.s_show_extra_break);
+        sCompleteButtonTop = ((android.app.Activity) getContext()).findViewById(R.id.s_complete_button_top);
     }
     
     /**

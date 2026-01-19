@@ -1,8 +1,14 @@
 package com.allvens.allworkouts;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +21,7 @@ import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
 import com.allvens.allworkouts.gesture.SkipWorkoutGestureHandler;
 import com.allvens.allworkouts.managers.WorkoutSessionController;
 import com.allvens.allworkouts.managers.WorkoutSessionDataManager;
+import com.allvens.allworkouts.services.WorkoutForegroundService;
 import com.allvens.allworkouts.ui.WorkoutSessionActivityUIManager;
 import com.allvens.allworkouts.workout_session_manager.workouts.Workout;
 
@@ -24,12 +31,17 @@ public class WorkoutSessionActivity extends AppCompatActivity
                WorkoutSessionController.WorkoutSessionControllerCallback,
                BaseInterfaces.BaseUICallback {
 
+    private static final int PERMISSION_REQUEST_NOTIFICATIONS = 1001;
+
     // Managers
     private WorkoutSessionActivityUIManager uiManager;
     private WorkoutSessionDataManager dataManager;
     private WorkoutSessionController sessionController;
     private SkipWorkoutGestureHandler gestureHandler;
     private WorkoutDurationTracker durationTracker;
+
+    // Flag to track if we're navigating forward (to finish screen) vs exiting
+    private boolean navigatingToFinish = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +64,31 @@ public class WorkoutSessionActivity extends AppCompatActivity
         // Initialize session with data from intent
         String sessionStartWorkout = getIntent().getStringExtra(Constants.SESSION_START_WORKOUT_KEY);
         dataManager.initializeSession(getIntent().getExtras(), sessionStartWorkout);
+
+        // Request notification permission for Android 13+
+        requestNotificationPermission();
+    }
+
+    /**
+     * Request notification permission for Android 13+
+     */
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        PERMISSION_REQUEST_NOTIFICATIONS);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Permission result doesn't affect app functionality, service will still work
+        // but notification may not show on Android 13+ without permission
     }
 
     @Override
@@ -88,6 +125,10 @@ public class WorkoutSessionActivity extends AppCompatActivity
         dataManager.cleanup();
         if (gestureHandler != null) {
             gestureHandler.cleanup();
+        }
+        // Only stop foreground notification service if we're NOT navigating to finish screen
+        if (!navigatingToFinish) {
+            WorkoutForegroundService.stop(this);
         }
     }
 
@@ -168,7 +209,10 @@ public class WorkoutSessionActivity extends AppCompatActivity
                 }
             );
         });
-        
+
+        // Pass gesture handler to UI manager for cooldown control
+        uiManager.setGestureHandler(gestureHandler);
+
         // Attach gesture handler to the workout session root layout
         android.view.View rootLayout = findViewById(R.id.workout_session_root);
         if (rootLayout != null) {
@@ -182,6 +226,8 @@ public class WorkoutSessionActivity extends AppCompatActivity
     @Override
     public void onSessionStarted(String workoutName) {
         // Session has started successfully
+        // Start foreground notification service
+        WorkoutForegroundService.start(this, workoutName, 0, 1);
     }
     
     public void onSessionError(String error) {
@@ -235,6 +281,9 @@ public class WorkoutSessionActivity extends AppCompatActivity
     public void onSessionComplete() {
         android.util.Log.d("WorkoutSession", "Activity.onSessionComplete() called");
 
+        // Mark that we're navigating to finish screen (don't stop notification service)
+        navigatingToFinish = true;
+
         // Get duration and pass to data manager for session completion
         long durationSeconds = 0;
         boolean isValidDuration = false;
@@ -264,5 +313,17 @@ public class WorkoutSessionActivity extends AppCompatActivity
     @Override
     public void onError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTimerTick(int secondsRemaining) {
+        // Update foreground notification with timer countdown
+        WorkoutForegroundService.updateTimer(this, secondsRemaining);
+    }
+
+    @Override
+    public void onWorkoutScreenChanged(String workoutName, int repCount, int setNumber) {
+        // Update foreground notification with workout info
+        WorkoutForegroundService.updateWorkout(this, workoutName, repCount, setNumber);
     }
 }

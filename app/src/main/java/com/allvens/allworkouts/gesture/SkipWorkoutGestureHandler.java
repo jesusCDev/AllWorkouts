@@ -28,6 +28,7 @@ public class SkipWorkoutGestureHandler {
     // Long-press tracking
     private boolean isLongPressing = false;
     private boolean isGestureActive = false;
+    private boolean isEnabled = true;
     private Handler longPressHandler;
     private Runnable longPressRunnable;
     private View currentView;
@@ -56,6 +57,11 @@ public class SkipWorkoutGestureHandler {
         view.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    // If gesture detection is disabled, don't process
+                    if (!isEnabled) {
+                        return false;
+                    }
+
                     // If a gesture just completed, reset state
                     if (isGestureActive) {
                         resetGestureState();
@@ -92,6 +98,25 @@ public class SkipWorkoutGestureHandler {
         if (longPressRunnable != null && longPressHandler != null) {
             longPressHandler.removeCallbacks(longPressRunnable);
         }
+    }
+
+    /**
+     * Enable or disable gesture detection
+     * @param enabled true to enable, false to disable
+     */
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+        if (!enabled) {
+            // Cancel any ongoing detection when disabled
+            cancelLongPressDetection();
+        }
+    }
+
+    /**
+     * Check if gesture detection is currently enabled
+     */
+    public boolean isEnabled() {
+        return isEnabled;
     }
     
     /**

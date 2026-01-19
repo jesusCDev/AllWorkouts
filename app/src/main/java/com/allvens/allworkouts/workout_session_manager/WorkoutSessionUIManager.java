@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
+import com.allvens.allworkouts.data_manager.DailyLimitManager;
 import com.allvens.allworkouts.data_manager.DifficultyRatingManager;
 import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
@@ -43,7 +44,7 @@ public class WorkoutSessionUIManager {
     private LinearLayout llDifficultySlider;
     private SeekBar seekbarDifficulty;
     private Button btnExtraBreak;
-    private int extraBreaksRemaining = 3;
+    private DailyLimitManager dailyLimitManager;
     private int selectedDifficulty = DifficultyRatingManager.FEEDBACK_JUST_RIGHT; // Default: normal
     private ExtraBreakCallback extraBreakCallback;
 
@@ -90,6 +91,9 @@ public class WorkoutSessionUIManager {
 
         this.workout = workout;
 
+        // Initialize daily limit manager for tracking extra breaks across workouts
+        this.dailyLimitManager = new DailyLimitManager(context);
+
         // Find break-only UI elements
         Activity activity = (Activity) context;
         llDifficultySlider = activity.findViewById(R.id.ll_difficulty_slider);
@@ -127,8 +131,8 @@ public class WorkoutSessionUIManager {
         if (btnExtraBreak != null) {
             updateExtraBreakButton();
             btnExtraBreak.setOnClickListener(v -> {
-                if (extraBreaksRemaining > 0 && extraBreakCallback != null) {
-                    extraBreaksRemaining--;
+                if (dailyLimitManager.getExtraBreaksRemaining() > 0 && extraBreakCallback != null) {
+                    dailyLimitManager.useExtraBreak();
                     extraBreakCallback.onExtraBreakRequested(30);
                     updateExtraBreakButton();
                 }
@@ -150,12 +154,13 @@ public class WorkoutSessionUIManager {
      */
     private void updateExtraBreakButton() {
         if (btnExtraBreak != null) {
-            if (extraBreaksRemaining > 0) {
-                btnExtraBreak.setText("+30s Extra Break (" + extraBreaksRemaining + " left)");
+            int remaining = dailyLimitManager.getExtraBreaksRemaining();
+            if (remaining > 0) {
+                btnExtraBreak.setText("+30s Extra Break (" + remaining + " left today)");
                 btnExtraBreak.setEnabled(true);
                 btnExtraBreak.setAlpha(1.0f);
             } else {
-                btnExtraBreak.setText("No Extra Breaks Left");
+                btnExtraBreak.setText("No Extra Breaks Left Today");
                 btnExtraBreak.setEnabled(false);
                 btnExtraBreak.setAlpha(0.5f);
             }
@@ -272,11 +277,11 @@ public class WorkoutSessionUIManager {
         SettingsPrefsManager prefs = new SettingsPrefsManager(context);
         boolean showDifficultySlider = prefs.getPrefSetting(PreferencesValues.SHOW_DIFFICULTY_SLIDER, true);
         boolean showExtraBreak = prefs.getPrefSetting(PreferencesValues.SHOW_EXTRA_BREAK, true);
-        
+
         if (llDifficultySlider != null && showDifficultySlider) {
             llDifficultySlider.setVisibility(View.VISIBLE);
         }
-        if (btnExtraBreak != null && showExtraBreak && extraBreaksRemaining > 0) {
+        if (btnExtraBreak != null && showExtraBreak && dailyLimitManager.getExtraBreaksRemaining() > 0) {
             btnExtraBreak.setVisibility(View.VISIBLE);
         }
     }

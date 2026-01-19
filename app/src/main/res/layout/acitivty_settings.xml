@@ -227,6 +227,48 @@
                         android:layout_marginStart="@dimen/spacing_2" />
                 </LinearLayout>
 
+                <!-- Show Media Background Setting (sub-setting of Media Controls) -->
+                <LinearLayout
+                    android:id="@+id/ll_show_media_background_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:paddingStart="@dimen/spacing_4"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Media Background"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body"
+                            android:alpha="0.9" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Toggle glossy background on media controls"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_media_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
                 <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
@@ -769,6 +811,45 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_2"
                         android:checked="true" />
+                </LinearLayout>
+
+                <!-- Complete Button at Top -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Complete Button at Top"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Move button above progress to avoid accidental clicks"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_complete_button_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="false" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

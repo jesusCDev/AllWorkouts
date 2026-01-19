@@ -20,6 +20,8 @@ public class WorkoutSessionController {
         void onTimerStateChanged(boolean isRunning);
         void onProgressChanged(int progress);
         void onError(String error);
+        void onTimerTick(int secondsRemaining);
+        void onWorkoutScreenChanged(String workoutName, int repCount, int setNumber);
     }
     
     private Context context;
@@ -73,6 +75,13 @@ public class WorkoutSessionController {
         // Set up timer
         timer = new Timer(workoutSessionUIManager);
 
+        // Set up timer tick callback for notification updates
+        timer.setTimerTickCallback(secondsRemaining -> {
+            if (callback != null) {
+                callback.onTimerTick(secondsRemaining);
+            }
+        });
+
         // Set up extra break callback
         workoutSessionUIManager.setExtraBreakCallback(seconds -> {
             if (timer != null && timer.get_TimerRunning()) {
@@ -90,6 +99,12 @@ public class WorkoutSessionController {
     public void startWorkoutScreen() {
         if (workoutSessionUIManager != null) {
             workoutSessionUIManager.changeScreenToWorkout();
+            // Notify callback for notification update
+            if (callback != null && workout != null) {
+                String workoutName = workout.get_WorkoutName(currentProgress);
+                int repCount = workout.getWorkoutValue(currentProgress);
+                callback.onWorkoutScreenChanged(workoutName, repCount, currentProgress + 1);
+            }
         }
     }
     
@@ -166,6 +181,12 @@ public class WorkoutSessionController {
             timer.stop_timer();
             workoutSessionUIManager.changeScreenToWorkout();
             callback.onTimerStateChanged(false);
+            // Notify callback for notification update
+            if (workout != null) {
+                String workoutName = workout.get_WorkoutName(currentProgress);
+                int repCount = workout.getWorkoutValue(currentProgress);
+                callback.onWorkoutScreenChanged(workoutName, repCount, currentProgress + 1);
+            }
         } else {
             // Switch to timer screen and start countdown
             workoutSessionUIManager.changeScreenToTimer();
@@ -213,6 +234,12 @@ public class WorkoutSessionController {
             timer.stop_timer();
             callback.onTimerStateChanged(false);
             workoutSessionUIManager.changeScreenToWorkout();
+            // Notify callback for notification update
+            if (workout != null) {
+                String workoutName = workout.get_WorkoutName(currentProgress);
+                int repCount = workout.getWorkoutValue(currentProgress);
+                callback.onWorkoutScreenChanged(workoutName, repCount, currentProgress + 1);
+            }
         } else {
             // Currently on workout screen - complete this set and go to timer
             android.util.Log.d("WorkoutSession", "Completing set, moving to timer");

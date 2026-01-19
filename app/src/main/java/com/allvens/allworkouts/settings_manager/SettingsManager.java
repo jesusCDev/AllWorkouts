@@ -92,6 +92,23 @@ public class SettingsManager {
         sShowExtraBreak.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_EXTRA_BREAK, true));
     }
 
+    /**
+     * Setup workout session settings switches including complete button position
+     */
+    public void set_WorkoutSessionSettingsValues(Switch sShowDifficultySlider, Switch sShowExtraBreak, Switch sCompleteButtonTop) {
+        set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak);
+        // Default to false for complete button at top (bottom is default)
+        sCompleteButtonTop.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.COMPLETE_BUTTON_TOP, false));
+    }
+
+    /**
+     * Setup media sub-settings (called separately as they're conditional)
+     */
+    public void set_MediaSubSettings(Switch sShowMediaBackground) {
+        // Default to true for media background
+        sShowMediaBackground.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_MEDIA_BACKGROUND, true));
+    }
+
     /********** Notification Settings **********/
 
     public void setUp_TimeDisplay(TextView tvTime) {

@@ -40,4 +40,14 @@ public interface PreferencesValues {
     /********** Workout Session Settings **********/
     String SHOW_DIFFICULTY_SLIDER    = "show_difficulty_slider";  // boolean - default true
     String SHOW_EXTRA_BREAK          = "show_extra_break";        // boolean - default true
+
+    /********** Daily Limits Keys **********/
+    String EXTRA_BREAKS_USED_TODAY   = "extra_breaks_used_today";  // int
+    String EXTRA_BREAKS_DATE         = "extra_breaks_date";         // String yyyy-MM-dd
+
+    /********** Media Display Settings **********/
+    String SHOW_MEDIA_BACKGROUND     = "show_media_background";     // boolean - default true
+
+    /********** Finish Screen Settings **********/
+    String COMPLETE_BUTTON_TOP       = "complete_button_top";       // boolean - default false
 }

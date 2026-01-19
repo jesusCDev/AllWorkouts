@@ -4,7 +4,15 @@ import android.os.Handler;
 
 public class Timer {
 
+    /**
+     * Callback interface for timer tick notifications
+     */
+    public interface TimerTickCallback {
+        void onTimerTick(int secondsRemaining);
+    }
+
     private WorkoutSessionUIManager workoutSessionUi_manager;
+    private TimerTickCallback timerTickCallback;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
@@ -13,6 +21,13 @@ public class Timer {
 
     public Timer(WorkoutSessionUIManager workoutSessionUi_manager){
         this.workoutSessionUi_manager = workoutSessionUi_manager;
+    }
+
+    /**
+     * Set the timer tick callback for notification updates
+     */
+    public void setTimerTickCallback(TimerTickCallback callback) {
+        this.timerTickCallback = callback;
     }
 
     public boolean get_TimerRunning(){
@@ -50,6 +65,11 @@ public class Timer {
 
                 // update ui
                 workoutSessionUi_manager.setTimeTV(secondsLeft);
+
+                // notify callback for notification updates
+                if (timerTickCallback != null && secondsLeft >= 0) {
+                    timerTickCallback.onTimerTick((int) secondsLeft);
+                }
 
                 timerHandler.postDelayed(this, 1000);
                 if(time_tracker < 0){

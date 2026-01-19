@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.allvens.allworkouts.R;
 import com.allvens.allworkouts.data_manager.PreferencesValues;
+import com.allvens.allworkouts.gesture.SkipWorkoutGestureHandler;
 import com.allvens.allworkouts.media.WorkoutMediaController;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.iambedant.text.OutlineTextView;
@@ -35,6 +38,13 @@ public class WorkoutSessionActivityUIManager {
     private View skipOverlayLayout;
     private TextView tvSkipCountdown;
     private android.os.Handler countdownHandler;
+
+    // Cooldown for button presses
+    private static final int BUTTON_COOLDOWN_MS = 5000;
+    private android.os.Handler cooldownHandler;
+
+    // Reference to gesture handler for cooldown control
+    private SkipWorkoutGestureHandler gestureHandler;
     
     // Main UI Elements
     private TextView tvWorkoutName;
@@ -50,6 +60,7 @@ public class WorkoutSessionActivityUIManager {
         this.context = context;
         this.callback = callback;
         this.countdownHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+        this.cooldownHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     }
     
     /**
@@ -76,11 +87,48 @@ public class WorkoutSessionActivityUIManager {
         
         // Control button
         btnChangeScreens = activity.findViewById(R.id.btn_workout_CompleteTask);
-        
+
         // Skip overlay elements
         skipOverlayLayout = activity.findViewById(R.id.skip_workout_overlay);
         if (skipOverlayLayout != null) {
             tvSkipCountdown = skipOverlayLayout.findViewById(R.id.tv_skip_countdown);
+        }
+
+        // Reposition complete button if setting is enabled
+        positionCompleteButton();
+    }
+
+    /**
+     * Reposition the complete button to the top of the bottom section if setting is enabled.
+     * Moves it above the value pills (progress indicators).
+     */
+    private void positionCompleteButton() {
+        SettingsPrefsManager prefs = new SettingsPrefsManager(context);
+        boolean positionTop = prefs.getPrefSetting(PreferencesValues.COMPLETE_BUTTON_TOP, false);
+
+        if (!positionTop) return; // Keep default bottom position
+
+        Activity activity = (Activity) context;
+        LinearLayout bottomBlock = activity.findViewById(R.id.bottomBlock);
+        View valueHolder = activity.findViewById(R.id.ll_workout_ValueHolder);
+
+        if (bottomBlock == null || btnChangeScreens == null || valueHolder == null) return;
+
+        // Remove the button from its current position
+        bottomBlock.removeView(btnChangeScreens);
+
+        // Find the index of the value holder (progress pills)
+        int valueHolderIndex = bottomBlock.indexOfChild(valueHolder);
+
+        // Insert the button before the value holder (after media controls if present)
+        bottomBlock.addView(btnChangeScreens, valueHolderIndex);
+
+        // Set proper margins for the repositioned button
+        int spacingBottom = (int) context.getResources().getDimension(R.dimen.spacing_3);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btnChangeScreens.getLayoutParams();
+        if (params != null) {
+            params.setMargins(0, 0, 0, spacingBottom);
+            btnChangeScreens.setLayoutParams(params);
         }
     }
     
@@ -91,21 +139,47 @@ public class WorkoutSessionActivityUIManager {
         // Check if media controls are enabled in settings
         SettingsPrefsManager prefsManager = new SettingsPrefsManager(context);
         boolean mediaControlsEnabled = prefsManager.getPrefSetting(PreferencesValues.MEDIA_CONTROLS_ON);
-        
+
         mediaControlsLayout = ((Activity) context).findViewById(R.id.media_controls);
-        
+
         if (mediaControlsEnabled && mediaControlsLayout != null) {
             // Show media controls
             mediaControlsLayout.setVisibility(View.VISIBLE);
-            
-            // Initialize media controller
-            mediaController = new WorkoutMediaController(context);
-            
+
             // Find media control buttons and track title
             ImageButton btnPrevious = mediaControlsLayout.findViewById(R.id.btn_media_previous);
             ImageButton btnPlayPause = mediaControlsLayout.findViewById(R.id.btn_media_play_pause);
             ImageButton btnNext = mediaControlsLayout.findViewById(R.id.btn_media_next);
             TextView tvTrackTitle = mediaControlsLayout.findViewById(R.id.tv_track_title);
+
+            // Apply media background setting
+            // Note: mediaControlsLayout IS the container (include ID overrides root element ID)
+            boolean showMediaBackground = prefsManager.getPrefSetting(PreferencesValues.SHOW_MEDIA_BACKGROUND, true);
+            if (showMediaBackground) {
+                mediaControlsLayout.setBackgroundResource(R.drawable.bg_chip_glossy);
+            } else {
+                // No background - remove it completely and enhance button/text visibility
+                mediaControlsLayout.setBackground(null);
+                mediaControlsLayout.setElevation(0);
+
+                // Enhance track title visibility with brighter color and shadow
+                if (tvTrackTitle != null) {
+                    tvTrackTitle.setTextColor(android.support.v4.content.ContextCompat.getColor(context, R.color.bone_100));
+                    tvTrackTitle.setShadowLayer(8f, 0f, 2f, 0x99000000);
+                }
+
+                // Enhance button visibility with brighter tint
+                int brightTint = android.support.v4.content.ContextCompat.getColor(context, R.color.bone_100);
+                if (btnPrevious != null) {
+                    btnPrevious.setColorFilter(brightTint);
+                }
+                if (btnNext != null) {
+                    btnNext.setColorFilter(brightTint);
+                }
+            }
+
+            // Initialize media controller
+            mediaController = new WorkoutMediaController(context);
 
             // Set up media control functionality
             if (btnPrevious != null && btnPlayPause != null && btnNext != null && tvTrackTitle != null) {
@@ -136,6 +210,13 @@ public class WorkoutSessionActivityUIManager {
     }
     
     /**
+     * Set the gesture handler reference for cooldown control
+     */
+    public void setGestureHandler(SkipWorkoutGestureHandler gestureHandler) {
+        this.gestureHandler = gestureHandler;
+    }
+
+    /**
      * Handle activity resume - refresh media controls
      */
     public void onResume() {
@@ -165,10 +246,15 @@ public class WorkoutSessionActivityUIManager {
             mediaController.cleanup();
             mediaController = null;
         }
-        
+
         // Clean up countdown handler
         if (countdownHandler != null) {
             countdownHandler.removeCallbacksAndMessages(null);
+        }
+
+        // Clean up cooldown handler
+        if (cooldownHandler != null) {
+            cooldownHandler.removeCallbacksAndMessages(null);
         }
     }
     
@@ -178,7 +264,38 @@ public class WorkoutSessionActivityUIManager {
     public void handleScreenChangeClick() {
         if (callback != null) {
             callback.onScreenChange();
+            // Apply cooldown to prevent accidental double-clicks
+            applyButtonCooldown();
         }
+    }
+
+    /**
+     * Apply cooldown to the Complete/Next button to prevent accidental clicks
+     * Also disables the skip gesture during cooldown
+     */
+    private void applyButtonCooldown() {
+        if (btnChangeScreens == null) return;
+
+        // Disable button and reduce alpha
+        btnChangeScreens.setEnabled(false);
+        btnChangeScreens.setAlpha(0.5f);
+
+        // Disable gesture handler during cooldown
+        if (gestureHandler != null) {
+            gestureHandler.setEnabled(false);
+        }
+
+        // Re-enable after cooldown
+        cooldownHandler.postDelayed(() -> {
+            if (btnChangeScreens != null) {
+                btnChangeScreens.setEnabled(true);
+                btnChangeScreens.setAlpha(1.0f);
+            }
+            // Re-enable gesture handler
+            if (gestureHandler != null) {
+                gestureHandler.setEnabled(true);
+            }
+        }, BUTTON_COOLDOWN_MS);
     }
     
     /**

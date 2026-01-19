@@ -16,6 +16,7 @@ import com.allvens.allworkouts.data_manager.PreferencesValues;
 import com.allvens.allworkouts.data_manager.SessionUtils;
 import com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker;
 import com.allvens.allworkouts.data_manager.backup.BackupManager;
+import com.allvens.allworkouts.services.WorkoutForegroundService;
 import com.allvens.allworkouts.settings_manager.SettingsPrefsManager;
 import com.allvens.allworkouts.data_manager.database.WorkoutHistoryInfo;
 import com.allvens.allworkouts.data_manager.database.WorkoutInfo;
@@ -104,6 +105,9 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         System.out.println("[DEBUG] onCreate: isRealWorkout=" + isReal + ", currentWorkout=" + currentChoiceWorkout);
 
         setNextWorkout(nextWorkoutButton);
+
+        // Update foreground notification for finish screen
+        WorkoutForegroundService.updateFinish(this, nextChoiceWorkout);
 
         // Set up progress indicator
         updateProgressIndicator();
@@ -523,10 +527,13 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     public void goHome(View view) {
         // Clear session state when user goes home
         SessionUtils.clearSession(this);
-        
+
+        // Stop foreground notification service
+        WorkoutForegroundService.stop(this);
+
         // Trigger auto-backup if enabled
         triggerAutoBackup();
-        
+
         startActivity(new Intent(this, MainActivity.class));
     }
     
