@@ -1,10 +1,15 @@
 package com.allvens.allworkouts;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -34,6 +39,8 @@ public class SettingsActivity extends AppCompatActivity
     private static final int PICK_BACKUP_FILE = 1001;
     private static final int PICK_BACKUP_FOLDER = 1002;
     private static final int PICK_BACKUP_FOLDER_FOR_IMPORT = 1003;
+    private static final int REQUEST_NOTIFICATION_PERMISSION_TEST = 2001;
+    private static final int REQUEST_NOTIFICATION_PERMISSION_TOGGLE = 2002;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +77,18 @@ public class SettingsActivity extends AppCompatActivity
 
     public void btnAction_setDayNotifications(View view) {
         uiManager.handleDayNotificationClick(view);
+    }
+
+    public void btnAction_TestNotification(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                   != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    REQUEST_NOTIFICATION_PERMISSION_TEST);
+            return;
+        }
+        uiManager.handleTestNotification();
     }
 
     public void btnAction_ExportBackup(View view) {
@@ -198,7 +217,27 @@ public class SettingsActivity extends AppCompatActivity
             }
         }
     }
-    
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        boolean granted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION_TEST) {
+            if (granted) {
+                uiManager.handleTestNotification();
+            } else {
+                uiManager.showInfoMessage("Notification permission is required");
+            }
+        } else if (requestCode == REQUEST_NOTIFICATION_PERMISSION_TOGGLE) {
+            if (granted) {
+                uiManager.enableNotificationSwitch();
+            } else {
+                uiManager.showInfoMessage("Notification permission is required");
+            }
+        }
+    }
+
     /**
      * Handle folder selection for auto-backup setup
      */
@@ -466,6 +505,15 @@ public class SettingsActivity extends AppCompatActivity
         startActivity(new Intent(this, SettingsAppInfoSelectorActivity.class));
     }
     
+    @Override
+    public void onNotificationPermissionNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    REQUEST_NOTIFICATION_PERMISSION_TOGGLE);
+        }
+    }
+
     @Override
     public void onMediaControlsToggled(boolean enabled) {
         if (enabled && !isNotificationListenerEnabled()) {

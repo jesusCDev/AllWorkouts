@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SystemClock;
 import java.util.Calendar;
 
 import com.allvens.allworkouts.R;
@@ -72,6 +73,7 @@ public class WorkoutNotificationManager {
     private String ANDROID_CHANNEL_ID   = "com.android.AllWorkouts";
     private String ANDROID_CHANNEL_NAME = "All Workouts";
     private int MID                     = 100;
+    private static final int TEST_MID   = 101;
 
     public void create_Notification(){
         try {
@@ -116,6 +118,40 @@ public class WorkoutNotificationManager {
         } catch (Exception e) {
             // Log error or handle gracefully - don't crash the app
             e.printStackTrace();
+        }
+    }
+
+    public boolean sendTestNotification() {
+        try {
+            if (Build.VERSION.SDK_INT >= 26) {
+                NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
+                        ANDROID_CHANNEL_NAME, android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                androidChannel.setDescription("Workout reminder notifications");
+                androidChannel.enableLights(true);
+                androidChannel.enableVibration(true);
+                androidChannel.setLightColor(context.getResources().getColor(R.color.notification_primary));
+                androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                androidChannel.setShowBadge(true);
+                getManager().createNotificationChannel(androidChannel);
+            }
+
+            Notification.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                builder = new Notification.Builder(context.getApplicationContext(), ANDROID_CHANNEL_ID);
+            } else {
+                builder = new Notification.Builder(context.getApplicationContext());
+            }
+
+            builder.setContentTitle(ANDROID_CHANNEL_NAME)
+                   .setContentText("Ready To Workout!")
+                   .setSmallIcon(R.drawable.ic_pullup)
+                   .setAutoCancel(true);
+
+            getManager().notify(TEST_MID, builder.build());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

@@ -304,6 +304,10 @@ public class SettingsManager {
         };
     }
 
+    public boolean sendTestNotification() {
+        return notiManager.sendTestNotification();
+    }
+
     public void update_NotificationTime(final View view) {
         Calendar currentTime = Calendar.getInstance();
         int hour             = currentTime.get(Calendar.HOUR_OF_DAY);

@@ -39,8 +39,17 @@ public class NotificationReceiver extends BroadcastReceiver {
             }
         }
 
+        // If this is a test notification, post immediately and return
+        if (intent.getBooleanExtra("is_test", false)) {
+            NotificationManager notificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification.Builder mNotifyBuilder = create_Notification(context);
+            notificationManager.notify(MID, mNotifyBuilder.build());
+            return;
+        }
+
         Calendar rightNow = Calendar.getInstance();
-        int rightNowHour  = rightNow.get(Calendar.HOUR);
+        int rightNowHour  = rightNow.get(Calendar.HOUR_OF_DAY);
         int rightNowMin   = rightNow.get(Calendar.MINUTE);
 
         if(settingsPrefs.get_NotificationDayValue((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)) && (rightNowHour == settingsPrefs.get_NotifiHour()) && (rightNowMin == settingsPrefs.get_NotifiMinute())){

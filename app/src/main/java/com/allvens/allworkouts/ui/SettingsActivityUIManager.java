@@ -1,8 +1,13 @@
 package com.allvens.allworkouts.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +41,7 @@ public class SettingsActivityUIManager extends BaseUIManager {
         void onShowDocumentation();
         void onMediaControlsToggled(boolean enabled);
         boolean isNotificationListenerEnabled();
+        void onNotificationPermissionNeeded();
     }
     
     private SettingsManager settingsManager;
@@ -68,6 +74,11 @@ public class SettingsActivityUIManager extends BaseUIManager {
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
     private TextView tvTimeDisplay;
+
+    // Test notification
+    private Button btnTestNotification;
+    private TextView tvTestCountdown;
+    private Handler feedbackHandler;
 
     public SettingsActivityUIManager(Context context, SettingsUICallback callback) {
         super(context, callback);
@@ -119,7 +130,22 @@ public class SettingsActivityUIManager extends BaseUIManager {
         // Settings switches listeners (delegate to SettingsManager)
         sVibrate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.VIBRATE_ON));
         sSound.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SOUND_ON));
-        sNotification.setOnCheckedChangeListener(settingsManager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON));
+
+        // Notification toggle with POST_NOTIFICATIONS permission check
+        sNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.POST_NOTIFICATIONS)
+                       != PackageManager.PERMISSION_GRANTED) {
+                // Revert without triggering listener again
+                sNotification.setOnCheckedChangeListener(null);
+                sNotification.setChecked(false);
+                setupNotificationSwitchListener();
+                notifyNotificationPermissionNeeded();
+                return;
+            }
+            settingsManager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON)
+                    .onCheckedChanged(buttonView, isChecked);
+        });
         
         // Media controls with permission check
         sMediaControls.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -164,6 +190,11 @@ public class SettingsActivityUIManager extends BaseUIManager {
     
     @Override
     protected void cleanupViews() {
+        if (feedbackHandler != null) {
+            feedbackHandler.removeCallbacksAndMessages(null);
+        }
+        feedbackHandler = null;
+
         // Cleanup view references
         switchAutoBackup = null;
         tvBackupStatus = null;
@@ -174,6 +205,8 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sMediaControls = null;
         btnSu = btnM = btnTu = btnW = btnTh = btnF = btnSa = null;
         tvTimeDisplay = null;
+        btnTestNotification = null;
+        tvTestCountdown = null;
     }
     
     /**
@@ -214,11 +247,15 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sShowTimeEstimate = ((android.app.Activity) getContext()).findViewById(R.id.s_show_time_estimate);
         sShowStatsCards = ((android.app.Activity) getContext()).findViewById(R.id.s_show_stats_cards);
         sShowGoals = ((android.app.Activity) getContext()).findViewById(R.id.s_show_goals);
-        
+
         // Workout session settings switches
         sShowDifficultySlider = ((android.app.Activity) getContext()).findViewById(R.id.s_show_difficulty_slider);
         sShowExtraBreak = ((android.app.Activity) getContext()).findViewById(R.id.s_show_extra_break);
         sCompleteButtonTop = ((android.app.Activity) getContext()).findViewById(R.id.s_complete_button_top);
+
+        // Test notification
+        btnTestNotification = ((android.app.Activity) getContext()).findViewById(R.id.btn_test_notification);
+        tvTestCountdown = ((android.app.Activity) getContext()).findViewById(R.id.tv_test_countdown);
     }
     
     /**
@@ -451,6 +488,62 @@ public class SettingsActivityUIManager extends BaseUIManager {
         }
     }
     
+    /**
+     * Handle test notification button press — fires notification immediately
+     */
+    public void handleTestNotification() {
+        boolean sent = settingsManager.sendTestNotification();
+        if (!sent) {
+            showInfoMessage("Failed to send test notification");
+            return;
+        }
+
+        btnTestNotification.setEnabled(false);
+        tvTestCountdown.setVisibility(View.VISIBLE);
+        tvTestCountdown.setText("Notification sent!");
+
+        if (feedbackHandler != null) {
+            feedbackHandler.removeCallbacksAndMessages(null);
+        }
+        feedbackHandler = new Handler();
+        feedbackHandler.postDelayed(() -> {
+            if (btnTestNotification != null) btnTestNotification.setEnabled(true);
+            if (tvTestCountdown != null) tvTestCountdown.setVisibility(View.GONE);
+        }, 3000);
+    }
+
+    /**
+     * Re-apply the notification switch listener (used after programmatic setChecked)
+     */
+    private void setupNotificationSwitchListener() {
+        sNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.POST_NOTIFICATIONS)
+                       != PackageManager.PERMISSION_GRANTED) {
+                sNotification.setOnCheckedChangeListener(null);
+                sNotification.setChecked(false);
+                setupNotificationSwitchListener();
+                notifyNotificationPermissionNeeded();
+                return;
+            }
+            settingsManager.update_NotfiSettings(PreferencesValues.NOTIFICATION_ON)
+                    .onCheckedChanged(buttonView, isChecked);
+        });
+    }
+
+    /**
+     * Enable the notification switch after permission is granted
+     */
+    public void enableNotificationSwitch() {
+        sNotification.setChecked(true);
+    }
+
+    private void notifyNotificationPermissionNeeded() {
+        if (getCallback() instanceof SettingsUICallback) {
+            ((SettingsUICallback) getCallback()).onNotificationPermissionNeeded();
+        }
+    }
+
     /**
      * Override to provide custom dark theme styling
      */

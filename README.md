@@ -7,6 +7,8 @@ A comprehensive Android fitness application for managing multiple workout routin
 - **5 Workout Categories**: Calisthenics, Cardio, Abs, Legs, Back Strengthening
 - **Circular Session Management**: Progress through workouts in sequence with automatic cycling
 - **Progress Tracking**: Log workout sessions with detailed history and charts
+- **Home Screen Widget**: Slim progress bar showing 9-day heat-map (4 past + today + 4 future), current streak, and max-out indicator — matches the in-app calendar intensity colors
+- **Daily Notification Reminders**: Configurable per-day-of-week workout reminders with time picker, test notification, and boot persistence
 - **Customizable Settings**: Adjust workout positions, enable/disable routines, backup/restore data
 - **Clean Architecture**: MVC/MVP pattern with separated UI, data, and business logic layers
 - **Dark Theme Support**: Automatic theme detection with custom notification colors
@@ -94,14 +96,17 @@ app/src/main/
 │   ├── base/                 # Base classes for MVC/MVP pattern
 │   ├── data_manager/         # Database and data access classes
 │   ├── managers/             # Business logic and data managers
+│   ├── settings_manager/     # Settings, notifications, preferences
 │   ├── ui/                   # UI managers for activities
 │   ├── utils/                # Utility classes
+│   ├── widget/               # Home screen widget (provider, data helper, midnight receiver)
 │   └── *.java               # Activity classes
 ├── res/
-│   ├── layout/               # XML layout files
+│   ├── layout/               # XML layout files (includes widget_workout.xml)
 │   ├── values/               # Colors, strings, styles
 │   ├── values-night/         # Dark theme resources
-│   └── drawable/             # Images and icons
+│   ├── drawable/             # Images, icons, widget cell drawables
+│   └── xml/                  # Widget metadata, backup rules
 └── AndroidManifest.xml       # App configuration
 ```
 
@@ -165,6 +170,7 @@ This project is configured to work seamlessly across different development machi
 
 ## Version History
 
+- **v1.4**: Home screen widget with 9-day heat-map, daily notification reminders with per-day scheduling
 - **v1.3**: Added Back Strengthening workout, improved MVC architecture
 - **v1.2**: Enhanced UI/UX, dark theme support
 - **v1.1**: Circular workout sessions, progress tracking

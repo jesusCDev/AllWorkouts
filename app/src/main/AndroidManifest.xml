@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -66,6 +68,22 @@
         <!-- Auto Backup BroadcastReceiver -->
         <receiver android:name=".data_manager.BackupScheduler$AutoBackupReceiver"
             android:enabled="true"
+            android:exported="false" />
+
+        <!-- Widget Provider -->
+        <receiver android:name=".widget.WorkoutWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.allvens.allworkouts.ACTION_WIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/workout_widget_info" />
+        </receiver>
+
+        <!-- Widget Midnight Refresh Receiver -->
+        <receiver android:name=".widget.WidgetMidnightReceiver"
             android:exported="false" />
         
         <!-- Media Notification Listener Service for track info -->

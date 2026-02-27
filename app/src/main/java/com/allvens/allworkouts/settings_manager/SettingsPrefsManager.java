@@ -102,7 +102,6 @@ public class SettingsPrefsManager {
 
         // Set the value directly: 1 for enabled, -1 for disabled
         notification_days[i] = enabled ? "1" : "-1";
-
         edit.putString(PreferencesValues.NOTIFICATION_DAYS, convert_ArrayToString(notification_days));
         edit.commit();
     }

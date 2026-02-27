@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base: diagonal gradient for depth -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:endColor="#C0252528"
+                android:startColor="#C0393939" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    <!-- Top edge highlight: faint glass reflection -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:endColor="#00FFFFFF"
+                android:startColor="#0AFFFFFF" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+</layer-list>

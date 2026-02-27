@@ -522,6 +522,43 @@
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp" />
                 </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_2"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
+
+                <!-- Debug section label -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_2"
+                    android:text="Debug"
+                    android:textColor="@color/selectedButton"
+                    android:textSize="@dimen/text_size_body"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_test_notification"
+                    style="@style/Widget.App.Button.Tonal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="btnAction_TestNotification"
+                    android:text="Test Notification"
+                    android:textAlignment="textStart"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_test_countdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_1"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption"
+                    android:visibility="gone" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

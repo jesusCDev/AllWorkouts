@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity
 
         // Check if we should prompt user to enable backup
         checkBackupPrompt();
+
+        // Refresh home screen widget
+        com.allvens.allworkouts.widget.WorkoutWidgetProvider.requestUpdate(this);
     }
 
     /* ====================================================================== */

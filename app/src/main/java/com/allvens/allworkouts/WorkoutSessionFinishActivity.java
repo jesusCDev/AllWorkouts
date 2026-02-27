@@ -534,6 +534,9 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // Trigger auto-backup if enabled
         triggerAutoBackup();
 
+        // Refresh home screen widget
+        com.allvens.allworkouts.widget.WorkoutWidgetProvider.requestUpdate(this);
+
         startActivity(new Intent(this, MainActivity.class));
     }
     
