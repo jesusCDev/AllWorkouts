@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity
     private TextView tvTimeEstimateCompletion;
     private android.view.View llQuickStats;
 
+    // Calendar nav buttons
+    private android.widget.ImageButton btnCalendarPrev;
+    private android.widget.ImageButton btnCalendarNext;
+
     // Goals views
     private android.view.View llGoalsSection;
     private TextView tvGoalIcon;
@@ -86,6 +90,9 @@ public class MainActivity extends AppCompatActivity
             }, 100);
         }
         
+        // Update calendar nav visibility based on settings
+        updateCalendarNavVisibility();
+
         // Update stats visibility based on settings
         updateStatsVisibility();
 
@@ -100,6 +107,9 @@ public class MainActivity extends AppCompatActivity
 
         // Check if we should prompt user to enable backup
         checkBackupPrompt();
+
+        // Apply combined routine mode
+        applyCombinedRoutineMode();
 
         // Refresh home screen widget
         com.allvens.allworkouts.widget.WorkoutWidgetProvider.requestUpdate(this);
@@ -143,8 +153,8 @@ public class MainActivity extends AppCompatActivity
         progressGoal = findViewById(R.id.progress_goal);
 
         // Setup calendar navigation buttons
-        android.widget.ImageButton btnCalendarPrev = findViewById(R.id.btn_calendar_prev);
-        android.widget.ImageButton btnCalendarNext = findViewById(R.id.btn_calendar_next);
+        btnCalendarPrev = findViewById(R.id.btn_calendar_prev);
+        btnCalendarNext = findViewById(R.id.btn_calendar_next);
 
         if (btnCalendarPrev != null) {
             btnCalendarPrev.setOnClickListener(v -> {
@@ -174,7 +184,13 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onStartWorkoutClicked(View view) {
-        String selectedWorkout = workoutManager.getSelectedWorkout();
+        boolean combinedMode = prefsManager.getPrefSetting(PreferencesValues.COMBINED_ROUTINE_MODE, false);
+        String selectedWorkout;
+        if (combinedMode) {
+            selectedWorkout = workoutManager.getFirstAvailableWorkout();
+        } else {
+            selectedWorkout = workoutManager.getSelectedWorkout();
+        }
         if (selectedWorkout == null) return;
 
         new StartWorkoutSession().startWorkout(this, selectedWorkout);
@@ -223,10 +239,13 @@ public class MainActivity extends AppCompatActivity
         // Handle updated workout list - ensure valid selection, preferring uncompleted workouts
         java.util.Set<String> completedToday = getCompletedWorkoutsToday();
         workoutManager.ensureValidSelection(completedToday);
-        
+
         // Update time estimate when workouts refresh
         updateTimeEstimate();
-        
+
+        // Re-apply combined routine mode state
+        applyCombinedRoutineMode();
+
         // If the workout chooser is open, refresh it with the new order
         if (uiManager.isChooserOpen()) {
             uiManager.closeWorkoutChooser();
@@ -255,6 +274,16 @@ public class MainActivity extends AppCompatActivity
         android.util.Log.w("MainActivity", "Workout selection error: " + error);
     }
     
+    /* ====================================================================== */
+    /*  COMBINED ROUTINE MODE                                                 */
+    /* ====================================================================== */
+
+    private void applyCombinedRoutineMode() {
+        boolean combinedMode = prefsManager.getPrefSetting(PreferencesValues.COMBINED_ROUTINE_MODE, false);
+        int workoutCount = workoutManager.getWorkoutCount();
+        uiManager.setCombinedRoutineMode(combinedMode, workoutCount);
+    }
+
     /* ====================================================================== */
     /*  STATS CALCULATION                                                     */
     /* ====================================================================== */
@@ -623,6 +652,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
+    /**
+     * Update visibility of calendar navigation arrows based on user preference
+     */
+    private void updateCalendarNavVisibility() {
+        boolean show = prefsManager.getPrefSetting(PreferencesValues.SHOW_CALENDAR_NAV, true);
+        int visibility = show ? android.view.View.VISIBLE : android.view.View.GONE;
+        if (btnCalendarPrev != null) btnCalendarPrev.setVisibility(visibility);
+        if (btnCalendarNext != null) btnCalendarNext.setVisibility(visibility);
+    }
+
     /**
      * Update visibility of stats cards based on user preference
      */

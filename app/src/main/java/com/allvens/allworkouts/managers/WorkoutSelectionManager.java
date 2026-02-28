@@ -360,4 +360,30 @@ public class WorkoutSelectionManager {
             wrapper.close();
         }
     }
+
+    /**
+     * Set all workouts to max day (progress = 8) so the next session
+     * for each workout type opens the max-setting screen.
+     * Useful after a long break to recalibrate to current fitness level.
+     * @return true if successful, false otherwise
+     */
+    public boolean resetToMaxDay() {
+        WorkoutWrapper wrapper = new WorkoutWrapper(context);
+        try {
+            wrapper.open();
+            List<WorkoutInfo> allWorkouts = wrapper.getAllWorkouts();
+
+            for (WorkoutInfo workout : allWorkouts) {
+                workout.setProgress(8);
+                wrapper.updateWorkout(workout);
+            }
+
+            return true;
+        } catch (Exception e) {
+            android.util.Log.e("WorkoutSelection", "Error resetting to max day: " + e.getMessage());
+            return false;
+        } finally {
+            wrapper.close();
+        }
+    }
 }

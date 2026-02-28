@@ -84,6 +84,14 @@ public class SettingsManager {
     }
     
     /**
+     * Setup display settings switches including calendar navigation (default to true if not set)
+     */
+    public void set_DisplaySettingsValues(Switch sShowTimeEstimate, Switch sShowStatsCards, Switch sShowGoals, Switch sShowCalendarNav) {
+        set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals);
+        sShowCalendarNav.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.SHOW_CALENDAR_NAV, true));
+    }
+
+    /**
      * Setup workout session settings switches (default to true if not set)
      */
     public void set_WorkoutSessionSettingsValues(Switch sShowDifficultySlider, Switch sShowExtraBreak) {
@@ -99,6 +107,14 @@ public class SettingsManager {
         set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak);
         // Default to false for complete button at top (bottom is default)
         sCompleteButtonTop.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.COMPLETE_BUTTON_TOP, false));
+    }
+
+    /**
+     * Setup workout session settings switches including combined routine mode
+     */
+    public void set_WorkoutSessionSettingsValues(Switch sShowDifficultySlider, Switch sShowExtraBreak, Switch sCompleteButtonTop, Switch sCombinedRoutine) {
+        set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak, sCompleteButtonTop);
+        sCombinedRoutine.setChecked(settingsPrefs.getPrefSetting(PreferencesValues.COMBINED_ROUTINE_MODE, false));
     }
 
     /**

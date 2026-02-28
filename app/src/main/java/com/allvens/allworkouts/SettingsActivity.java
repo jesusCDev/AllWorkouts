@@ -112,6 +112,10 @@ public class SettingsActivity extends AppCompatActivity
     public void btnAction_AlignMax(View view) {
         showAlignMaxDialog();
     }
+
+    public void btnAction_ResetToMaxDay(View view) {
+        showResetToMaxDayDialog();
+    }
     
     /**
      * Show dialog to align all max workouts to same day
@@ -138,7 +142,29 @@ public class SettingsActivity extends AppCompatActivity
                .setNegativeButton("Cancel", null)
                .show();
     }
-    
+
+    /**
+     * Show confirmation dialog to reset all workouts to max day
+     */
+    private void showResetToMaxDayDialog() {
+        new android.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
+                .setTitle("Reset to Max Day")
+                .setMessage("This will set all workouts to max day. Your next session for each workout will ask you to set a new max.\n\nThis is useful after a long break to recalibrate to your current level.")
+                .setPositiveButton("Reset", (dialog, which) -> {
+                    com.allvens.allworkouts.managers.WorkoutSelectionManager workoutManager =
+                            new com.allvens.allworkouts.managers.WorkoutSelectionManager(this);
+                    if (workoutManager.resetToMaxDay()) {
+                        android.widget.Toast.makeText(this,
+                                "All workouts set to max day!", android.widget.Toast.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(this,
+                                "Failed to reset workouts", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
     /****************************************
      /**** INTERFACE IMPLEMENTATIONS
      ****************************************/

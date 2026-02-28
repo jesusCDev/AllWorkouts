@@ -639,7 +639,14 @@ public class BackupManager {
         prefs.put(PreferencesValues.NOTIFICATION_ON, prefsManager.getPrefSetting(PreferencesValues.NOTIFICATION_ON));
         prefs.put(PreferencesValues.SHOW_TIME_ESTIMATE, prefsManager.getPrefSetting(PreferencesValues.SHOW_TIME_ESTIMATE, true));
         prefs.put(PreferencesValues.SHOW_STATS_CARDS, prefsManager.getPrefSetting(PreferencesValues.SHOW_STATS_CARDS, true));
-        
+        prefs.put(PreferencesValues.SHOW_GOALS, prefsManager.getPrefSetting(PreferencesValues.SHOW_GOALS, true));
+        prefs.put(PreferencesValues.SHOW_MEDIA_BACKGROUND, prefsManager.getPrefSetting(PreferencesValues.SHOW_MEDIA_BACKGROUND, true));
+        prefs.put(PreferencesValues.SHOW_DIFFICULTY_SLIDER, prefsManager.getPrefSetting(PreferencesValues.SHOW_DIFFICULTY_SLIDER, true));
+        prefs.put(PreferencesValues.SHOW_EXTRA_BREAK, prefsManager.getPrefSetting(PreferencesValues.SHOW_EXTRA_BREAK, true));
+        prefs.put(PreferencesValues.COMPLETE_BUTTON_TOP, prefsManager.getPrefSetting(PreferencesValues.COMPLETE_BUTTON_TOP, false));
+        prefs.put(PreferencesValues.COMBINED_ROUTINE_MODE, prefsManager.getPrefSetting(PreferencesValues.COMBINED_ROUTINE_MODE, false));
+        prefs.put(PreferencesValues.SHOW_CALENDAR_NAV, prefsManager.getPrefSetting(PreferencesValues.SHOW_CALENDAR_NAV, true));
+
         return prefs;
     }
     

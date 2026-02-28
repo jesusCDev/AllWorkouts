@@ -111,23 +111,6 @@
             android:layout_height="22dp"
             android:src="@drawable/bg_widget_cell_empty" />
 
-        <!-- MAX OUT badge -->
-        <TextView
-            android:id="@+id/widget_badge_maxout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_widget_badge_maxout"
-            android:paddingStart="8dp"
-            android:paddingTop="3dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="3dp"
-            android:text="MAX OUT"
-            android:textColor="@color/vermilion"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
     </LinearLayout>
 
 </FrameLayout>

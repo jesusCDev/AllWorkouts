@@ -64,7 +64,536 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Workout Feedback Card -->
+        <!-- ============================================ -->
+        <!-- Card 1: Workouts (Order + Align Max merged) -->
+        <!-- ============================================ -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/workout_position_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <LinearLayout
+                    android:id="@+id/ll_header_workouts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Workouts"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_workouts"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_workouts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_3"
+                    android:text="Drag to reorder workouts and toggle which ones to include"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption"
+                    android:alpha="0.8" />
+
+                <!-- Container for dynamically added workout position items -->
+                <LinearLayout
+                    android:id="@+id/ll_settings_WorkoutPositions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- Divider between drag list and align max -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/spacing_3"
+                    android:background="@color/unSelectedButton"
+                    android:alpha="0.1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_2"
+                    android:text="Set all workouts to reach MAX on the same day"
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption"
+                    android:alpha="0.8" />
+
+                <Button
+                    android:id="@+id/btn_align_max"
+                    style="@style/Widget.App.Button.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/touch_target_min"
+                    android:onClick="btnAction_AlignMax"
+                    android:text="⚡ Align Max Workouts"
+                    android:textSize="@dimen/text_size_body" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_3"
+                    android:layout_marginBottom="@dimen/spacing_2"
+                    android:text="Coming back after a break? Reset all workouts to max day so you can set new maxes that match your current level."
+                    android:textColor="@color/unSelectedButton"
+                    android:textSize="@dimen/text_size_caption"
+                    android:alpha="0.8" />
+
+                <Button
+                    android:id="@+id/btn_reset_to_max"
+                    style="@style/Widget.App.Button.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/touch_target_min"
+                    android:onClick="btnAction_ResetToMaxDay"
+                    android:text="🔄 Reset to Max Day"
+                    android:textSize="@dimen/text_size_body" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- ============================================ -->
+        <!-- Card 2: Home Screen (was Display Settings)  -->
+        <!-- ============================================ -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/display_settings_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <LinearLayout
+                    android:id="@+id/ll_header_home_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Home Screen"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_home_screen"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_home_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <!-- Show Time Estimate -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Time Estimate"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Estimated workout duration on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_time_estimate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Show Stats Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Stats Cards"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Sessions and streak info on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_stats_cards"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Show Goals -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Goals Progress"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Session milestones on home screen"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_goals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Calendar Navigation -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Calendar Navigation"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Show left/right arrows on calendar (swipe always works)"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_calendar_nav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- ============================================ -->
+        <!-- Card 3: Workout Session                     -->
+        <!-- ============================================ -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/workout_session_settings_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_3"
+            app:cardBackgroundColor="@color/background_elevated"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_4">
+
+                <LinearLayout
+                    android:id="@+id/ll_header_workout_session"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Workout Session"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_workout_session"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_workout_session"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <!-- Show Difficulty Slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Difficulty Adjuster"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Adjust next workout difficulty during breaks"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_difficulty_slider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Show Extra Break Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show Extra Break Button"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Add +30 seconds to break timer"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_show_extra_break"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Complete Button at Top -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Complete Button at Top"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Move button above progress to avoid accidental clicks"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_complete_button_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="false" />
+                </LinearLayout>
+
+                <!-- Combined Routine Mode -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/spacing_1"
+                    android:layout_marginTop="@dimen/spacing_2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Combined Routine"
+                            android:textColor="@color/selectedButton"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_half"
+                            android:text="Run all enabled workouts as one continuous session"
+                            android:textColor="@color/unSelectedButton"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/s_combined_routine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_2"
+                        android:checked="false" />
+                </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- ============================================ -->
+        <!-- Card 4: Feedback & Media                    -->
+        <!-- ============================================ -->
         <android.support.v7.widget.CardView
             android:id="@+id/feedback_card"
             android:layout_width="match_parent"
@@ -80,14 +609,36 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_4">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_header_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Workout Feedback"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Feedback &amp; Media"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_feedback"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <!-- Vibrate Setting -->
                 <LinearLayout
@@ -288,6 +839,7 @@
                     android:text="App Info"
                     android:textAlignment="textStart"
                     android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -307,14 +859,36 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_4">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_header_notification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Notification"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Notification"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_notification"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <!-- Notification Toggle and Time Setting -->
                 <LinearLayout
@@ -559,383 +1133,19 @@
                     android:textColor="@color/unSelectedButton"
                     android:textSize="@dimen/text_size_caption"
                     android:visibility="gone" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <!-- Workout Position Card -->
-        <android.support.v7.widget.CardView
-            android:id="@+id/workout_position_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
-            app:cardCornerRadius="@dimen/corner_radius_large"
-            app:cardElevation="@dimen/elevation_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_4">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Workout Order &amp; Status"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Drag to reorder workouts and toggle which ones to include"
-                    android:textColor="@color/unSelectedButton"
-                    android:textSize="@dimen/text_size_caption"
-                    android:alpha="0.8" />
-
-                <!-- Container for dynamically added workout position items -->
-                <LinearLayout
-                    android:id="@+id/ll_settings_WorkoutPositions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <!-- Display Settings Card -->
-        <android.support.v7.widget.CardView
-            android:id="@+id/display_settings_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
-            app:cardCornerRadius="@dimen/corner_radius_large"
-            app:cardElevation="@dimen/elevation_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_4">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Display Settings"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
-
-                <!-- Show Time Estimate -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Show Time Estimate"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Estimated workout duration on home screen"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_show_time_estimate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="true" />
-                </LinearLayout>
-
-                <!-- Show Stats Cards -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1"
-                    android:layout_marginTop="@dimen/spacing_2">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Show Stats Cards"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Sessions and streak info on home screen"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_show_stats_cards"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="true" />
-                </LinearLayout>
-
-                <!-- Show Goals -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1"
-                    android:layout_marginTop="@dimen/spacing_2">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Show Goals Progress"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Session milestones on home screen"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_show_goals"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="true" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <!-- Workout Session Settings Card -->
-        <android.support.v7.widget.CardView
-            android:id="@+id/workout_session_settings_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
-            app:cardCornerRadius="@dimen/corner_radius_large"
-            app:cardElevation="@dimen/elevation_card">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_4">
+        <!-- ============================================ -->
+        <!-- Card 5: Notification (unchanged)            -->
+        <!-- (already above — Notification card kept)    -->
+        <!-- ============================================ -->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Workout Session Settings"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
-
-                <!-- Show Difficulty Slider -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Show Difficulty Adjuster"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Adjust next workout difficulty during breaks"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_show_difficulty_slider"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="true" />
-                </LinearLayout>
-
-                <!-- Show Extra Break Button -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1"
-                    android:layout_marginTop="@dimen/spacing_2">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Show Extra Break Button"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Add +30 seconds to break timer"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_show_extra_break"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="true" />
-                </LinearLayout>
-
-                <!-- Complete Button at Top -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/spacing_1"
-                    android:layout_marginTop="@dimen/spacing_2">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Complete Button at Top"
-                            android:textColor="@color/selectedButton"
-                            android:textSize="@dimen/text_size_body" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            android:text="Move button above progress to avoid accidental clicks"
-                            android:textColor="@color/unSelectedButton"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/s_complete_button_top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_2"
-                        android:checked="false" />
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <!-- Align Max Workouts Card -->
-        <android.support.v7.widget.CardView
-            android:id="@+id/align_max_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_3"
-            app:cardBackgroundColor="@color/background_elevated"
-            app:cardCornerRadius="@dimen/corner_radius_large"
-            app:cardElevation="@dimen/elevation_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_4">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_2"
-                    android:text="Align Max Workouts"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Set all workouts to reach MAX on the same day"
-                    android:textColor="@color/unSelectedButton"
-                    android:textSize="@dimen/text_size_caption"
-                    android:alpha="0.8" />
-
-                <Button
-                    android:id="@+id/btn_align_max"
-                    style="@style/Widget.App.Button.Primary"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/touch_target_min"
-                    android:onClick="btnAction_AlignMax"
-                    android:text="⚡ Align Max Workouts"
-                    android:textSize="@dimen/text_size_body" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
+        <!-- ============================================ -->
+        <!-- Card 6: Backup & Restore (unchanged)        -->
+        <!-- ============================================ -->
         <!-- Backup & Restore Card -->
         <android.support.v7.widget.CardView
             android:id="@+id/backup_card"
@@ -952,14 +1162,36 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_4">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_header_backup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_3"
-                    android:text="Backup &amp; Restore"
-                    android:textColor="@color/selectedButton"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Backup &amp; Restore"
+                        android:textColor="@color/selectedButton"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_chevron_backup"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:tint="@color/selectedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_content_backup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -1057,6 +1289,7 @@
                     android:textColor="@color/unSelectedButton"
                     android:textSize="@dimen/text_size_caption"
                     android:alpha="0.6" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

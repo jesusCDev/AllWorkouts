@@ -10,7 +10,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,7 +48,16 @@ public class SettingsActivityUIManager extends BaseUIManager {
     }
     
     private SettingsManager settingsManager;
-    
+    private SharedPreferences prefs;
+
+    // Collapsible card views
+    private View llHeaderWorkouts, llHeaderHomeScreen, llHeaderWorkoutSession;
+    private View llHeaderFeedback, llHeaderNotification, llHeaderBackup;
+    private View llContentWorkouts, llContentHomeScreen, llContentWorkoutSession;
+    private View llContentFeedback, llContentNotification, llContentBackup;
+    private ImageView ivChevronWorkouts, ivChevronHomeScreen, ivChevronWorkoutSession;
+    private ImageView ivChevronFeedback, ivChevronNotification, ivChevronBackup;
+
     // UI Elements
     private Switch switchAutoBackup;
     private TextView tvBackupStatus;
@@ -65,11 +77,13 @@ public class SettingsActivityUIManager extends BaseUIManager {
     private Switch sShowTimeEstimate;
     private Switch sShowStatsCards;
     private Switch sShowGoals;
+    private Switch sShowCalendarNav;
     
     // Workout session settings switches
     private Switch sShowDifficultySlider;
     private Switch sShowExtraBreak;
     private Switch sCompleteButtonTop;
+    private Switch sCombinedRoutine;
     
     // Notification day buttons
     private Button btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa;
@@ -83,10 +97,12 @@ public class SettingsActivityUIManager extends BaseUIManager {
     public SettingsActivityUIManager(Context context, SettingsUICallback callback) {
         super(context, callback);
         this.settingsManager = new SettingsManager(context);
+        this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
     
     @Override
     protected void setupViews() {
+        setupCollapsibleCards();
         refreshSettingsValues();
     }
     
@@ -101,10 +117,10 @@ public class SettingsActivityUIManager extends BaseUIManager {
         settingsManager.setUP_DailyNotificationBtns(btnSu, btnM, btnTu, btnW, btnTh, btnF, btnSa);
 
         // Setup display settings (default to true if not set)
-        settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals);
+        settingsManager.set_DisplaySettingsValues(sShowTimeEstimate, sShowStatsCards, sShowGoals, sShowCalendarNav);
 
         // Setup workout session settings (default to true if not set, complete button top defaults to false)
-        settingsManager.set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak, sCompleteButtonTop);
+        settingsManager.set_WorkoutSessionSettingsValues(sShowDifficultySlider, sShowExtraBreak, sCompleteButtonTop, sCombinedRoutine);
 
         // Setup media sub-settings
         settingsManager.set_MediaSubSettings(sShowMediaBackground);
@@ -113,6 +129,28 @@ public class SettingsActivityUIManager extends BaseUIManager {
         updateSongTitleSettingVisibility(sMediaControls.isChecked());
     }
     
+    private void setupCollapsibleCards() {
+        setupCollapsibleCard("settings_collapsed_workouts", llHeaderWorkouts, llContentWorkouts, ivChevronWorkouts);
+        setupCollapsibleCard("settings_collapsed_home_screen", llHeaderHomeScreen, llContentHomeScreen, ivChevronHomeScreen);
+        setupCollapsibleCard("settings_collapsed_workout_session", llHeaderWorkoutSession, llContentWorkoutSession, ivChevronWorkoutSession);
+        setupCollapsibleCard("settings_collapsed_feedback", llHeaderFeedback, llContentFeedback, ivChevronFeedback);
+        setupCollapsibleCard("settings_collapsed_notification", llHeaderNotification, llContentNotification, ivChevronNotification);
+        setupCollapsibleCard("settings_collapsed_backup", llHeaderBackup, llContentBackup, ivChevronBackup);
+    }
+
+    private void setupCollapsibleCard(String prefKey, View headerRow, View contentContainer, ImageView chevron) {
+        boolean collapsed = prefs.getBoolean(prefKey, false);
+        contentContainer.setVisibility(collapsed ? View.GONE : View.VISIBLE);
+        chevron.setRotation(collapsed ? 180f : 0f);
+
+        headerRow.setOnClickListener(v -> {
+            boolean isVisible = contentContainer.getVisibility() == View.VISIBLE;
+            contentContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+            chevron.animate().rotation(isVisible ? 180f : 0f).setDuration(200).start();
+            prefs.edit().putBoolean(prefKey, isVisible).apply();
+        });
+    }
+
     /**
      * Update visibility of media sub-settings based on media controls state
      */
@@ -164,11 +202,13 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sShowTimeEstimate.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_TIME_ESTIMATE));
         sShowStatsCards.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_STATS_CARDS));
         sShowGoals.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_GOALS));
-        
+        sShowCalendarNav.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_CALENDAR_NAV));
+
         // Workout session settings listeners
         sShowDifficultySlider.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_DIFFICULTY_SLIDER));
         sShowExtraBreak.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_EXTRA_BREAK));
         sCompleteButtonTop.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.COMPLETE_BUTTON_TOP));
+        sCombinedRoutine.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.COMBINED_ROUTINE_MODE));
 
         // Media background setting listener
         sShowMediaBackground.setOnCheckedChangeListener(settingsManager.update_PrefSettings(PreferencesValues.SHOW_MEDIA_BACKGROUND));
@@ -203,10 +243,20 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sSound = null;
         sNotification = null;
         sMediaControls = null;
+        sShowCalendarNav = null;
+        sCombinedRoutine = null;
         btnSu = btnM = btnTu = btnW = btnTh = btnF = btnSa = null;
         tvTimeDisplay = null;
         btnTestNotification = null;
         tvTestCountdown = null;
+
+        // Collapsible card views
+        llHeaderWorkouts = llHeaderHomeScreen = llHeaderWorkoutSession = null;
+        llHeaderFeedback = llHeaderNotification = llHeaderBackup = null;
+        llContentWorkouts = llContentHomeScreen = llContentWorkoutSession = null;
+        llContentFeedback = llContentNotification = llContentBackup = null;
+        ivChevronWorkouts = ivChevronHomeScreen = ivChevronWorkoutSession = null;
+        ivChevronFeedback = ivChevronNotification = ivChevronBackup = null;
     }
     
     /**
@@ -247,15 +297,41 @@ public class SettingsActivityUIManager extends BaseUIManager {
         sShowTimeEstimate = ((android.app.Activity) getContext()).findViewById(R.id.s_show_time_estimate);
         sShowStatsCards = ((android.app.Activity) getContext()).findViewById(R.id.s_show_stats_cards);
         sShowGoals = ((android.app.Activity) getContext()).findViewById(R.id.s_show_goals);
+        sShowCalendarNav = ((android.app.Activity) getContext()).findViewById(R.id.s_show_calendar_nav);
 
         // Workout session settings switches
         sShowDifficultySlider = ((android.app.Activity) getContext()).findViewById(R.id.s_show_difficulty_slider);
         sShowExtraBreak = ((android.app.Activity) getContext()).findViewById(R.id.s_show_extra_break);
         sCompleteButtonTop = ((android.app.Activity) getContext()).findViewById(R.id.s_complete_button_top);
+        sCombinedRoutine = ((android.app.Activity) getContext()).findViewById(R.id.s_combined_routine);
 
         // Test notification
         btnTestNotification = ((android.app.Activity) getContext()).findViewById(R.id.btn_test_notification);
         tvTestCountdown = ((android.app.Activity) getContext()).findViewById(R.id.tv_test_countdown);
+
+        // Collapsible card headers
+        llHeaderWorkouts = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_workouts);
+        llHeaderHomeScreen = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_home_screen);
+        llHeaderWorkoutSession = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_workout_session);
+        llHeaderFeedback = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_feedback);
+        llHeaderNotification = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_notification);
+        llHeaderBackup = ((android.app.Activity) getContext()).findViewById(R.id.ll_header_backup);
+
+        // Collapsible card content containers
+        llContentWorkouts = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_workouts);
+        llContentHomeScreen = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_home_screen);
+        llContentWorkoutSession = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_workout_session);
+        llContentFeedback = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_feedback);
+        llContentNotification = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_notification);
+        llContentBackup = ((android.app.Activity) getContext()).findViewById(R.id.ll_content_backup);
+
+        // Collapsible card chevrons
+        ivChevronWorkouts = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_workouts);
+        ivChevronHomeScreen = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_home_screen);
+        ivChevronWorkoutSession = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_workout_session);
+        ivChevronFeedback = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_feedback);
+        ivChevronNotification = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_notification);
+        ivChevronBackup = ((android.app.Activity) getContext()).findViewById(R.id.iv_chevron_backup);
     }
     
     /**

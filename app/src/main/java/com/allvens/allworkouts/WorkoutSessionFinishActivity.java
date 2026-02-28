@@ -32,6 +32,7 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
     private String nextChoiceWorkout;
     private String sessionStartWorkout; // The workout that started this session
     private Long durationSeconds; // Duration of the workout session (null if invalid/outlier)
+    private boolean combinedRoutineMode;
 
     // Old fixed progression constants (DEPRECATED - kept for reference)
     // private final static int PROG_INC_NEUTRAL = 1;
@@ -94,6 +95,10 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
             android.util.Log.d("WorkoutFinish", "No duration received (outlier or legacy)");
         }
 
+        // Read combined routine mode preference
+        SettingsPrefsManager settingsPrefs = new SettingsPrefsManager(this);
+        combinedRoutineMode = settingsPrefs.getPrefSetting(PreferencesValues.COMBINED_ROUTINE_MODE, false);
+
         ((TextView)findViewById(R.id.tv_workoutFinish_WorkoutName)).setText(currentChoiceWorkout);
 
         wrapper = new WorkoutWrapper(this);
@@ -152,9 +157,14 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
 
         workoutInfo.setProgress((workoutInfo.getProgress() + 1));
         wrapper.updateWorkout(workoutInfo);
-        
+
         // Check if tomorrow is a max day for this workout
         showMaxTomorrowIfApplicable(workoutInfo);
+
+        // Sync progress for all enabled workouts when combined routine completes
+        if (combinedRoutineMode && nextChoiceWorkout == null) {
+            syncProgressForCombinedRoutine();
+        }
     }
     
     /**
@@ -355,6 +365,55 @@ public class WorkoutSessionFinishActivity extends AppCompatActivity{
         // Change the Next Workout button to Complete Session button
         nextWorkoutButton.setText(getString(R.string.complete_session));
         nextWorkoutButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Sync progress for all enabled workouts to the maximum progress value among them.
+     * Called when the last workout in a combined routine session completes.
+     */
+    private void syncProgressForCombinedRoutine() {
+        try {
+            WorkoutPosAndStatus[] enabledWorkouts = new WorkoutBasicsPrefsChecker(this).getWorkoutPositions(false);
+
+            // Find the maximum progress among all enabled workouts
+            int maxProgress = 0;
+            for (WorkoutPosAndStatus pos : enabledWorkouts) {
+                WorkoutInfo info = wrapper.getWorkout(pos.getName());
+                if (info != null && info.getProgress() > maxProgress) {
+                    maxProgress = info.getProgress();
+                }
+            }
+
+            // Set all enabled workouts to that max progress
+            for (WorkoutPosAndStatus pos : enabledWorkouts) {
+                WorkoutInfo info = wrapper.getWorkout(pos.getName());
+                if (info != null && info.getProgress() != maxProgress) {
+                    info.setProgress(maxProgress);
+                    wrapper.updateWorkout(info);
+                }
+            }
+
+            android.util.Log.d("WorkoutFinish", "Combined routine sync: set all progress to " + maxProgress);
+        } catch (Exception e) {
+            android.util.Log.e("WorkoutFinish", "Error syncing combined routine progress", e);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (combinedRoutineMode && nextChoiceWorkout != null) {
+            // Mid-routine in combined mode - warn user
+            new android.support.v7.app.AlertDialog.Builder(this, R.style.DarkAlertDialog)
+                    .setTitle("Leave Combined Routine?")
+                    .setMessage("Progress sync only happens when all workouts are completed. If you leave now, workout progress may become out of sync.")
+                    .setPositiveButton("Leave", (dialog, which) -> {
+                        WorkoutSessionFinishActivity.super.onBackPressed();
+                    })
+                    .setNegativeButton("Continue", null)
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void updateWorkoutProgress(int feedbackType){

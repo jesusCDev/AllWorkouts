@@ -401,56 +401,67 @@ public class WorkoutCalendarView extends View {
     }
     
     /**
-     * Calculate which future days will have max workouts
-     * Assumes today's workout will be completed, so calculations start from tomorrow
+     * Calculate which future days will have max workouts.
+     * Assumes today's workout will be completed (if not already done)
+     * and that one workout is completed each subsequent day.
      */
     private void calculateMaxWorkoutDays(WorkoutWrapper wrapper, List<com.allvens.allworkouts.data_manager.database.WorkoutInfo> allWorkouts) {
         maxWorkoutDays.clear();
         maxWorkoutNames.clear();
-        
+
         // Only calculate if we're viewing the current month
         if (todayDay <= 0) {
             return;
         }
-        
+
         try {
-            // For each workout type, calculate when max day would occur
+            // Only consider enabled workouts
+            com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus[] enabledPositions =
+                    new com.allvens.allworkouts.data_manager.WorkoutBasicsPrefsChecker(getContext())
+                            .getWorkoutPositions(false);
+            java.util.Set<String> enabledNames = new java.util.HashSet<>();
+            for (com.allvens.allworkouts.settings_manager.WorkoutPos.WorkoutPosAndStatus pos : enabledPositions) {
+                enabledNames.add(pos.getName().toLowerCase());
+            }
+
+            // Check which workout types were already completed today
+            java.util.Calendar today = java.util.Calendar.getInstance();
+            today.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            today.set(java.util.Calendar.MINUTE, 0);
+            today.set(java.util.Calendar.SECOND, 0);
+            today.set(java.util.Calendar.MILLISECOND, 0);
+            long todayStart = today.getTimeInMillis() / 1000;
+            long todayEnd = todayStart + 86400 - 1;
+            java.util.Set<Long> completedTodayIds = wrapper.getUniqueWorkoutIdsForDay(todayStart, todayEnd);
+
             for (com.allvens.allworkouts.data_manager.database.WorkoutInfo workout : allWorkouts) {
+                // Skip disabled workouts
+                if (!enabledNames.contains(workout.getWorkout().toLowerCase())) continue;
+
                 int progress = workout.getProgress();
-                
-                // Assume today's workout will be completed (progress + 1)
-                int projectedProgress = progress + 1;
-                
-                // Max day is at progress 8
-                // Calculate how many more sessions needed after today
-                int sessionsUntilMax = 8 - projectedProgress;
-                
-                if (sessionsUntilMax > 0 && sessionsUntilMax <= daysInMonth - todayDay) {
-                    // Calculate which day this would be (starting from tomorrow)
-                    // todayDay + 1 = tomorrow, + sessionsUntilMax for the actual max day
+                boolean doneToday = completedTodayIds.contains(workout.getId());
+
+                int sessionsUntilMax;
+                if (progress >= 8 && !doneToday) {
+                    // Already at max day — today IS the max day
+                    sessionsUntilMax = 0;
+                } else {
+                    // Project +1 only if today's workout hasn't been completed yet
+                    int projectedProgress = progress + (doneToday ? 0 : 1);
+                    sessionsUntilMax = 8 - projectedProgress;
+                }
+
+                if (sessionsUntilMax >= 0) {
                     int maxDay = todayDay + sessionsUntilMax;
-                    
-                    // Only mark if it's within this month and in the future (not today)
-                    if (maxDay > todayDay && maxDay <= daysInMonth) {
+                    if (maxDay >= todayDay && maxDay <= daysInMonth) {
                         maxWorkoutDays.put(maxDay, true);
-                        // Add workout name to the list for this day
                         if (!maxWorkoutNames.containsKey(maxDay)) {
                             maxWorkoutNames.put(maxDay, new java.util.ArrayList<String>());
                         }
                         maxWorkoutNames.get(maxDay).add(workout.getWorkout());
-                        Log.d(TAG, workout.getWorkout() + " max day would be on day " + maxDay + " (" + sessionsUntilMax + " sessions away after today)");
-                    }
-                } else if (sessionsUntilMax == 0) {
-                    // Tomorrow is max day
-                    int maxDay = todayDay + 1;
-                    if (maxDay <= daysInMonth) {
-                        maxWorkoutDays.put(maxDay, true);
-                        // Add workout name to the list for this day
-                        if (!maxWorkoutNames.containsKey(maxDay)) {
-                            maxWorkoutNames.put(maxDay, new java.util.ArrayList<String>());
-                        }
-                        maxWorkoutNames.get(maxDay).add(workout.getWorkout());
-                        Log.d(TAG, workout.getWorkout() + " max day is tomorrow (day " + maxDay + ")");
+                        Log.d(TAG, workout.getWorkout() + " max day on day " + maxDay +
+                                " (" + sessionsUntilMax + " sessions away, progress=" + progress +
+                                ", doneToday=" + doneToday + ")");
                     }
                 }
             }

@@ -20,6 +20,8 @@ public class WidgetDataHelper {
         public int streak;
         /** Whether the next workout is a max-out session (progress >= 8). */
         public boolean nextIsMaxOut;
+        /** Which cells are predicted max days (index 0–8, today = 4). */
+        public boolean[] isMaxDay = new boolean[9];
     }
 
     public static WidgetData gatherWidgetData(Context context) {
@@ -83,6 +85,28 @@ public class WidgetDataHelper {
                         data.nextIsMaxOut = info.getProgress() >= 8;
                     }
                     break;
+                }
+            }
+
+            // Predict max days for cells (index 4 = today, 5-8 = tomorrow to +4 days)
+            for (WorkoutPosAndStatus w : enabled) {
+                WorkoutInfo info = wrapper.getWorkout(w.getName());
+                if (info == null) continue;
+
+                boolean doneToday = completedNames.contains(w.getName().toLowerCase());
+
+                int sessionsUntilMax;
+                if (info.getProgress() >= 8 && !doneToday) {
+                    // Already at max day — today IS the max day
+                    sessionsUntilMax = 0;
+                } else {
+                    int projectedProgress = info.getProgress() + (doneToday ? 0 : 1);
+                    sessionsUntilMax = 8 - projectedProgress;
+                }
+
+                // sessionsUntilMax maps directly to cell offset from today (index 4)
+                if (sessionsUntilMax >= 0 && sessionsUntilMax <= 4) {
+                    data.isMaxDay[4 + sessionsUntilMax] = true;
                 }
             }
 

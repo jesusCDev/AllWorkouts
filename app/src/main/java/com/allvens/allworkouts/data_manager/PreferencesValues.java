@@ -36,10 +36,12 @@ public interface PreferencesValues {
     String SHOW_TIME_ESTIMATE        = "show_time_estimate";      // boolean - default true
     String SHOW_STATS_CARDS          = "show_stats_cards";        // boolean - default true
     String SHOW_GOALS                = "show_goals";              // boolean - default true
-    
+    String SHOW_CALENDAR_NAV         = "show_calendar_nav";       // boolean - default true
+
     /********** Workout Session Settings **********/
     String SHOW_DIFFICULTY_SLIDER    = "show_difficulty_slider";  // boolean - default true
     String SHOW_EXTRA_BREAK          = "show_extra_break";        // boolean - default true
+    String COMBINED_ROUTINE_MODE     = "combined_routine_mode";   // boolean - default false
 
     /********** Daily Limits Keys **********/
     String EXTRA_BREAKS_USED_TODAY   = "extra_breaks_used_today";  // int

@@ -7,7 +7,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import com.allvens.allworkouts.MainActivity;
@@ -95,17 +94,19 @@ public class WorkoutWidgetProvider extends AppWidgetProvider {
         for (int i = 0; i < 9; i++) {
             int intensity = intensityLevel(data.dayCounts[i]);
             int drawable;
-            if (i == TODAY_INDEX) {
+            if (i == TODAY_INDEX && data.isMaxDay[i]) {
+                // Today is a max day
+                drawable = R.drawable.bg_widget_cell_today_maxday;
+            } else if (i == TODAY_INDEX) {
                 drawable = CELL_TODAY_DRAWABLES[intensity];
+            } else if (i > TODAY_INDEX && data.isMaxDay[i]) {
+                // Future cell predicted as max day
+                drawable = R.drawable.bg_widget_cell_maxday;
             } else {
                 drawable = CELL_DRAWABLES[intensity];
             }
             views.setImageViewResource(CELL_IDS[i], drawable);
         }
-
-        // --- MAX OUT badge ---
-        views.setViewVisibility(R.id.widget_badge_maxout,
-                data.nextIsMaxOut ? View.VISIBLE : View.GONE);
 
         // --- Click intent to open MainActivity ---
         Intent launchIntent = new Intent(context, MainActivity.class);

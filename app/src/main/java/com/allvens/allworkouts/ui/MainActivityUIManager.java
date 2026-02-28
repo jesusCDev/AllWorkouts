@@ -135,8 +135,28 @@ public class MainActivityUIManager {
         return chooserIsOpen;
     }
     
+    /**
+     * Configure combined routine mode on the main screen.
+     * When enabled: shows "All Workouts (N)", hides arrow, disables chooser tap.
+     * When disabled: restores normal chooser behavior.
+     */
+    public void setCombinedRoutineMode(boolean enabled, int workoutCount) {
+        if (enabled) {
+            workoutSelectorText.setText("All Workouts (" + workoutCount + ")");
+            workoutSelectorArrow.setVisibility(View.GONE);
+            changeWorkoutButton.setOnClickListener(null);
+            changeWorkoutButton.setClickable(false);
+            // Ensure chooser is closed
+            closeWorkoutChooser();
+        } else {
+            workoutSelectorArrow.setVisibility(View.VISIBLE);
+            changeWorkoutButton.setClickable(true);
+            changeWorkoutButton.setOnClickListener(this::onChangeWorkoutClicked);
+        }
+    }
+
     // Private helper methods
-    
+
     private void onChangeWorkoutClicked(View view) {
         // Notify parent that chooser toggle was requested
         if (eventListener != null) {
